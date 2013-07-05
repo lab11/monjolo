@@ -8,7 +8,7 @@ module RpiCoilcubeReceiverP {
     interface Receive;
     interface Send;
 
-   // interface UartBuffer;
+    interface TcpSocket as GatdSocket;
   }
 }
 implementation {
@@ -16,8 +16,22 @@ implementation {
 #define COILCUBE_ADDR 2
 #define TEST_LOAD_ADDR 3
 
+  char gatd_host[] = "memristor-v1.eecs.umich.edu";
+  uint16_t gatd_port = 12399;
+
+  char testdata[] = "abcd";
+
   event void Boot.booted() {
-    call RadioControl.start();
+    error_t err;
+    //call RadioControl.start();
+
+    err = call GatdSocket.connect(gatd_host, gatd_port);
+
+    if (err != SUCCESS) {
+      printf("NO CONNECT\n");
+    }
+
+    call GatdSocket.send(testdata, 4);
   }
 
   event void RadioControl.startDone (error_t err) {
@@ -118,9 +132,9 @@ implementation {
     return msg;
   }
 
-//  event void UartBuffer.receive (uint8_t* buf, uint8_t len) {
-//    printf("%s", buf);
-//  }
+  event void GatdSocket.receive (uint8_t* msg, int len) {
+
+  }
 
   event void RadioControl.stopDone (error_t err) { }
   event void Send.sendDone (message_t* msg, error_t err) { }

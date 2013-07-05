@@ -14,7 +14,8 @@ implementation {
   App.Receive -> Ieee154BareC.BareReceive;
   App.Send -> Ieee154BareC.BareSend;
 
-  components new PersistentTcpConnectionC();
+  components new PersistentTcpConnectionC() as TcpConn;
+  App.GatdSocket -> TcpConn.TcpSocket;
 
 //  components UartC;
 //  App.UartBuffer -> UartC.UartBuffer;
