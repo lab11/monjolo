@@ -1,0 +1,4 @@
+#-*-Makefile-*- vim:syntax=make
+
+TINYOS_ROOT_DIR=/home/bradjc/git/tinyos-main
+include $(TINYOS_ROOT_DIR)/Makefile.include
