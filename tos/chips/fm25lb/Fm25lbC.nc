@@ -6,14 +6,15 @@
 
 configuration Fm25lbC {
   provides{
-    interface Init;
     interface Fm25lb;
   }
 }
 implementation {
   components Fm25lbP as FramP;
-  Init = FramP;
   Fm25lb = FramP;
+
+  components MainC;
+  FramP.Init <- MainC.SoftwareInit;
 
   components new Msp430Spi0C() as SpiC;
   FramP.SpiResource -> SpiC;

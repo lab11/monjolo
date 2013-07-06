@@ -6,7 +6,7 @@
 
 module Fm25lbP {
   provides {
-    interface Init;
+    interface Init @exactlyonce();
     interface Fm25lb;
   }
   uses {
@@ -183,4 +183,13 @@ implementation {
       break;
     }
   }
+
+  default event void Fm25lb.readDone(fm25lb_addr_t addr, uint8_t* buf,
+    fm25lb_len_t len, error_t err) {}
+  default event void Fm25lb.writeDone(fm25lb_addr_t addr, uint8_t* buf,
+    fm25lb_len_t len, error_t err) {}
+  default event void Fm25lb.readStatusDone(uint8_t* buf, error_t err) {}
+  default event void Fm25lb.writeStatusDone(uint8_t* buf, error_t err) {}
+  default event void Fm25lb.writeEnableDone() {}
+
 }
