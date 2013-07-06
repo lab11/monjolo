@@ -15,6 +15,8 @@ PFLAGS += -I%T/chips/msp430/pins
 PFLAGS += -I%T/chips/msp430/timer
 PFLAGS += -I%T/chips/msp430/usart
 PFLAGS += -I%T/lib/onewire
+PFLAGS += -I%T/lib/rfxlink/layers
+PFLAGS += -I%T/lib/rfxlink/util
 PFLAGS += -I%T/lib/timer
 
 PFLAGS += -mmcu=msp430f1611

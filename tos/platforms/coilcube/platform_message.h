@@ -2,11 +2,10 @@
 #define PLATFORM_MESSAGE_H
 
 #include <CC2420FbRadio.h>
-#include <Serial.h>
+//#include <Serial.h>
 
 typedef union message_header {
   cc2420_header_t cc2420;
-  serial_header_t serial;
 } message_header_t;
 
 typedef union TOSRadioFooter {
