@@ -24,6 +24,10 @@ implementation {
       }
     }
 
+    call Fram.writeEnable();
+  }
+
+  event void Fram.writeEnableDone() {
     // Setup a write to the first 8 bytes of the FRAM
     call Fram.write(0, id.data, 8);
   }
@@ -45,6 +49,5 @@ implementation {
     fm25lb_len_t len, error_t err) {}
   event void Fram.readStatusDone(uint8_t* buf, error_t err) {}
   event void Fram.writeStatusDone(uint8_t* buf, error_t err) {}
-  event void Fram.writeEnableDone() {}
 
 }

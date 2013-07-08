@@ -3,9 +3,11 @@
 # Include directories
 PFLAGS += -I%T/platforms/coilcube
 PFLAGS += -I%T/platforms/coilcube/chips/cc2420
+PFLAGS += -I%T/platforms/coilcube/chips/ds2411
 PFLAGS += -I%T/platforms/coilcube/chips/fm25lb
 PFLAGS += -I%T/platforms/epic
 PFLAGS += -I%T/platforms/epic/chips/ds2411
+PFLAGS += -I%T/platforms/telosa
 PFLAGS += -I%T/chips/fm25lb
 PFLAGS += -I%T/chips/cc2420fb
 PFLAGS += -I%T/chips/ds2411
@@ -17,7 +19,9 @@ PFLAGS += -I%T/chips/msp430/usart
 PFLAGS += -I%T/lib/onewire
 PFLAGS += -I%T/lib/rfxlink/layers
 PFLAGS += -I%T/lib/rfxlink/util
+PFLAGS += -I%T/lib/serial
 PFLAGS += -I%T/lib/timer
+PFLAGS += -I%T/lib/power
 
 PFLAGS += -mmcu=msp430f1611
 PFLAGS += -fnesc-target=msp430
