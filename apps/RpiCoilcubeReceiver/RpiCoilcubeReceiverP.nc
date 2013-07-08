@@ -1,3 +1,4 @@
+#include "coilcube_packet.h"
 
 module RpiCoilcubeReceiverP {
   uses {
@@ -9,6 +10,8 @@ module RpiCoilcubeReceiverP {
     interface Send;
 
     interface TcpSocket as GatdSocket;
+
+    interface Queue<cc_raw_pkt_t> as RawPacketQueue;
   }
 }
 implementation {
@@ -16,29 +19,33 @@ implementation {
 #define COILCUBE_ADDR 2
 #define TEST_LOAD_ADDR 3
 
-  char gatd_host[] = "memristor-v1.eecs.umich.edu";
-  uint16_t gatd_port = 12399;
+  char gatd_host[] = "inductor.eecs.umich.edu";
+  uint16_t gatd_port = 4002;
+  char gatd_profile[] = "abcdefghij"
 
-  char testdata[] = "abcd";
+  cc_gatd_pkt_header_t pkt_header;
 
   event void Boot.booted() {
     error_t err;
-    //call RadioControl.start();
 
+    // Connect to the GATD server to store the coilcube data
     err = call GatdSocket.connect(gatd_host, gatd_port);
-
     if (err != SUCCESS) {
-      printf("NO CONNECT\n");
+      fprintf(stderr, "Unable to connect to the storage server.\n");
+      fprintf(stderr, "Exiting.\n");
+      exit(1);
     }
 
-    call GatdSocket.send(testdata, 4);
+    // Set up the packet structs
+    strncpy(pkt_header.profile, gatd_profile, GATD_PROFILEID_LEN);
+
+    call RadioControl.start();
   }
 
   event void RadioControl.startDone (error_t err) {
     if (err != SUCCESS) {
       call RadioControl.start();
     }
-    printf("started\n");
   }
 
   // Ground truth
@@ -78,6 +85,22 @@ implementation {
     actual_wattage = val;
   }
 
+  task void process_queue_task () {
+    cc_raw_pkt_t raw;
+
+    if (RawPacketQueue.size == 0) return;
+
+    raw = RawPacketQueue.dequeue();
+
+    // Send raw to GATD
+
+    // process the packet for the power measurement
+    // send that result to gatd
+
+    // Re post task to process the rest of the queue
+    post process_queue_task();
+  }
+
   // Rough outline of what this function will be when everything is filled in
   // correctly.
   event message_t* Receive.receive (message_t* msg,
@@ -87,13 +110,29 @@ implementation {
     uint8_t seq;
     uint8_t val, val2;
     uint16_t src;
+
     timestamp_metadata_t* meta_timestamp;
-    uint64_t timestamp;
 
-    // need to update this to get it from the meta data from the packet
+    cc_raw_pkt_t raw_pkt;
+
+    // Get the timestamp from the radio driver
     meta_timestamp = &(((cc2520packet_metadata_t*) msg->metadata)->timestamp);
-    timestamp = meta_timestamp->timestamp_micro;
+    raw_pkt.timestamp = meta_timestamp->timestamp_micro;
 
+    // Check if extended source addressing was used
+    // If not, disregard this packet
+
+    // Copy the id into the raw struct
+    // Copy the seq_no into the raw struct
+    // Copy the counter into the raw struct
+
+    // Enqueue the raw packet
+
+    post process_queue_task();
+
+    return msg;
+
+/*
     // get seq number
     seq = pkt_buf[3];
 
@@ -127,14 +166,12 @@ implementation {
       default:
         break;
     }
-
+*/
 
     return msg;
   }
 
-  event void GatdSocket.receive (uint8_t* msg, int len) {
-
-  }
+  event void GatdSocket.receive (uint8_t* msg, int len) { }
 
   event void RadioControl.stopDone (error_t err) { }
   event void Send.sendDone (message_t* msg, error_t err) { }

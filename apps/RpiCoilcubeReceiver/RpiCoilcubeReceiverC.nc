@@ -1,3 +1,4 @@
+#include "coilcube_packet.h"
 
 configuration RpiCoilcubeReceiverC {}
 implementation {
@@ -17,6 +18,6 @@ implementation {
   components new PersistentTcpConnectionC() as TcpConn;
   App.GatdSocket -> TcpConn.TcpSocket;
 
-//  components UartC;
-//  App.UartBuffer -> UartC.UartBuffer;
+  components new QueueC(cc_raw_pkt_t, 100) as RawPacketQueue;
+  App.RawPacketQueue -> RawPacketQueue.Queue;
 }
