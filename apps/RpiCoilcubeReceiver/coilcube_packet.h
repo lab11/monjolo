@@ -1,12 +1,14 @@
 #ifndef __COILCUBE_PACKET_H__
 #define __COILCUBE_PACKET_H__
 
+#include "IeeeEui64.h"
+
 #define DATA_TYPE_RAW 1
 #define DATA_TYPE_CALCULATED 2
 
 #define GATD_PROFILEID_LEN 10
 
-typdef struct {
+typedef struct {
   char    profile[GATD_PROFILEID_LEN]; // ID of the GATD profile for coilcube
   uint8_t type;                        // Which data packet this is
 } __attribute__((packed)) cc_gatd_pkt_header_t;

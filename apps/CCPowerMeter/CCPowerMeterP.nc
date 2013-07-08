@@ -1,35 +1,27 @@
 #include "Timer.h"
 #include "Msp430Adc12.h"
-#include "CoilCube.h"
+#include "coilcube.h"
 #include "message.h"
 #include "Ieee154.h"
 #include "ieee154_header.h"
-
-#define PANID 0x0022
-#define COUNT_ADDR 0
-#define SEQ_ADDR 1
 
 module CCPowerMeterP {
 	uses {
 		interface Leds;
     interface Boot;
 
-    interface Timer<TMilli> as Timer0;
-
     interface SplitControl as RadioControl;
     interface Packet as RadioPacket;
     interface Send as RadioSend;
     interface Receive as RadioReceive;
 
-    interface HplMsp430Interrupt as Interrupt;
-    interface HplMsp430GeneralIO as InterruptGPIO;
     interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
 
     interface Msp430Adc12SingleChannel as ReadSingleChannel;
     interface Resource as AdcResource;
 
-    interface HplMsp430GeneralIO as TimeGPIO;
+    interface HplMsp430GeneralIO as TimeControlGPIO;
   }
 }
 implementation {
@@ -39,16 +31,10 @@ implementation {
   struct ieee154_frame_addr ack_frame;
   uint8_t* payload_buf = (uint8_t*) &msg;
 
-  uint8_t counter;
-  uint8_t sequence;
-  uint8_t i;
-  bool m_busy = TRUE;
+  uint16_t timing_cap_val;
 
-  bool m_init;
-
-  uint8_t m_addr;
-  uint8_t m_buf[50];
-  uint8_t m_len = 1;
+  fram_data_t fram_data;
+  cc_state_e state;
 
   msp430adc12_channel_config_t config = {
     inch:         INPUT_CHANNEL_A0,
@@ -61,144 +47,175 @@ implementation {
     sampcon_id:   SAMPCON_CLOCK_DIV_1
   };
 
-  void sendMsg();
-
   event void Boot.booted() {
     call FlagGPIO.makeOutput();
-    //call TimeGPIO.makeInput();
-    counter = 0;
-    i = 0;
-    m_init = FALSE;
 
+    state = STATE_INITIAL_READ;
     call RadioControl.start();
   }
 
-  void sendMsg(){
+  void sendMsg() {
     error_t  error;
     uint8_t* payload_data;
 
     call RadioPacket.clear(&msg);
 
-    call TimeGPIO.makeOutput();
-    call TimeGPIO.set();
-
     // setup outgoing frame
-    out_frame.ieee_dstpan = PANID;
-    out_frame.ieee_src.i_saddr = TOS_NODE_ID;
-    out_frame.ieee_src.ieee_mode = IEEE154_ADDR_SHORT;
-
-    out_frame.ieee_dst.i_saddr = IEEE154_BROADCAST_ADDR;
+    out_frame.ieee_dstpan        = PANID;
+    memcpy(&out_frame.ieee_src.i_laddr, fram_data.id.data, 8);
+    out_frame.ieee_src.ieee_mode = IEEE154_ADDR_EXT;
+    out_frame.ieee_dst.i_saddr   = IEEE154_BROADCAST_ADDR;
     out_frame.ieee_dst.ieee_mode = IEEE154_ADDR_SHORT;
 
     // put header in payload
     payload_data = pack_ieee154_header(payload_buf, 22, &out_frame);
 
     // add seq no
-    payload_buf[3] = sequence;
+    payload_buf[3] = fram_data.seq_no;
 
     // set length
     // length is always tricky because of what gets counted. Here we must count
     // the two crc bytes but not the length byte.
-    payload_buf[0] = (payload_data - payload_buf + 1) + sizeof(counter);
+    payload_buf[0] = (payload_data - payload_buf + 1) + sizeof(uint8_t);
 
     // Set the payload as just the counter for now.
-    payload_data[0] = counter;
+    payload_data[0] = fram_data.counter;
 
     // send the packet
     error = call RadioSend.send(&msg, payload_buf[0]);
   }
 
+  task void state_machine () {
+    switch (state) {
+      case STATE_INITIAL_READ:
+        // Read in the status from the FRAM
+        state = STATE_INITIAL_READ_DONE;
+        call Fram.read(ADDR_ID, (uint8_t*) &fram_data, sizeof(fram_data_t));
+        break;
+
+      case STATE_INITIAL_READ_DONE:
+        // Just got the id and whatnot from FRAM
+        // Now since this is a wakeup increment the counter
+        fram_data.counter++;
+        // And check if we should send a packet too
+        state = STATE_CHECK_PKT_DELAY;
+        call AdcResource.request();
+        break;
+
+      case STATE_CHECK_PKT_DELAY:
+        // Now have access to the adc
+        // Sample the timing capacitor
+        state = STATE_CHECK_PKT_DELAY_DONE;
+        call ReadSingleChannel.configureSingle(&config);
+        call ReadSingleChannel.getData();
+        break;
+
+      case STATE_CHECK_PKT_DELAY_DONE: {
+        // Got the ADC sample back
+        uint16_t timing_cap_val_local;
+        atomic timing_cap_val_local = timing_cap_val;
+
+        call AdcResource.release();
+
+        if ((timing_cap_val_local >> 8) <= 2) {
+          // The capacitor is low enough to send a packet
+          // Update the sequence number and store it and the count value
+          state = STATE_SEND_PACKET;
+          fram_data.seq_no++;
+          call Fram.write(ADDR_COUNT, &fram_data.counter, 2);
+
+        } else {
+          // Just store the counter value and be done
+          state = STATE_DONE;
+          call Fram.write(ADDR_COUNT, &fram_data.counter, 1);
+        }
+        break;
+      }
+
+      case STATE_SEND_PACKET:
+        state = STATE_SEND_PACKET_DONE;
+        // Recharge the timing capacitor
+        call TimeControlGPIO.makeOutput();
+        call TimeControlGPIO.set();
+        sendMsg();
+        break;
+
+      case STATE_SEND_PACKET_DONE:
+        state = STATE_DONE;
+        // Stop recharing the timing capacitor
+        call TimeControlGPIO.clr();
+        break;
+
+      case STATE_DONE:
+        break;
+
+      default:
+        break;
+
+    }
+
+  }
+
   event void RadioControl.startDone (error_t error) {
     call FlagGPIO.set();
-    m_addr = COUNT_ADDR;
-    call Fram.read(m_addr, m_buf, m_len);
+
+    post state_machine();
   }
 
-  event void Timer0.fired(){
-    call FlagGPIO.set();
-    m_addr = COUNT_ADDR;
-    call Fram.read(m_addr, m_buf, m_len);
+  event void Fram.readDone(fm25lb_addr_t addr,
+                           uint8_t* buf,
+                           fm25lb_len_t len,
+                           error_t err) {
+    post state_machine();
   }
 
-  event void Fram.readDone(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len, error_t err) {
-    //if(!m_init) {
-    //  m_init = TRUE;
-    //  call RadioControl.start();
-    //  return;
-    //}
-    if(addr == SEQ_ADDR) {
-      sequence = *buf;
-      sequence = sequence + 1;
-      m_buf[0] = sequence;
-      call Fram.write(m_addr, m_buf, m_len);
-    }
-    else {
-      counter = *buf;
-      counter = counter + 1;
-      m_buf[0] = counter;
-      call Fram.write(m_addr, m_buf, m_len);
-    }
+  event void Fram.writeDone(fm25lb_addr_t addr,
+                            uint8_t* buf,
+                            fm25lb_len_t len,
+                            error_t err) {
+    post state_machine();
   }
 
-  event void Fram.writeDone(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len, error_t err) {
-    if(addr == SEQ_ADDR) {
-      sendMsg();
-    }
-    else {
-      call AdcResource.request();
-    }
+  event void AdcResource.granted () {
+    // Go ahead and sample the timing capacitor
+    post state_machine();
+  }
+
+  async event error_t ReadSingleChannel.singleDataReady (uint16_t data) {
+    call FlagGPIO.clr();
+    timing_cap_val = data;
+    post state_machine();
+    return SUCCESS;
   }
 
   event void Fram.writeEnableDone() {
-    call Fram.readStatus(m_buf);
+    post state_machine();
   }
 
   event void Fram.readStatusDone(uint8_t* buf, error_t err) {
-    if(!m_init) {
-      m_addr = COUNT_ADDR;
-      call Fram.read(m_addr, m_buf, m_len);
-    }
-    else {
-      call Fram.write(m_addr, m_buf, m_len);
-    }
+    post state_machine();
   }
 
-  event void Fram.writeStatusDone(uint8_t* buf, error_t err) {}
+  event void Fram.writeStatusDone(uint8_t* buf, error_t err) {
+    post state_machine();
+  }
 
   event void RadioSend.sendDone (message_t* message, error_t error) {
-    call TimeGPIO.clr();
+    post state_machine();
   }
-
-
-  async event void Interrupt.fired() {}
 
   event message_t* RadioReceive.receive(message_t* packet,
                                         void* payload, uint8_t len) {
     return packet;
   }
 
-  event void RadioControl.stopDone (error_t error) { }
-
-  event void AdcResource.granted () {
-    call ReadSingleChannel.configureSingle(&config);
-    call ReadSingleChannel.getData();
+  event void RadioControl.stopDone (error_t error) {
+    post state_machine();
   }
 
-  async event error_t ReadSingleChannel.singleDataReady (uint16_t data) {
-    call FlagGPIO.clr();
-    call AdcResource.release();
-    call Timer0.startOneShot(1000);
-    if ((data >> 8) <= 2) {
-      //sendMsg();
-      m_addr = SEQ_ADDR;
-      call Fram.read(m_addr, m_buf, m_len);
-    } else {
-      call TimeGPIO.clr();
-    }
-    return SUCCESS;
-  }
-
-  async event uint16_t* COUNT_NOK(numSamples) ReadSingleChannel.multipleDataReady(uint16_t *COUNT(numSamples) buffer, uint16_t numSamples) {
+  async event uint16_t* COUNT_NOK(numSamples)
+  ReadSingleChannel.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
+    uint16_t numSamples) {
     return NULL;
   }
 }

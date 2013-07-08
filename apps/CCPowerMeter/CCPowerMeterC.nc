@@ -1,4 +1,4 @@
-#include "CoilCube.h"
+#include "coilcube.h"
 
 configuration CCPowerMeterC {}
 implementation {
@@ -11,9 +11,6 @@ implementation {
   App.Boot -> MainC.Boot;
   App.Leds -> LedsC.Leds;
 
-  components new TimerMilliC() as Timer0;
-  App.Timer0 -> Timer0.Timer;
-
   components Fm25lbC as FramC;
   App.Fram -> FramC.Fm25lb;
 
@@ -24,16 +21,11 @@ implementation {
   App.RadioReceive -> Ieee154BareC.BareReceive;
   App.RadioPacket -> Ieee154BareC.BarePacket;
 
-  components HplMsp430InterruptC as Interrupt;
-  components HplMsp430GeneralIOC as GPIO;
-  App.InterruptGPIO -> GPIO.Port17;
-  App.Interrupt -> Interrupt.Port17;
-
   components HplMsp430GeneralIOC as FlagGPIOC;
   App.FlagGPIO -> FlagGPIOC.Port55;
 
-  components HplMsp430GeneralIOC as TimeGPIOC;
-  App.TimeGPIO -> TimeGPIOC.Port54;
+  components HplMsp430GeneralIOC as TimeControlGPIOC;
+  App.TimeControlGPIO -> TimeControlGPIOC.Port54;
 
   // ADC for time approx.
   components new Msp430Adc12ClientC() as Adc;
