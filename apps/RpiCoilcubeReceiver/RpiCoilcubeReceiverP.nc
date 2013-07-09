@@ -138,6 +138,7 @@ implementation {
     // Check that the length is correct for a coilcube packet
     if (pkt_buf[0] != STD_COILCUBE_PKT_LENGTH) {
       printf("Received a non coilcube packet (bad length).\n");
+      return msg;
     }
 
     // Get the timestamp from the radio driver
