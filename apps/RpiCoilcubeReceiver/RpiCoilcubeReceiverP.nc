@@ -133,8 +133,6 @@ implementation {
 
     cc_raw_pkt_t raw_pkt;
 
-    printf("got packet\n");
-
     // Check that the length is correct for a coilcube packet
     if (pkt_buf[0] != STD_COILCUBE_PKT_LENGTH) {
       printf("Received a non coilcube packet (bad length).\n");

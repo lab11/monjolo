@@ -58,7 +58,7 @@ implementation {
 
   uint16_t temp_value;
 
-  #define LOAD_INCREMENT_INTERVAL 1000
+  #define LOAD_INCREMENT_INTERVAL 60000
   #define LOAD_REPORT_INTERVAL 10000
 
 	event void Boot.booted() {
