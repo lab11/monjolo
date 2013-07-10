@@ -104,6 +104,7 @@ implementation {
       printf("\n");
       printf("seq_no: %i\n", raw.seq_no);
       printf("counter: %i\n", raw.counter);
+      printf("version: %i\n", raw.version);
     }
 
     // Send raw to GATD
@@ -127,6 +128,7 @@ implementation {
     uint8_t* pkt_buf = (uint8_t*) msg;
     uint8_t* data;
     error_t err;
+    cc_pkt_data_t* cc_pkt_data;
 
     timestamp_metadata_t* meta_timestamp;
     struct ieee154_frame_addr in_frame;
@@ -164,8 +166,10 @@ implementation {
     // Copy the seq_no into the raw struct
     raw_pkt.seq_no = pkt_buf[3];
 
-    // Copy the counter into the raw struct
-    raw_pkt.counter = data[0];
+    // Get the payload data
+    cc_pkt_data = (cc_pkt_data_t*) data;
+    raw_pkt.version = cc_pkt_data->version;
+    raw_pkt.counter = cc_pkt_data->counter;
 
     // Enqueue the raw packet
     err = call RawPacketQueue.enqueue(raw_pkt);
@@ -178,42 +182,6 @@ implementation {
     post process_queue_task();
 
     return msg;
-
-/*
-    // get seq number
-    seq = pkt_buf[3];
-
-    val = pkt_buf[10];
-    val2 = pkt_buf[11];
-
-    src = pkt_buf[8] | (pkt_buf[9] << 8);
-
-
-    switch (src) {
-      case COILCUBE_ADDR:
-        {
-          uint8_t count = val;
-          uint32_t wattage;
-
-          wattage = calculate_wattage(timestamp, count);
-
-          printf("Current wattage: estimated: %i, actual: %i\n",
-                 wattage, actual_wattage);
-
-          previous_timestamp = timestamp;
-          previous_count = count;
-        }
-        break;
-
-      case TEST_LOAD_ADDR:
-        update_actual_wattage((((uint16_t) val) << 8) | val2);
-        printf("got load measurement\n");
-        break;
-
-      default:
-        break;
-    }
-*/
 
   }
 

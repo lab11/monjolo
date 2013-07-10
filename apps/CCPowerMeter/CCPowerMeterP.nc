@@ -26,10 +26,13 @@ module CCPowerMeterP {
 }
 implementation {
 
+#define COILCUBE_VERSION 1
+
   message_t msg;
   struct ieee154_frame_addr out_frame;
   struct ieee154_frame_addr ack_frame;
   uint8_t* payload_buf = (uint8_t*) &msg;
+  pkt_data_t pkt_data;
 
   uint16_t timing_cap_val;
 
@@ -50,13 +53,15 @@ implementation {
   event void Boot.booted() {
     call FlagGPIO.makeOutput();
 
+    pkt_data.version = COILCUBE_VERSION;
+
     state = STATE_INITIAL_READ;
     call RadioControl.start();
   }
 
-  void sendMsg() {
+  void sendMsg () {
     error_t  error;
-    uint8_t* payload_data;
+    uint8_t* data;
 
     call RadioPacket.clear(&msg);
 
@@ -68,7 +73,7 @@ implementation {
     out_frame.ieee_dst.ieee_mode = IEEE154_ADDR_SHORT;
 
     // put header in payload
-    payload_data = pack_ieee154_header(payload_buf, 22, &out_frame);
+    data = pack_ieee154_header(payload_buf, 22, &out_frame);
 
     // add seq no
     payload_buf[3] = fram_data.seq_no;
@@ -76,10 +81,11 @@ implementation {
     // set length
     // length is always tricky because of what gets counted. Here we must count
     // the two crc bytes but not the length byte.
-    payload_buf[0] = (payload_data - payload_buf + 1) + sizeof(uint8_t);
+    payload_buf[0] = (data - payload_buf + 1) + sizeof(pkt_data_t);
 
-    // Set the payload as just the counter for now.
-    payload_data[0] = fram_data.counter;
+    // Set the payload as the pkt data
+    pkt_data.counter = fram_data.counter;
+    memcpy(data, &pkt_data, sizeof(pkt_data_t));
 
     // send the packet
     error = call RadioSend.send(&msg, payload_buf[0]);

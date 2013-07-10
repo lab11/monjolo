@@ -15,6 +15,11 @@ typedef struct {
   uint8_t seq_no;
 } __attribute__((packed)) fram_data_t;
 
+typedef struct {
+  uint8_t version; // version of the coilcube
+  uint8_t counter; // number of wakeups of the coilcube
+} __attribute__((packed)) pkt_data_t;
+
 typedef enum {
   STATE_INITIAL_READ, // Get the starting seq no, counter and id from FRAM
   STATE_INITIAL_READ_DONE,
