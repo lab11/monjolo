@@ -18,7 +18,7 @@ module RpiCoilcubeReceiverP {
 }
 implementation {
 
-#define STD_COILCUBE_PKT_LENGTH 18
+#define STD_COILCUBE_PKT_LENGTH 19
 
   char gatd_host[] = "inductor.eecs.umich.edu";
   uint16_t gatd_port = 4002;
