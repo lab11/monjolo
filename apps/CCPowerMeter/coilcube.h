@@ -3,7 +3,7 @@
 
 #include "Ieee154.h"
 
-#define PANID 0x0022
+#define PAN_ID 0x0022
 
 #define ADDR_ID     0
 #define ADDR_COUNT  8

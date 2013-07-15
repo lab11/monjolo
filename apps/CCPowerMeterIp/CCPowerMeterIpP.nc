@@ -1,19 +1,17 @@
 #include "Timer.h"
 #include "Msp430Adc12.h"
 #include "coilcube.h"
-#include "message.h"
-#include "Ieee154.h"
-#include "ieee154_header.h"
+#include "coilcube_ip.h"
+#include <lib6lowpan/lib6lowpan.h>
+#include <lib6lowpan/ip.h>
 
-module CCPowerMeterP {
+module CCPowerMeterIpP {
 	uses {
 		interface Leds;
     interface Boot;
 
     interface SplitControl as RadioControl;
-    interface Packet as RadioPacket;
-    interface Send as RadioSend;
-    interface Receive as RadioReceive;
+    interface UDP as Udp;
 
     interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
@@ -28,11 +26,9 @@ implementation {
 
 #define COILCUBE_VERSION 1
 
-  message_t msg;
-  struct ieee154_frame_addr out_frame;
-  struct ieee154_frame_addr ack_frame;
-  uint8_t* payload_buf = (uint8_t*) &msg;
-  pkt_data_t pkt_data;
+  struct sockaddr_in6 dest; // Where to send the packet
+
+  pkt_data_t pkt_data = {COILCUBE_VERSION, 0};
 
   uint16_t timing_cap_val;
 
@@ -53,7 +49,8 @@ implementation {
   event void Boot.booted() {
     call FlagGPIO.makeOutput();
 
-    pkt_data.version = COILCUBE_VERSION;
+    inet_pton6(RECEIVER_ADDR, &dest.sin6_addr);
+    dest.sin6_port = htons(RECEIVER_PORT);
 
     state = STATE_INITIAL_READ;
     call RadioControl.start();
@@ -63,32 +60,12 @@ implementation {
     error_t  error;
     uint8_t* data;
 
-    call RadioPacket.clear(&msg);
-
-    // setup outgoing frame
-    out_frame.ieee_dstpan        = PAN_ID;
-    memcpy(&out_frame.ieee_src.i_laddr, fram_data.id.data, 8);
-    out_frame.ieee_src.ieee_mode = IEEE154_ADDR_EXT;
-    out_frame.ieee_dst.i_saddr   = IEEE154_BROADCAST_ADDR;
-    out_frame.ieee_dst.ieee_mode = IEEE154_ADDR_SHORT;
-
-    // put header in payload
-    data = pack_ieee154_header(payload_buf, 22, &out_frame);
-
-    // add seq no
-    payload_buf[3] = fram_data.seq_no;
-
-    // set length
-    // length is always tricky because of what gets counted. Here we must count
-    // the two crc bytes but not the length byte.
-    payload_buf[0] = (data - payload_buf + 1) + sizeof(pkt_data_t);
-
     // Set the payload as the pkt data
     pkt_data.counter = fram_data.counter;
     memcpy(data, &pkt_data, sizeof(pkt_data_t));
 
-    // send the packet
-    error = call RadioSend.send(&msg, payload_buf[0]);
+    error = call Udp.sendto(&dest, &pkt_data, sizeof(pkt_data_t));
+    // Not much we can do if this returns an error
   }
 
   task void state_machine () {
@@ -206,15 +183,6 @@ implementation {
     post state_machine();
   }
 
-  event void RadioSend.sendDone (message_t* message, error_t error) {
-    post state_machine();
-  }
-
-  event message_t* RadioReceive.receive(message_t* packet,
-                                        void* payload, uint8_t len) {
-    return packet;
-  }
-
   event void RadioControl.stopDone (error_t error) {
     post state_machine();
   }
@@ -224,4 +192,9 @@ implementation {
     uint16_t numSamples) {
     return NULL;
   }
+
+  event void Udp.recvfrom (struct sockaddr_in6 *from,
+                           void *data,
+                           uint16_t len,
+                           struct ip6_metadata *meta) { }
 }
