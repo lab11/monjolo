@@ -15,6 +15,7 @@ implementation {
 
   // IPv6 Stack
   components IPStackC;
+  components StaticIPAddressC;
   App.BlipControl -> IPStackC.SplitControl;
   App.ForwardingTable -> IPStackC.ForwardingTable;
   components new UdpSocketC() as Udp;

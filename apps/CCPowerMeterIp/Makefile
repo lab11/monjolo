@@ -1,11 +1,9 @@
 COMPONENT=CCPowerMeterIpC
 
-CFLAGS += -DCC2420X_DEF_CHANNEL=18
+CFLAGS += -DCC2420X_DEF_CHANNEL=19
 
 PFLAGS += -I$(TINYOS_ROOT_DIR)/tools/tinyos/c/blip/lib6lowpan
 PFLAGS += $(TINYOS_ROOT_DIR)/tools/tinyos/c/blip/lib6lowpan/ieee154_header.c
-
-PFLAGS += -I../CCPowerMeter
 
 CFLAGS += -DASSERT_NONE
 

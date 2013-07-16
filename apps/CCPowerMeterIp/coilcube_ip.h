@@ -12,6 +12,10 @@
 #define RECEIVER_ADDR "2001:470:1f10:131c::2"
 #define RECEIVER_PORT 4001
 
+// Prefix for this node, just set it blank as we have no idea what the prefix
+// will be.
+#define IN6_PREFIX "::"
+
 #define FRAM_ADDR_COUNT  0
 #define FRAM_ADDR_SEQ_NO 1
 
