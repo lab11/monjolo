@@ -41,6 +41,12 @@ module CC2420FbDriverLayerP
         interface RadioReceive;
         interface RadioCCA;
         interface RadioPacket;
+
+        interface SeqNoControl; // interface to let applications set the
+                                // sequence number to use on the next packet
+                                // This could be more general in the future,
+                                // but right now I think that clarity is more
+                                // useful.
 /*
         interface PacketField<uint8_t> as PacketTransmitPower;
         interface PacketField<uint8_t> as PacketRSSI;
@@ -151,6 +157,8 @@ implementation {
 
     inline cc2420X_status_t getStatus();
     inline void setChannel();
+
+    uint8_t sequence_number;
 
 /*----------------- ALARM -----------------*/
     tasklet_async event void RadioAlarm.fired()
@@ -655,6 +663,10 @@ implementation {
 
     data = getPayload(msg);
     length = getHeader(msg)->length;
+
+
+    // Set the sequence number
+    data[3] = sequence_number++;
 
     // length | data[0] ... data[length-3] | automatically generated FCS
 
@@ -1326,6 +1338,13 @@ if(status.tx_active == 0) {
   command uint8_t ReadLqi.readRssi(message_t *msg) {
     return 200;
   }
+
+
+//------------- Sequence Number ------------
+
+    command void SeqNoControl.set_sequence_number (uint8_t seq_no) {
+        sequence_number = seq_no;
+    }
 
 
 
