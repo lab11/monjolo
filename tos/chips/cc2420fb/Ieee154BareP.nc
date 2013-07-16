@@ -83,6 +83,7 @@ implementation {
 
   message_t* BareSend_msg;
   error_t BareSend_err;
+  uint8_t seq_no = 10;
 
   task void send_sendDone () {
     message_t* m;
@@ -97,6 +98,7 @@ implementation {
 
   command error_t BareSend.send(message_t* msg, uint8_t len) {
     atomic BareSend_msg = msg;
+    ((uint8_t*)msg)[3] = seq_no++;
     return call RadioSend.send(msg);
   }
 

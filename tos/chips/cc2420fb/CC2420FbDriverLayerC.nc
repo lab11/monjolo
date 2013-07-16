@@ -41,8 +41,13 @@ configuration CC2420FbDriverLayerC
 
 		interface LocalTime<TRadio> as LocalTimeRadio;
 
-    interface Alarm<TRadio, tradio_size>;
-    //interface Alarm<TRadioAlarm, tradio_size>;
+    	interface Alarm<TRadio, tradio_size>;
+    	//interface Alarm<TRadioAlarm, tradio_size>;
+
+    	interface LowPowerListening;
+	    interface PacketLink;
+	    interface PacketAcknowledgements;
+	    interface ReadLqi;
 	}
 
 	uses
@@ -117,4 +122,9 @@ implementation
 
 	components LedsC;
 	DriverLayerP.Leds -> LedsC;
+
+	LowPowerListening = DriverLayerP.LPL;
+    PacketLink = DriverLayerP.PacketLink;
+    PacketAcknowledgements = DriverLayerP.PacketAcknowledgements;
+    ReadLqi = DriverLayerP.ReadLqi;
 }

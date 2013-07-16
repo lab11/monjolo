@@ -47,6 +47,12 @@ module CC2420FbDriverLayerP
         interface PacketField<uint8_t> as PacketTimeSyncOffset;
         interface PacketField<uint8_t> as PacketLinkQuality;
 */
+        // NOT ACTUALLY SUPPORTED
+        interface LowPowerListening as LPL;
+        interface PacketLink;
+        interface PacketAcknowledgements;
+        interface ReadLqi;
+
     }
 
     uses
@@ -1266,6 +1272,64 @@ if(status.tx_active == 0) {
     {
         // all flags are automatically cleared
     }
+
+
+// FOR BLIP
+// NOT SUPPORTED YET
+  async command error_t PacketAcknowledgements.requestAck(message_t* msg) {
+    return SUCCESS;
+  }
+
+  async command error_t PacketAcknowledgements.noAck(message_t* msg) {
+    return SUCCESS;
+  }
+
+  async command bool PacketAcknowledgements.wasAcked(message_t* msg) {
+    return TRUE;
+  }
+
+  command void PacketLink.setRetries(message_t *msg, uint16_t maxRetries) {
+  }
+
+  command void PacketLink.setRetryDelay(message_t *msg, uint16_t retryDelay) {
+  }
+
+  command uint16_t PacketLink.getRetries(message_t *msg) {
+    return 1;
+  }
+
+  command uint16_t PacketLink.getRetryDelay(message_t *msg) {
+    return 100;
+  }
+
+  command bool PacketLink.wasDelivered(message_t *msg) {
+    return TRUE;
+  }
+
+  command void LPL.setLocalWakeupInterval(uint16_t intervalMs) {
+  }
+
+  command uint16_t LPL.getLocalWakeupInterval() {
+    return 128;
+  }
+
+  command void LPL.setRemoteWakeupInterval(message_t *msg, uint16_t intervalMs) {}
+
+  command uint16_t LPL.getRemoteWakeupInterval(message_t *msg) {
+    return 128;
+  }
+
+  command uint8_t ReadLqi.readLqi(message_t *msg) {
+    return 200;
+  }
+
+  command uint8_t ReadLqi.readRssi(message_t *msg) {
+    return 200;
+  }
+
+
+
+
 /*
 //----------------- PacketTransmitPower -----------------
 
