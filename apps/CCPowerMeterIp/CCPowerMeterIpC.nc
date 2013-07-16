@@ -1,4 +1,3 @@
-#include "coilcube.h"
 
 configuration CCPowerMeterIpC {}
 implementation {
@@ -16,9 +15,13 @@ implementation {
 
   // IPv6 Stack
   components IPStackC;
-  App.RadioControl -> IPStackC.SplitControl;
+  App.BlipControl -> IPStackC.SplitControl;
+  App.ForwardingTable -> IPStackC.ForwardingTable;
   components new UdpSocketC() as Udp;
   App.Udp -> Udp.UDP;
+
+  components CC2420FbDriverLayerP as CC2420Fb;
+  App.SeqNoControl -> CC2420Fb.SeqNoControl;
 
   components HplMsp430GeneralIOC as FlagGPIOC;
   App.FlagGPIO -> FlagGPIOC.Port55;

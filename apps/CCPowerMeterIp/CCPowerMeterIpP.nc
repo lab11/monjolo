@@ -1,6 +1,5 @@
 #include "Timer.h"
 #include "Msp430Adc12.h"
-#include "coilcube.h"
 #include "coilcube_ip.h"
 #include <lib6lowpan/lib6lowpan.h>
 #include <lib6lowpan/ip.h>
@@ -10,8 +9,11 @@ module CCPowerMeterIpP {
 		interface Leds;
     interface Boot;
 
-    interface SplitControl as RadioControl;
+    interface SplitControl as BlipControl;
     interface UDP as Udp;
+    interface ForwardingTable;
+
+    interface SeqNoControl;
 
     interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
@@ -24,11 +26,10 @@ module CCPowerMeterIpP {
 }
 implementation {
 
-#define COILCUBE_VERSION 1
-
   struct sockaddr_in6 dest; // Where to send the packet
+  struct in6_addr next_hop; // for default route setup
 
-  pkt_data_t pkt_data = {COILCUBE_VERSION, 0};
+  pkt_data_t pkt_data = {COILCUBE_VERSION, 0, 0};
 
   uint16_t timing_cap_val;
 
@@ -49,22 +50,30 @@ implementation {
   event void Boot.booted() {
     call FlagGPIO.makeOutput();
 
+    // Get binary version of the ip address to send the packets to
     inet_pton6(RECEIVER_ADDR, &dest.sin6_addr);
     dest.sin6_port = htons(RECEIVER_PORT);
 
+    // Setup a default broadcast route for that destination
+    inet_pton6(ADDR_ALL_ROUTERS, &next_hop);
+    call ForwardingTable.addRoute(dest.sin6_addr.s6_addr, 128, &next_hop,
+      ROUTE_IFACE_154);
+
     state = STATE_INITIAL_READ;
-    call RadioControl.start();
+    call BlipControl.start();
   }
 
   void sendMsg () {
-    error_t  error;
     uint8_t* data;
+
+    // Tell the radio driver what sequence number to use
+    call SeqNoControl.set_sequence_number(fram_data.seq_no);
 
     // Set the payload as the pkt data
     pkt_data.counter = fram_data.counter;
-    memcpy(data, &pkt_data, sizeof(pkt_data_t));
+    pkt_data.seq_no = fram_data.seq_no;
 
-    error = call Udp.sendto(&dest, &pkt_data, sizeof(pkt_data_t));
+    call Udp.sendto(&dest, &pkt_data, sizeof(pkt_data_t));
     // Not much we can do if this returns an error
   }
 
@@ -73,7 +82,7 @@ implementation {
       case STATE_INITIAL_READ:
         // Read in the status from the FRAM
         state = STATE_INITIAL_READ_DONE;
-        call Fram.read(ADDR_ID, (uint8_t*) &fram_data, sizeof(fram_data_t));
+        call Fram.read(FRAM_ADDR_COUNT, (uint8_t*) &fram_data, sizeof(fram_data_t));
         break;
 
       case STATE_INITIAL_READ_DONE:
@@ -105,12 +114,12 @@ implementation {
           // Update the sequence number and store it and the count value
           state = STATE_SEND_PACKET;
           fram_data.seq_no++;
-          call Fram.write(ADDR_COUNT, &fram_data.counter, 2);
+          call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, 2);
 
         } else {
           // Just store the counter value and be done
           state = STATE_DONE;
-          call Fram.write(ADDR_COUNT, &fram_data.counter, 1);
+          call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, 1);
         }
         break;
       }
@@ -139,7 +148,7 @@ implementation {
 
   }
 
-  event void RadioControl.startDone (error_t error) {
+  event void BlipControl.startDone (error_t error) {
     call FlagGPIO.set();
 
     post state_machine();
@@ -183,7 +192,7 @@ implementation {
     post state_machine();
   }
 
-  event void RadioControl.stopDone (error_t error) {
+  event void BlipControl.stopDone (error_t error) {
     post state_machine();
   }
 
