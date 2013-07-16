@@ -668,6 +668,9 @@ implementation {
     // Set the sequence number
     data[3] = sequence_number++;
 
+    // HACK
+    //data[17] |= 0x40;
+
     // length | data[0] ... data[length-3] | automatically generated FCS
 
     //header = 0;
@@ -1265,7 +1268,8 @@ if(status.tx_active == 0) {
         RADIO_ASSERT( call RadioPacket.headerLength(msg) + length + call RadioPacket.metadataLength(msg) <= sizeof(message_t) );
 
         // we add the length of the CRC, which is automatically generated
-        getHeader(msg)->length = length + 2;
+        // but substract the length byte
+        getHeader(msg)->length = length + 1;
     }
 
     async command uint8_t RadioPacket.maxPayloadLength()
