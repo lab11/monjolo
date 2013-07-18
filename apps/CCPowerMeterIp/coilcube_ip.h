@@ -9,8 +9,9 @@
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 
-#define RECEIVER_ADDR "2001:470:1f10:131c::2"
+#define RECEIVER_ADDR "2001:470:1f10:1320::2"
 #define RECEIVER_PORT 4001
+#define PROFILE_ID "7aiOPJapXF"
 
 // Prefix for this node, just set it blank as we have no idea what the prefix
 // will be.
@@ -26,9 +27,10 @@ typedef struct {
 } __attribute__((packed)) fram_data_t;
 
 typedef struct {
-  uint8_t version; // version of the coilcube
-  uint8_t counter; // number of wakeups of the coilcube
-  uint8_t seq_no;  // copy of the 15.4 sequence number as this will be lost (udp)
+  char profile[10]; // GATD profile ID
+  uint8_t version;  // version of the coilcube
+  uint8_t counter;  // number of wakeups of the coilcube
+  uint8_t seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
 } __attribute__((packed)) pkt_data_t;
 
 typedef enum {

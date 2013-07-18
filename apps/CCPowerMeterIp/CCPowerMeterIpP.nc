@@ -29,7 +29,7 @@ implementation {
   struct sockaddr_in6 dest; // Where to send the packet
   struct in6_addr next_hop; // for default route setup
 
-  pkt_data_t pkt_data = {COILCUBE_VERSION, 0, 0};
+  pkt_data_t pkt_data = {PROFILE_ID, COILCUBE_VERSION, 0, 0};
 
   uint16_t timing_cap_val;
 
@@ -64,8 +64,6 @@ implementation {
   }
 
   void sendMsg () {
-    uint8_t* data;
-
     // Tell the radio driver what sequence number to use
     call SeqNoControl.set_sequence_number(fram_data.seq_no);
 
