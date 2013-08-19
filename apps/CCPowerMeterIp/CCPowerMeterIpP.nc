@@ -48,8 +48,6 @@ implementation {
   };
 
   event void Boot.booted() {
-    call FlagGPIO.makeOutput();
-
     // Get binary version of the ip address to send the packets to
     inet_pton6(RECEIVER_ADDR, &dest.sin6_addr);
     dest.sin6_port = htons(RECEIVER_PORT);
@@ -107,6 +105,7 @@ implementation {
 
         call AdcResource.release();
 
+        //if (1) {
         if ((timing_cap_val_local >> 8) <= 2) {
           // The capacitor is low enough to send a packet
           // Update the sequence number and store it and the count value
@@ -147,8 +146,6 @@ implementation {
   }
 
   event void BlipControl.startDone (error_t error) {
-    call FlagGPIO.set();
-
     post state_machine();
   }
 
@@ -172,7 +169,6 @@ implementation {
   }
 
   async event error_t ReadSingleChannel.singleDataReady (uint16_t data) {
-    call FlagGPIO.clr();
     timing_cap_val = data;
     post state_machine();
     return SUCCESS;
