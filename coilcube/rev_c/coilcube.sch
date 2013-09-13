@@ -9619,10 +9619,12 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <part name="+3V12" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="R4" library="rcl" deviceset="R-US_" device="R0603" value="1M">
-<attribute name="DIGIKEY" value="P4.7KGCT-ND"/>
+<attribute name="DIGIKEY" value="RHM1.00MCFCT-ND
+"/>
 </part>
 <part name="R5" library="rcl" deviceset="R-US_" device="R0603" value="4.7M">
-<attribute name="DIGIKEY" value="P4.7KGCT-ND"/>
+<attribute name="DIGIKEY" value="RHM4.7MCGDKR-ND
+"/>
 </part>
 </parts>
 <sheets>
