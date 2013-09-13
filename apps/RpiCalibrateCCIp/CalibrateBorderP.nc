@@ -38,6 +38,7 @@ implementation {
     uint64_t timestamp;
     uint8_t i;
     uint64_t id = 0;
+    char mac[25];
 
     timestamp = call UnixTime.getMicroseconds();
 
@@ -53,10 +54,13 @@ implementation {
 
     for (i=8; i<16; i++) {
       id += ((uint64_t) msg->ip6_hdr.ip6_src.s6_addr[i]) << (8*(15-i));
+      sprintf(mac+((i-8)*3), "%02x:", msg->ip6_hdr.ip6_src.s6_addr[i]);
     }
+    mac[23] = '\0';
 
     printf("{\"type\":\"coilcube\",");
     printf("\"id\":%llu,", id);
+    printf("\"mac\":\"%s\",", mac);
     printf("\"timestamp\":%llu,", timestamp);
     printf("\"seq_no\":%i,", ccpkt->seq_no);
     printf("\"counter\":%i}\n", ccpkt->counter);
