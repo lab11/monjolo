@@ -5,6 +5,7 @@ PFLAGS += -I%T/platforms/impulse
 PFLAGS += -I%T/platforms/impulse/chips/cc2420
 PFLAGS += -I%T/platforms/impulse/chips/ds2411
 PFLAGS += -I%T/platforms/impulse/chips/fm25lb
+PFLAGS += -I%T/platforms/impulse/chips/vtimer
 PFLAGS += -I%T/platforms/epic
 PFLAGS += -I%T/platforms/telosa
 
