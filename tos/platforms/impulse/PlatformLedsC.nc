@@ -19,7 +19,10 @@ implementation {
 
   Init = PlatformP.LedsInit;
 
-  Led0 = Led0Impl;
+  components PlatformLedsP;
+
+  Led0 = PlatformLedsP.FixedLed;
+  PlatformLedsP.BackwardsLed -> Led0Impl.GeneralIO;
   Led0Impl -> GeneralIOC.Port61;
 
   Led1 = Led1Impl;
