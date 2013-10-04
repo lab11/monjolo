@@ -41,12 +41,12 @@ implementation {
     dest.sin6_port = htons(PORT);
 
     call TimeControlGPIO.makeOutput();
+    call TimeControlGPIO.clr();
 
     call BlipControl.start();
   }
 
   event void BlipControl.startDone (error_t error) {
-    call TimeControlGPIO.set();
     call AdcResource.request();
   }
 
@@ -61,6 +61,11 @@ implementation {
     call UDPService.sendto(&dest, buf, 2);
     call AdcResource.release();
     call Timer.startOneShot(10000);
+
+    if (data < 0x000F) {
+      call TimeControlGPIO.set();
+      call TimeControlGPIO.clr();
+    }
     return SUCCESS;
   }
 
