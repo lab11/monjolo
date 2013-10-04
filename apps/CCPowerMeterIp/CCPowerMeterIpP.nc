@@ -37,17 +37,6 @@ implementation {
   fram_data_t fram_data;
   cc_state_e state;
 
-  msp430adc12_channel_config_t config = {
-    inch:         INPUT_CHANNEL_A0,
-    sref:         REFERENCE_AVcc_AVss,
-    ref2_5v:      REFVOLT_LEVEL_NONE,
-    adc12ssel:    SHT_SOURCE_ACLK,
-    adc12div:     SHT_CLOCK_DIV_1,
-    sht:          SAMPLE_HOLD_16_CYCLES,
-    sampcon_ssel: SAMPCON_SOURCE_ACLK,
-    sampcon_id:   SAMPCON_CLOCK_DIV_1
-  };
-
   event void Boot.booted() {
     // Get binary version of the ip address to send the packets to
     inet_pton6(RECEIVER_ADDR, &dest.sin6_addr);
