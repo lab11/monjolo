@@ -35,7 +35,7 @@ implementation {
       P5DIR = 0xfb;
 
       P6OUT = 0x00;
-      P6DIR = 0xff;
+      P6DIR = 0xfb;
 
       P1IE = 0;
       P2IE = 0;
