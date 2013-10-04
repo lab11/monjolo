@@ -5,6 +5,7 @@ PFLAGS += -I%T/platforms/coilcube
 PFLAGS += -I%T/platforms/coilcube/chips/cc2420
 PFLAGS += -I%T/platforms/coilcube/chips/ds2411
 PFLAGS += -I%T/platforms/coilcube/chips/fm25lb
+PFLAGS += -I%T/platforms/coilcube/chips/vtimer
 PFLAGS += -I%T/platforms/epic
 PFLAGS += -I%T/platforms/telosa
 

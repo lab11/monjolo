@@ -1,3 +1,12 @@
+/* Monjolo style sensing app.
+ *
+ * On boot, it reads the FRAM and updates a counter, reads the ADC line for the
+ * timing capacitor, and if the timing cap is discharged enough, sends a packet
+ * with the counter information.
+ *
+ * @author Samuel DeBruin <sdebruin@umich.edu>
+ * @author Brad Campbell <bradjc@umich.edu>
+ */
 
 configuration CCPowerMeterIpC {}
 implementation {
@@ -27,8 +36,9 @@ implementation {
   components HplMsp430GeneralIOC as FlagGPIOC;
   App.FlagGPIO -> FlagGPIOC.Port55;
 
-  components HplMsp430GeneralIOC as TimeControlGPIOC;
-  App.TimeControlGPIO -> TimeControlGPIOC.Port54;
+  components HplVTimerC;
+  App.TimeControlGPIO -> HplVTimerC.TimeControlGPIO;
+  App.VTimerAdcConfig -> HplVTimerC.VTimerAdcConfig;
 
   // ADC for time approximation
   components new Msp430Adc12ClientC() as Adc;

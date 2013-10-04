@@ -18,6 +18,7 @@ module CCPowerMeterIpP {
     interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
 
+    interface AdcConfigure<const msp430adc12_channel_config_t*> as VTimerAdcConfig;
     interface Msp430Adc12SingleChannel as ReadSingleChannel;
     interface Resource as AdcResource;
 
@@ -94,7 +95,7 @@ implementation {
         // Now have access to the adc
         // Sample the timing capacitor
         state = STATE_CHECK_PKT_DELAY_DONE;
-        call ReadSingleChannel.configureSingle(&config);
+        call ReadSingleChannel.configureSingle(call VTimerAdcConfig.getConfiguration());
         call ReadSingleChannel.getData();
         break;
 
