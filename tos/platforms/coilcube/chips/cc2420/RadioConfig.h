@@ -64,4 +64,30 @@ typedef uint16_t tradio_size;
  */
 #define RADIO_ALARM_MILLI_EXP	2
 
+/**
+ * Timing defines that change as the clocks on the platform change
+ */
+enum cc2420X_timing_enums {
+  MICRO_SEC = 8, // 8Mhz clock (TMicro)
+
+  CC2420X_SYMBOL_TIME = 1, // 16us (used with T32Khz)
+  //CC2420X_SYMBOL_TIME = 16*MICRO_SEC, // 16us (used with TMicro)
+
+  PD_2_IDLE_TIME = 10, // 0.86ms (used with T32Khz)
+  //PD_2_IDLE_TIME = 9000, // ~0.86ms (used with TMicro)
+
+  IDLE_2_RX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
+
+  STROBE_TO_TX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
+  // TX SFD delay is computed as follows:
+  // a.) STROBE_TO_TX_ON_TIME is required for preamble transmission to
+  // start after TX strobe is issued
+  // b.) the SFD byte is the 5th byte transmitted (10 symbol periods)
+  // c.) there's approximately a 25us delay between the strobe and reading
+  // the timer register
+  TX_SFD_DELAY = STROBE_TO_TX_ON_TIME + 10 * CC2420X_SYMBOL_TIME - 25*MICRO_SEC,
+  // TX SFD is captured in hardware
+  RX_SFD_DELAY = 0,
+};
+
 #endif//__RADIOCONFIG_H__
