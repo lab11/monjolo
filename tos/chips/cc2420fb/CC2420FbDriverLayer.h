@@ -24,7 +24,6 @@
 #ifndef __CC2420FBDRIVERLAYER_H__
 #define __CC2420FBDRIVERLAYER_H__
 
-
 typedef nx_struct cc2420_header_t {
   nxle_uint8_t length;
 } cc2420_header_t;
@@ -36,23 +35,6 @@ typedef struct cc2420_metadata_t {
     uint8_t rssi;
   };
 } cc2420_metadata_t;
-
-enum cc2420X_timing_enums {
-  MICRO_SEC = 8, // 8Mhz clock (TMicro)
-
-  IDLE_2_RX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
-
-  STROBE_TO_TX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
-  // TX SFD delay is computed as follows:
-  // a.) STROBE_TO_TX_ON_TIME is required for preamble transmission to
-  // start after TX strobe is issued
-  // b.) the SFD byte is the 5th byte transmitted (10 symbol periods)
-  // c.) there's approximately a 25us delay between the strobe and reading
-  // the timer register
-  TX_SFD_DELAY = STROBE_TO_TX_ON_TIME + 10 * CC2420X_SYMBOL_TIME - 25*MICRO_SEC,
-  // TX SFD is captured in hardware
-  RX_SFD_DELAY = 0,
-};
 
 enum cc2420X_reg_access_enums {
   CC2420X_CMD_REGISTER_MASK = 0x3f,
