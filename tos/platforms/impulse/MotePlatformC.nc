@@ -9,6 +9,26 @@ module MotePlatformC @safe() {
 }
 implementation {
 
+/*
+ * This function gets called automatically by the linker/init sequence.
+ * It fits in before the c runtime gets going.
+ *
+ * @author Brad Campbell <bradjc@umich.edu>
+ */
+__attribute__((naked, section(".init3"))) void __low_level_init()  @C() @spontaneous() {
+    // enable VREN of radio
+    P4DIR |= 1<<5;
+    P4OUT |= 1<<5;
+
+    WDTCTL = WDTPW + WDTHOLD; // Stop watchdog timer
+
+    BCSCTL1 = XT2OFF | (0x07); // select highest DCO freq possible
+    BCSCTL2 = DIVS0 | DCOR;    // select external resistor
+    DCOCTL = 0xE0;             // highest DCOx possible
+
+    CLR_FLAG( IE1, OFIE );
+  }
+
   command error_t Init.init() {
     // reset all of the ports to be input and using i/o functionality
     atomic {
@@ -28,10 +48,10 @@ implementation {
       P3OUT = 0x00;
       P3DIR = 0xf1;
 
-      P4OUT = 0xdd;
+      P4OUT = 0xfd;
       P4DIR = 0xfd;
 
-      P5OUT = 0xE7;
+      P5OUT = 0xF7;
       P5DIR = 0xfb;
 
       P6OUT = 0x00;
