@@ -117,6 +117,8 @@ implementation {
         call TimeControlGPIO.makeOutput();
         call TimeControlGPIO.set();
         sendMsg();
+        call TimeControlGPIO.clr();
+        call Leds.led0On();
         break;
 
       case STATE_SEND_PACKET_DONE:
