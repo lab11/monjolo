@@ -36,23 +36,18 @@
 #include <RadioAssert.h>
 #include "RadioConfig.h"
 
-generic module RadioAlarmP()
-{
-	provides
-	{
-		interface RadioAlarm[uint8_t id];
-	}
+generic module RadioAlarmP() {
+  provides {
+    interface RadioAlarm[uint8_t id];
+  }
 
-	uses
-	{
+  uses {
     interface Alarm<TRadio, tradio_size>;
-	//	interface Alarm<TRadioAlarm, tradio_size>;
-		interface Tasklet;
-	}
+    interface Tasklet;
+  }
 }
 
-implementation
-{
+implementation {
 	norace uint8_t state;
 	enum
 	{

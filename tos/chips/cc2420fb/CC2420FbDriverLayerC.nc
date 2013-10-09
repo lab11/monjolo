@@ -42,7 +42,6 @@ configuration CC2420FbDriverLayerC
 		interface LocalTime<TRadio> as LocalTimeRadio;
 
     	interface Alarm<TRadio, tradio_size>;
-    	//interface Alarm<TRadioAlarm, tradio_size>;
 
     	interface LowPowerListening;
 	    interface PacketLink;
