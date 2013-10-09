@@ -38,120 +38,114 @@ typedef struct cc2420_metadata_t {
 } cc2420_metadata_t;
 
 enum cc2420X_timing_enums {
-  	MICRO_SEC = 8, // 8Mhz clock (TMicro)
+  MICRO_SEC = 8, // 8Mhz clock (TMicro)
 
-	CC2420X_SYMBOL_TIME = 1, // 16us (used with T32Khz)
-  	//CC2420X_SYMBOL_TIME = 16*MICRO_SEC, // 16us (used with TMicro)
+  IDLE_2_RX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
 
-	IDLE_2_RX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
-
-	PD_2_IDLE_TIME = 10, // 0.86ms (used with T32Khz)
-  	//PD_2_IDLE_TIME = 9000, // ~0.86ms (used with TMicro)
-
-	STROBE_TO_TX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
-	// TX SFD delay is computed as follows:
-	// a.) STROBE_TO_TX_ON_TIME is required for preamble transmission to
-	// start after TX strobe is issued
-	// b.) the SFD byte is the 5th byte transmitted (10 symbol periods)
-	// c.) there's approximately a 25us delay between the strobe and reading
-	// the timer register
-	TX_SFD_DELAY = STROBE_TO_TX_ON_TIME + 10 * CC2420X_SYMBOL_TIME - 25*MICRO_SEC,
-	// TX SFD is captured in hardware
-	RX_SFD_DELAY = 0,
+  STROBE_TO_TX_ON_TIME = 2 * CC2420X_SYMBOL_TIME,
+  // TX SFD delay is computed as follows:
+  // a.) STROBE_TO_TX_ON_TIME is required for preamble transmission to
+  // start after TX strobe is issued
+  // b.) the SFD byte is the 5th byte transmitted (10 symbol periods)
+  // c.) there's approximately a 25us delay between the strobe and reading
+  // the timer register
+  TX_SFD_DELAY = STROBE_TO_TX_ON_TIME + 10 * CC2420X_SYMBOL_TIME - 25*MICRO_SEC,
+  // TX SFD is captured in hardware
+  RX_SFD_DELAY = 0,
 };
 
 enum cc2420X_reg_access_enums {
-	CC2420X_CMD_REGISTER_MASK = 0x3f,
-	CC2420X_CMD_REGISTER_READ = 0x40,
-	CC2420X_CMD_REGISTER_WRITE = 0x00,
-	CC2420X_CMD_TXRAM_WRITE	= 0x80,
+  CC2420X_CMD_REGISTER_MASK = 0x3f,
+  CC2420X_CMD_REGISTER_READ = 0x40,
+  CC2420X_CMD_REGISTER_WRITE = 0x00,
+  CC2420X_CMD_TXRAM_WRITE = 0x80,
 };
 
 typedef union cc2420X_status {
-	uint16_t value;
-	struct {
-	  unsigned  reserved0:1;
-	  unsigned  rssi_valid:1;
-	  unsigned  lock:1;
-	  unsigned  tx_active:1;
+  uint16_t value;
+  struct {
+    unsigned  reserved0:1;
+    unsigned  rssi_valid:1;
+    unsigned  lock:1;
+    unsigned  tx_active:1;
 
-	  unsigned  enc_busy:1;
-	  unsigned  tx_underflow:1;
-	  unsigned  xosc16m_stable:1;
-	  unsigned  reserved7:1;
-	};
+    unsigned  enc_busy:1;
+    unsigned  tx_underflow:1;
+    unsigned  xosc16m_stable:1;
+    unsigned  reserved7:1;
+  };
 } cc2420X_status_t;
 
 typedef union cc2420X_iocfg0 {
-	uint16_t value;
-	struct {
-	  unsigned  fifop_thr:7;
-	  unsigned  cca_polarity:1;
-	  unsigned  sfd_polarity:1;
-	  unsigned  fifop_polarity:1;
-	  unsigned  fifo_polarity:1;
-	  unsigned  bcn_accept:1;
-	  unsigned  reserved:4; // write as 0
-	} f;
+  uint16_t value;
+  struct {
+    unsigned  fifop_thr:7;
+    unsigned  cca_polarity:1;
+    unsigned  sfd_polarity:1;
+    unsigned  fifop_polarity:1;
+    unsigned  fifo_polarity:1;
+    unsigned  bcn_accept:1;
+    unsigned  reserved:4; // write as 0
+  } f;
 } cc2420X_iocfg0_t;
 
 // TODO: make sure that we avoid wasting RAM
 static const cc2420X_iocfg0_t cc2420X_iocfg0_default = {.f.fifop_thr = 64, .f.cca_polarity = 0, .f.sfd_polarity = 0, .f.fifop_polarity = 0, .f.fifo_polarity = 0, .f.bcn_accept = 0, .f.reserved = 0};
 
 typedef union cc2420X_iocfg1 {
-	uint16_t value;
-	struct {
-	  unsigned  ccamux:5;
-	  unsigned  sfdmux:5;
-	  unsigned  hssd_src:3;
-	  unsigned  reserved:3; // write as 0
-	} f;
+  uint16_t value;
+  struct {
+    unsigned  ccamux:5;
+    unsigned  sfdmux:5;
+    unsigned  hssd_src:3;
+    unsigned  reserved:3; // write as 0
+  } f;
 } cc2420X_iocfg1_t;
 
 static const cc2420X_iocfg1_t cc2420X_iocfg1_default = {.value = 0};
 
 typedef union cc2420X_fsctrl {
-	uint16_t value;
-	struct {
-	  unsigned  freq:10;
-	  unsigned  lock_status:1;
-	  unsigned  lock_length:1;
-	  unsigned  cal_running:1;
-	  unsigned  cal_done:1;
-	  unsigned  lock_thr:2;
-	} f;
+  uint16_t value;
+  struct {
+    unsigned  freq:10;
+    unsigned  lock_status:1;
+    unsigned  lock_length:1;
+    unsigned  cal_running:1;
+    unsigned  cal_done:1;
+    unsigned  lock_thr:2;
+  } f;
 } cc2420X_fsctrl_t;
 
 static const cc2420X_fsctrl_t cc2420X_fsctrl_default = {.f.lock_thr = 1, .f.freq = 357, .f.lock_status = 0, .f.lock_length = 0, .f.cal_running = 0, .f.cal_done = 0};
 
 typedef union cc2420X_mdmctrl0 {
-	uint16_t value;
-	struct {
-	  unsigned  preamble_length:4;
-	  unsigned  autoack:1;
-	  unsigned  autocrc:1;
-	  unsigned  cca_mode:2;
-	  unsigned  cca_hyst:3;
-	  unsigned  adr_decode:1;
-	  unsigned  pan_coordinator:1;
-	  unsigned  reserved_frame_mode:1;
-	  unsigned  reserved:2;
-	} f;
+  uint16_t value;
+  struct {
+    unsigned  preamble_length:4;
+    unsigned  autoack:1;
+    unsigned  autocrc:1;
+    unsigned  cca_mode:2;
+    unsigned  cca_hyst:3;
+    unsigned  adr_decode:1;
+    unsigned  pan_coordinator:1;
+    unsigned  reserved_frame_mode:1;
+    unsigned  reserved:2;
+  } f;
 } cc2420X_mdmctrl0_t;
 
 static const cc2420X_mdmctrl0_t cc2420X_mdmctrl0_default = {.f.preamble_length = 2, .f.autocrc = 1, .f.cca_mode = 3, .f.cca_hyst = 2, .f.adr_decode = 1};
 
 typedef union cc2420X_txctrl {
-	uint16_t value;
-	struct {
-	  unsigned  pa_level:5;
-	  unsigned reserved:1;
-	  unsigned pa_current:3;
-	  unsigned txmix_current:2;
-	  unsigned txmix_caparray:2;
-  	  unsigned tx_turnaround:1;
-  	  unsigned txmixbuf_cur:2;
-	} f;
+  uint16_t value;
+  struct {
+    unsigned  pa_level:5;
+    unsigned reserved:1;
+    unsigned pa_current:3;
+    unsigned txmix_current:2;
+    unsigned txmix_caparray:2;
+      unsigned tx_turnaround:1;
+      unsigned txmixbuf_cur:2;
+  } f;
 } cc2420X_txctrl_t;
 
 static const cc2420X_txctrl_t cc2420X_txctrl_default = {.f.pa_level = 31, .f.reserved = 1, .f.pa_current = 3, .f.tx_turnaround = 1, .f.txmixbuf_cur = 2};
@@ -166,8 +160,8 @@ static const cc2420X_txctrl_t cc2420X_txctrl_default = {.f.pa_level = 31, .f.res
 #endif
 
 enum {
-	CC2420X_TX_PWR_MASK = 0x1f,
-	CC2420X_CHANNEL_MASK = 0x1f,
+  CC2420X_TX_PWR_MASK = 0x1f,
+  CC2420X_CHANNEL_MASK = 0x1f,
 };
 
 enum cc2420X_config_reg_enums {
