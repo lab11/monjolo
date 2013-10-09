@@ -53,12 +53,16 @@ implementation {
 
   event void Msp430ClockInit.initClocks()
   {
+    // MOVED TO MOTEPLATFORMC.nc
+
+
     // BCSCTL1
     // .XT2OFF = 1; disable the external oscillator for SCLK and MCLK
     // .XTS = 0; set low frequency mode for LXFT1
     // .DIVA = 0; set the divisor on ACLK to 1
     // .RSEL = 5
-    BCSCTL1 = XT2OFF | (RSEL2|RSEL0);
+    //BCSCTL1 = XT2OFF | (RSEL2|RSEL0);
+    //BCSCTL1 = XT2OFF | (RSEL2|RSEL1|RSEL0);
 
     // BCSCTL2
     // .SELM = 0; select DCOCLK as source for MCLK
@@ -66,10 +70,11 @@ implementation {
     // .SELS = 0; select DCOCLK as source for SCLK
     // .DIVS = 2; set the divisor of SCLK to 2
     // .DCOR = 1; select external resistor for DCO
-    BCSCTL2 = DIVS0 | DCOR;
+    //BCSCTL2 = DIVS0 | DCOR;
+    //BCSCTL2 = DCOR;
 
     // IE1.OFIE = 0; no interrupt for oscillator fault
-    CLR_FLAG( IE1, OFIE );
+    //CLR_FLAG( IE1, OFIE );
   }
 
   event void Msp430ClockInit.initTimerA()
@@ -99,7 +104,7 @@ implementation {
     // .MC = 0; initially disabled
     // .TBCLR = 0; reset timer B
     // .TBIE = 1; enable timer B interrupts
-    TBCTL = TBSSEL1 | TBIE | (2<<6);
+    TBCTL = TBSSEL1 | TBIE | (0x3<<6);
   }
 
 }

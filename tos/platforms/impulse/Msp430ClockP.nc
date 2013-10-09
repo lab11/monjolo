@@ -236,9 +236,9 @@ implementation
 
     atomic
     {
-      signal Msp430ClockInit.setupDcoCalibrate();
+    //  signal Msp430ClockInit.setupDcoCalibrate();
     //  busyCalibrateDco();
-      signal Msp430ClockInit.initClocks();
+    //  signal Msp430ClockInit.initClocks();
       signal Msp430ClockInit.initTimerA();
       signal Msp430ClockInit.initTimerB();
       startTimerA();
