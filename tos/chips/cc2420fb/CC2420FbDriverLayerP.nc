@@ -523,8 +523,7 @@ implementation {
             // start oscillator
             strobe(CC2420X_SXOSCON);
 
-        //    call RadioAlarm.wait(PD_2_IDLE_TIME); // .86ms OSC startup time
-            call RadioAlarm.wait(10); // .86ms OSC startup time
+            call RadioAlarm.wait(PD_2_IDLE_TIME); // .86ms OSC startup time
 
             state = STATE_PD_2_IDLE;
         }
