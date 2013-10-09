@@ -37,7 +37,6 @@ configuration HplCC2420FbC {
 		interface LocalTime<TRadio> as LocalTimeRadio;
 
 		interface Alarm<TRadio,uint16_t>;
-    //interface Alarm<TRadioAlarm,uint16_t>; // New
 	}
 }
 implementation {
@@ -84,11 +83,10 @@ implementation {
   FifopInterruptC.HplInterrupt -> HplMsp430InterruptC.Port10;
   FifopInterrupt= FifopInterruptC;
 
-	components LocalTime32khzC;
-	LocalTimeRadio = LocalTime32khzC.LocalTime;
+	components LocalTimeMicroC as LocalTimeC;
+  LocalTimeRadio = LocalTimeC.LocalTime;
 
-	components new Alarm32khz16C() as AlarmC;
-  //components new AlarmMicro16C() as AlarmC;   // New
+  components new AlarmMicro16C() as AlarmC;   // New
 	Alarm = AlarmC;
 
 }
