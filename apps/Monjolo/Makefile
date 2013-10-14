@@ -1,0 +1,8 @@
+COMPONENT=MonjoloC
+
+CFLAGS += -DCC2420X_DEF_CHANNEL=18
+
+CFLAGS += -DASSERT_NONE
+
+TINYOS_ROOT_DIR?=../..
+include $(TINYOS_ROOT_DIR)/Makefile.include

@@ -8,17 +8,17 @@
  * @author Brad Campbell <bradjc@umich.edu>
  */
 
-configuration CCPowerMeterIpC {}
+configuration MonjoloC {}
 implementation {
 
 	components MainC;
-  components CCPowerMeterIpP as App;
-  components LedsC;
-  components Ieee154BareC;
-
+  components MonjoloP as App;
   App.Boot -> MainC.Boot;
+
+  components LedsC;
   App.Leds -> LedsC.Leds;
 
+  // FRAM
   components Fm25lbC as FramC;
   App.Fram -> FramC.Fm25lb;
 
@@ -30,18 +30,18 @@ implementation {
   components new UdpSocketC() as Udp;
   App.Udp -> Udp.UDP;
 
+  // Allow the app to pick the sequence number
   components CC2420FbDriverLayerP as CC2420Fb;
   App.SeqNoControl -> CC2420Fb.SeqNoControl;
 
-  components HplMsp430GeneralIOC as FlagGPIOC;
-  App.FlagGPIO -> FlagGPIOC.Port55;
+  // Platform specific pin for debugging
+  components HplFlagC;
+  App.FlagGPIO -> HplFlagC.FlagGPIO;
 
   components HplVTimerC;
+  components new Msp430Adc12ClientC() as Adc;
   App.TimeControlGPIO -> HplVTimerC.TimeControlGPIO;
   App.VTimerAdcConfig -> HplVTimerC.VTimerAdcConfig;
-
-  // ADC for time approximation
-  components new Msp430Adc12ClientC() as Adc;
-  App.ReadSingleChannel -> Adc.Msp430Adc12SingleChannel;
+  App.VTimerRead -> Adc.Msp430Adc12SingleChannel;
   App.AdcResource -> Adc.Resource;
 }

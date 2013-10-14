@@ -1,10 +1,11 @@
 #include "Timer.h"
 #include "Msp430Adc12.h"
-#include "coilcube_ip.h"
+#include "monjolo.h"
+#include "monjolo_platform.h"
 #include <lib6lowpan/lib6lowpan.h>
 #include <lib6lowpan/ip.h>
 
-module CCPowerMeterIpP {
+module MonjoloP {
 	uses {
 		interface Leds;
     interface Boot;
@@ -12,15 +13,15 @@ module CCPowerMeterIpP {
     interface SplitControl as BlipControl;
     interface UDP as Udp;
     interface ForwardingTable;
-
     interface SeqNoControl;
 
-    interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
 
-    interface AdcConfigure<const msp430adc12_channel_config_t*> as VTimerAdcConfig;
-    interface Msp430Adc12SingleChannel as ReadSingleChannel;
+    interface HplMsp430GeneralIO as FlagGPIO;
+
     interface Resource as AdcResource;
+    interface AdcConfigure<const msp430adc12_channel_config_t*> as VTimerAdcConfig;
+    interface Msp430Adc12SingleChannel as VTimerRead;
 
     interface HplMsp430GeneralIO as TimeControlGPIO;
   }
@@ -30,7 +31,7 @@ implementation {
   struct sockaddr_in6 dest; // Where to send the packet
   struct in6_addr next_hop; // for default route setup
 
-  pkt_data_t pkt_data = {PROFILE_ID, COILCUBE_VERSION, 0, 0};
+  pkt_data_t pkt_data = {PROFILE_ID, MONJOLO_VERSION, 0, 0};
 
   uint16_t timing_cap_val;
 
@@ -84,8 +85,8 @@ implementation {
         // Now have access to the adc
         // Sample the timing capacitor
         state = STATE_CHECK_PKT_DELAY_DONE;
-        call ReadSingleChannel.configureSingle(call VTimerAdcConfig.getConfiguration());
-        call ReadSingleChannel.getData();
+        call VTimerRead.configureSingle(call VTimerAdcConfig.getConfiguration());
+        call VTimerRead.getData();
         break;
 
       case STATE_CHECK_PKT_DELAY_DONE: {
@@ -160,7 +161,7 @@ implementation {
     post state_machine();
   }
 
-  async event error_t ReadSingleChannel.singleDataReady (uint16_t data) {
+  async event error_t VTimerRead.singleDataReady (uint16_t data) {
     timing_cap_val = data;
     post state_machine();
     return SUCCESS;
@@ -183,7 +184,7 @@ implementation {
   }
 
   async event uint16_t* COUNT_NOK(numSamples)
-  ReadSingleChannel.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
+  VTimerRead.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
     uint16_t numSamples) {
     return NULL;
   }
