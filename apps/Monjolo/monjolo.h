@@ -9,6 +9,7 @@
 // 1: coilcube rev a, rev b, rev c
 // 2: sEHnsor
 // 3: impulse rev a, rev b
+// 4: coilcube with gecko power supply
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 

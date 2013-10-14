@@ -5,6 +5,12 @@
 #include <lib6lowpan/lib6lowpan.h>
 #include <lib6lowpan/ip.h>
 
+/* Monjolo application with IPv6/6LoWPAN
+ *
+ * @author Sam DeBruin <sdebruin@umich.edu>
+ * @author Brad Campbell <bradjc@umich.edu>
+ */
+
 module MonjoloP {
 	uses {
 		interface Leds;
