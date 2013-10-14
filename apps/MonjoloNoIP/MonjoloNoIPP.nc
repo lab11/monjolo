@@ -1,11 +1,12 @@
 #include "Timer.h"
 #include "Msp430Adc12.h"
-#include "coilcube.h"
+#include "monjolo.h"
+#include "monjolo_platform.h"
 #include "message.h"
 #include "Ieee154.h"
 #include "ieee154_header.h"
 
-module CCPowerMeterP {
+module MonjoloNoIPP {
 	uses {
 		interface Leds;
     interface Boot;
@@ -15,18 +16,18 @@ module CCPowerMeterP {
     interface Send as RadioSend;
     interface Receive as RadioReceive;
 
-    interface HplMsp430GeneralIO as FlagGPIO;
     interface Fm25lb as Fram;
 
-    interface Msp430Adc12SingleChannel as ReadSingleChannel;
+    interface HplMsp430GeneralIO as FlagGPIO;
+
     interface Resource as AdcResource;
+    interface AdcConfigure<const msp430adc12_channel_config_t*> as VTimerAdcConfig;
+    interface Msp430Adc12SingleChannel as VTimerRead;
 
     interface HplMsp430GeneralIO as TimeControlGPIO;
   }
 }
 implementation {
-
-#define COILCUBE_VERSION 1
 
   message_t msg;
   struct ieee154_frame_addr out_frame;
@@ -39,21 +40,10 @@ implementation {
   fram_data_t fram_data;
   cc_state_e state;
 
-  msp430adc12_channel_config_t config = {
-    inch:         INPUT_CHANNEL_A0,
-    sref:         REFERENCE_AVcc_AVss,
-    ref2_5v:      REFVOLT_LEVEL_NONE,
-    adc12ssel:    SHT_SOURCE_ACLK,
-    adc12div:     SHT_CLOCK_DIV_1,
-    sht:          SAMPLE_HOLD_16_CYCLES,
-    sampcon_ssel: SAMPCON_SOURCE_ACLK,
-    sampcon_id:   SAMPCON_CLOCK_DIV_1
-  };
-
   event void Boot.booted() {
-    call FlagGPIO.makeOutput();
+  //  call FlagGPIO.makeOutput();
 
-    pkt_data.version = COILCUBE_VERSION;
+    pkt_data.version = MONJOLO_VERSION;
 
     state = STATE_INITIAL_READ;
     call RadioControl.start();
@@ -112,8 +102,8 @@ implementation {
         // Now have access to the adc
         // Sample the timing capacitor
         state = STATE_CHECK_PKT_DELAY_DONE;
-        call ReadSingleChannel.configureSingle(&config);
-        call ReadSingleChannel.getData();
+        call VTimerRead.configureSingle(call VTimerAdcConfig.getConfiguration());
+        call VTimerRead.getData();
         break;
 
       case STATE_CHECK_PKT_DELAY_DONE: {
@@ -163,7 +153,7 @@ implementation {
   }
 
   event void RadioControl.startDone (error_t error) {
-    call FlagGPIO.set();
+    //call FlagGPIO.set();
 
     post state_machine();
   }
@@ -187,8 +177,8 @@ implementation {
     post state_machine();
   }
 
-  async event error_t ReadSingleChannel.singleDataReady (uint16_t data) {
-    call FlagGPIO.clr();
+  async event error_t VTimerRead.singleDataReady (uint16_t data) {
+  //  call FlagGPIO.clr();
     timing_cap_val = data;
     post state_machine();
     return SUCCESS;
@@ -220,7 +210,7 @@ implementation {
   }
 
   async event uint16_t* COUNT_NOK(numSamples)
-  ReadSingleChannel.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
+  VTimerRead.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
     uint16_t numSamples) {
     return NULL;
   }
