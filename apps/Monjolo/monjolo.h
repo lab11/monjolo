@@ -3,9 +3,12 @@
 
 #include "Ieee154.h"
 
-// Constant to keep track of which revision of coilcube sent the packet.
-// This will probably be useful to determine what wakeups and packets mean.
-#define COILCUBE_VERSION 1
+// MONJOLO_VERSION
+// Constant to keep track of which revision of monjolo sent the packet.
+// 0: unused
+// 1: coilcube rev a, rev b, rev c
+// 2: sEHnsor
+// 3: impulse rev a, rev b
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 
