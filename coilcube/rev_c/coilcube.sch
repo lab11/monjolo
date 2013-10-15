@@ -9619,19 +9619,17 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <part name="+3V12" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="R4" library="rcl" deviceset="R-US_" device="R0603" value="1M">
-<attribute name="DIGIKEY" value="RHM1.00MCFCT-ND
-"/>
+<attribute name="DIGIKEY" value="RHM1.00MCFCT-ND "/>
 </part>
 <part name="R5" library="rcl" deviceset="R-US_" device="R0603" value="4.7M">
-<attribute name="DIGIKEY" value="RHM4.7MCGDKR-ND
-"/>
+<attribute name="DIGIKEY" value="RHM4.7MCGDKR-ND "/>
 </part>
 </parts>
 <sheets>
 <sheet>
 <description>EPIC &amp; Programmer</description>
 <plain>
-<text x="149.86" y="175.26" size="1.778" layer="97" align="bottom-center">Programmer Connection</text>
+<text x="180.34" y="134.62" size="1.778" layer="97" align="bottom-center">Programmer Connection</text>
 <text x="63.5" y="170.18" size="1.778" layer="97" align="bottom-center">EPIC</text>
 <text x="60.96" y="40.64" size="1.778" layer="97" align="bottom-center">FRAM</text>
 <text x="195.58" y="83.82" size="1.778" layer="97" align="bottom-center">Timing Circuit</text>
