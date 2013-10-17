@@ -21,7 +21,8 @@ import sh
 from sh import pdftk
 from sh import pdf2svg
 
-CASE_LABEL = 'case_label.pdf'
+CASE_LABEL_PDF = 'case_label.pdf'
+CASE_LABEL_SVG = 'case_label.svg'
 
 def validate (rawid):
 	rawid = rawid.strip()
@@ -96,6 +97,9 @@ if len(ids) == 0:
 label_sheet = sg.SVGFigure('612', '792')
 labels = []
 
+# Convert the case_label.pdf to svg
+pdf2svg(CASE_LABEL_PDF, CASE_LABEL_SVG)
+
 for nodeid in ids:
 	nodeidstr = nodeid.replace(':', '')
 
@@ -108,7 +112,7 @@ for nodeid in ids:
 	# Create the node specific svg
 	fig = sg.SVGFigure('108px', '72px')
 
-	rawlabel = sg.fromfile('case_label2.svg')
+	rawlabel = sg.fromfile(CASE_LABEL_SVG)
 	rawlabelr = rawlabel.getroot()
 
 	qr = sg.fromfile('qr_{}.svg'.format(nodeidstr))
@@ -116,7 +120,7 @@ for nodeid in ids:
 	qrr.moveto('58', '6', 1.7) # position correctly (hand tweaked)
 
 	#txt = sg.TextElement(100,318, nodeid, size=28, font='Courier')
-	txt = sg.TextElement('19','64', nodeid, size=6, font='Courier')
+	txt = sg.TextElement('19','62.5', nodeid, size=6, font='Courier')
 	fig.append([rawlabelr, qrr, txt])
 	fig.save('label_{}.svg'.format(nodeidstr))
 
@@ -141,7 +145,7 @@ for nodeid in ids:
 
 label_sheet.append(labels)
 label_sheet.save('all.svg')
-sh.rsvg_convert('-f', 'pdf', '-d', '100', '-p', '100', '-o', 'all.pdf', 'all.svg')
+sh.rsvg_convert('-f', 'pdf', '-d', '72', '-p', '72', '-o', 'all.pdf', 'all.svg')
 
 
 
