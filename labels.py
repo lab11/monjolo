@@ -106,6 +106,8 @@ for nodeid in ids:
 	# Create the QR code
 	img = qrcode.make(nodeid,
 		image_factory=qrcode.image.svg.SvgPathImage,
+		box_size=7,
+		version=4,
 		border=0)
 	img.save('qr_{}.svg'.format(nodeidstr))
 
