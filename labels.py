@@ -24,6 +24,8 @@ from sh import pdf2svg
 CASE_LABEL_PDF = 'case_label.pdf'
 CASE_LABEL_SVG = 'case_label.svg'
 
+QR_CODE_STR = '{}|coilcube|A|http://lab11.github.io/monjolo'
+
 def validate (rawid):
 	rawid = rawid.strip()
 	# see if it just nicely formated
@@ -104,7 +106,7 @@ for nodeid in ids:
 	nodeidstr = nodeid.replace(':', '')
 
 	# Create the QR code
-	img = qrcode.make(nodeid,
+	img = qrcode.make(QR_CODE_STR.format(nodeid),
 		image_factory=qrcode.image.svg.SvgPathImage,
 		box_size=7,
 		version=4,
