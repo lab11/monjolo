@@ -26,7 +26,7 @@ __attribute__((naked, section(".init3"))) void __low_level_init()  @C() @spontan
     BCSCTL2 = DIVS0 | DCOR;    // select external resistor
     DCOCTL = 0xE0;             // highest DCOx possible
 
-    CLR_FLAG( IE1, OFIE );
+    CLR_FLAG(IE1, OFIE);
   }
 
   command error_t Init.init() {
