@@ -3,7 +3,7 @@
  */
 
 #include "border.h"
-#include "coilcube_ip.h"
+#include "monjolo.h"
 
 module CalibrateBorderP {
   provides {
