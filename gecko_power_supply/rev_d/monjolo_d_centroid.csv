@@ -1,0 +1,37 @@
+# Centroid Data for pc board: "monjolo_d.brd" as of: 6/27/13 2:31 PM
+# Measurements are in inches. Comma delimited
+# Only surface mount components included
+
+RefDes,Layer,LocationX,LocationY,Rotation
+C1,Top,0.700,0.140,270
+C2,Top,0.475,0.175,270
+C3,Top,0.115,0.440,270
+C4,Top,0.115,0.325,270
+C5,Top,0.115,0.210,270
+C6,Top,0.115,0.095,270
+D1,Bottom,0.605,0.275,0
+D2,Bottom,1.235,0.115,0
+JP2,Top,1.220,0.100,0
+JP3,Top,0.280,0.435,0
+JP4,Top,1.160,0.450,0
+L1,Top,0.335,0.170,270
+Q1,Top,0.695,0.410,270
+Q2,Top,1.060,0.405,270
+Q3,Top,0.960,0.240,0
+R1,Top,0.780,0.225,90
+R2,Top,1.100,0.180,270
+R3,Top,0.415,0.310,0
+R4,Top,0.870,0.410,270
+R5,Top,1.045,0.135,90
+R6,Top,0.800,0.410,270
+R7,Top,0.570,0.445,0
+R8,Top,0.940,0.410,270
+R9,Top,0.860,0.225,270
+R10,Top,0.935,0.100,180
+R11,Top,0.535,0.350,270
+R12,Top,0.660,0.325,0
+R13,Top,0.660,0.270,180
+R14,Top,1.150,0.040,0
+U1,Top,0.280,0.335,180
+U2,Top,0.415,0.410,0
+U3,Top,0.590,0.170,0
