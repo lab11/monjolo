@@ -22,3 +22,5 @@
 *.smt
 *.tps
 *.centroid
+*.pdf
+*.svg
