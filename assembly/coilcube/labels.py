@@ -55,7 +55,7 @@ def validate (rawid):
 		print('Invalid ID: {}'.format(rawid))
 		return None
 
-POSITION_START_X = 4
+POSITION_START_X = 0
 POSITION_START_Y = 0
 x = POSITION_START_X
 y = POSITION_START_Y
