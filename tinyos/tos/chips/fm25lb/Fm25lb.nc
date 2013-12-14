@@ -7,18 +7,18 @@
 #include "Fm25lb.h"
 
 interface Fm25lb {
-  command error_t read(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len);
-  command error_t write(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len);
+  command error_t read (uint16_t addr, uint8_t* buf, uint16_t len);
+  command error_t write (uint16_t addr, uint8_t* buf, uint16_t len);
 
-  command error_t readStatus(uint8_t* buf);
-  command error_t writeStatus(uint8_t* buf);
+  command error_t readStatus ();
+  command error_t writeStatus (uint8_t status);
 
-  event void readDone(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len, error_t err);
-  event void writeDone(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len, error_t err);
+  command error_t blockingRead(uint16_t addr, uint8_t* buf, uint16_t len);
+  command error_t blockingWrite(uint16_t addr, uint8_t* buf, uint16_t len);
 
-  event void readStatusDone(uint8_t* buf, error_t err);
-  event void writeStatusDone(uint8_t* buf, error_t err);
+  event void readDone (uint16_t addr, uint8_t* buf, uint16_t len, error_t err);
+  event void writeDone (uint16_t addr, uint8_t* buf, uint16_t len, error_t err);
 
-  command error_t writeEnable();
-  event void writeEnableDone();
+  event void readStatusDone (uint8_t status, error_t err);
+  event void writeStatusDone (error_t err);
 }

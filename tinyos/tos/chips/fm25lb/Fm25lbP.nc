@@ -1,5 +1,6 @@
 /**
  * @author Samuel DeBruin <sdebruin@umich.edu>
+ * @author Brad Campbell <bradjc@umich.edu>
  */
 
 #include "Fm25lb.h"
@@ -20,31 +21,27 @@ module Fm25lbP {
 }
 implementation {
 
-  uint8_t m_cmd[3];
-  uint8_t m_cmd_len;
-  uint8_t* m_buf;
-  fm25lb_len_t m_len;
 
-  uint8_t* tx_buf_spidone;
+  fm25lb_state_e _state;
 
-  typedef enum {
-    WREN = 0x06,
-    WRDI = 0x04,
-    RDSR = 0x05,
-    WRSR = 0x01,
-    READ = 0x03,
-    WRITE = 0x02,
-  } fm25lb_cmd_t;
+  // Current command state for persisting through callbacks
+  uint8_t  _cmd_buf[2];
+  uint8_t* _buf;
+  uint16_t _len;
+  error_t  _err;
 
-  void signalDone(error_t err);
+  void write_enable ();
 
-  void sendCmd(uint8_t cmd) {
-    call CSN.clr();
-    call SpiByte.write(cmd);
-    call CSN.set();
-    return;
+  task void state_machine ();
+
+
+
+  // Send a the command byte to the FRAM. Must have access to the spi bus.
+  void write_enable () {
+    call SpiByte.write(FM25LB_CMD_WRITE_ENABLE);
   }
 
+  // Called to initialize the GPIO pins for the FRAM
   command error_t Init.init() {
     call CSN.makeOutput();
     call Hold.makeOutput();
@@ -55,141 +52,221 @@ implementation {
     return SUCCESS;
   }
 
-  event void SpiResource.granted() {
-    if(m_cmd[0] == WRITE || m_cmd[0] == WRSR) {
-      sendCmd(WREN);
+  ////////////////////////
+  // PUBLIC FUNCTIONS
+  ////////////////////////
+
+  command error_t Fm25lb.read (uint16_t addr, uint8_t* buf, uint16_t len) {
+    // Setup the read call by setting the state and filling the command buffer
+    _state      = FM25LB_STATE_READ_GOT_SPI;
+    _cmd_buf[0] = FM25LB_ADD_ADDRESS_BIT(addr, FM25LB_CMD_READ);
+    _cmd_buf[1] = (uint8_t) addr;
+    _buf        = buf;
+    _len        = len;
+
+    return call SpiResource.request();
+  }
+
+  command error_t Fm25lb.write (uint16_t addr, uint8_t* buf, uint16_t len) {
+    _state      = FM25LB_STATE_WRITE_GOT_SPI;
+    _cmd_buf[0] = FM25LB_ADD_ADDRESS_BIT(addr, FM25LB_CMD_WRITE);
+    _cmd_buf[1] = (uint8_t) addr;
+    _buf        = buf;
+    _len        = len;
+
+    return call SpiResource.request();
+  }
+
+  command error_t Fm25lb.readStatus () {
+    _state      = FM25LB_STATE_READ_STATUS_GOT_SPI;
+    _cmd_buf[0] = FM25LB_CMD_READ_STATUS;
+
+    return call SpiResource.request();
+  }
+
+  command error_t Fm25lb.writeStatus (uint8_t status) {
+    _state      = FM25LB_STATE_READ_STATUS_GOT_SPI;
+    _cmd_buf[0] = FM25LB_CMD_WRITE_STATUS;
+    _cmd_buf[1] = status;
+
+    return call SpiResource.request();
+  }
+
+  command error_t Fm25lb.blockingRead (uint16_t addr,
+                                       uint8_t* buf,
+                                       uint16_t len) {
+    int i;
+
+    // First get access to the SPI bus
+    while (1) {
+      error_t err = call SpiResource.immediateRequest();
+      if (err == SUCCESS) break;
     }
 
+    // Now set CS low
     call CSN.clr();
-    call SpiPacket.send(m_cmd, NULL, m_cmd_len);
+
+    // Send the command and address
+    call SpiByte.write(FM25LB_ADD_ADDRESS_BIT(addr, FM25LB_CMD_READ));
+    call SpiByte.write(addr);
+
+    for (i=0; i<len; i++) {
+      buf[i] = call SpiByte.write(0);
+    }
+
+    call CSN.set();
+    call SpiResource.release();
   }
 
-  command error_t Fm25lb.writeEnable() {
-    error_t err = SUCCESS;
-    m_cmd[0] = WREN;
-    m_cmd_len = 1;
+  command error_t Fm25lb.blockingWrite (uint16_t addr,
+                                       uint8_t* buf,
+                                       uint16_t len) {
+    int i;
 
-    call SpiResource.request();
+    // First get access to the SPI bus
+    while (1) {
+      error_t err = call SpiResource.immediateRequest();
+      if (err == SUCCESS) break;
+    }
 
-    return err;
+    // Now set CS low
+    call CSN.clr();
+
+    call SpiByte.write(FM25LB_CMD_WRITE_ENABLE);
+
+    // Toggle the CS bit between the write enable and write command
+    call CSN.set();
+    call CSN.clr();
+
+    // Send the command and address
+    call SpiByte.write(FM25LB_ADD_ADDRESS_BIT(addr, FM25LB_CMD_WRITE));
+    call SpiByte.write(addr);
+
+    for (i=0; i<len; i++) {
+      call SpiByte.write(buf[i]);
+    }
+
+    call CSN.set();
+    call SpiResource.release();
   }
 
-  command error_t Fm25lb.read(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len) {
-    error_t err = SUCCESS;
-    m_cmd[0] = READ;
-    m_cmd[1] = addr;
-    //m_cmd[2] = 0x00;  //Second address byte does not apply to 4KB FRAM
-    //m_cmd_len = 3;
-    m_cmd_len = 2;
-    m_buf = buf;
-    m_len = len;
+  ////////////////////////
+  // EVENTS
+  ////////////////////////
 
-    call SpiResource.request();
-
-    return err;
+  event void SpiResource.granted () {
+    post state_machine();
   }
 
-  command error_t Fm25lb.write(fm25lb_addr_t addr, uint8_t* buf, fm25lb_len_t len) {
-    error_t err = SUCCESS;
-    m_cmd[0] = WRITE;
-    m_cmd[1] = addr;
-    //m_cmd[2] = 0x00;  //Second address byte does not apply to 4KB FRAM
-    //m_cmd_len = 3;
-    m_cmd_len = 2;
-    m_buf = buf;
-    m_len = len;
-
-    call WP.set();
-
-    call SpiResource.request();
-
-    return err;
+  async event void SpiPacket.sendDone (uint8_t* txBuf,
+                                       uint8_t* rxBuf,
+                                       uint16_t len,
+                                       error_t error) {
+    atomic _err = error;
+    post state_machine();
   }
 
-  command error_t Fm25lb.readStatus(uint8_t* buf) {
-    error_t err = SUCCESS;
-    m_cmd[0] = RDSR;
-    m_cmd_len = 1;
-    m_buf = buf;
-    m_len = 1;
 
-    call SpiResource.request();
+  ////////////////////////
+  // TASKS
+  ////////////////////////
 
-    return err;
-  }
+  task void state_machine () {
 
-  command error_t Fm25lb.writeStatus(uint8_t* buf) {
-    error_t err = SUCCESS;
-    m_cmd[0] = WRSR;
-    m_cmd_len = 1;
-    m_buf = buf;
-    m_len = 1;
+    error_t local_error;
 
-    call SpiResource.request();
+    atomic local_error = _err;
 
-    return err;
-  }
+    switch (_state) {
+      // READ
+      case FM25LB_STATE_READ_GOT_SPI:
+        _state = FM25LB_STATE_READ_SENT_CMD;
+        call CSN.clr();
+        call SpiPacket.send(_cmd_buf, NULL, FM25LB_READ_CMD_LEN);
+        break;
 
-  task void spiSendDone () {
-    uint8_t* txBuf;
+      case FM25LB_STATE_READ_SENT_CMD:
+        _state = FM25LB_STATE_READ_DONE;
+        call SpiPacket.send(NULL, _buf, _len);
+        break;
 
-    atomic txBuf = tx_buf_spidone;
-
-    if(txBuf == m_cmd) {
-      if(m_cmd[0] == WREN) {
+      case FM25LB_STATE_READ_DONE:
+        _state = FM25LB_STATE_DONE;
         call CSN.set();
         call SpiResource.release();
-        signalDone(SUCCESS);
-      }
-      else if(m_cmd[0] == READ || m_cmd[0] == RDSR) {
-        call SpiPacket.send(NULL, m_buf, m_len);
-      }
-      else {
-        call SpiPacket.send(m_buf, NULL, m_len);
-      }
+        signal Fm25lb.readDone(FM25LB_GET_ADDRESS(_cmd_buf[0], _cmd_buf[1]),
+                               _buf, _len, local_error);
+        break;
+
+      // WRITE
+      case FM25LB_STATE_WRITE_GOT_SPI:
+        _state = FM25LB_STATE_WRITE_SENT_CMD;
+        call CSN.clr();
+        call WP.set();
+        write_enable();
+        // Toggle the chp select line between the write enable bit and the
+        // actual write command
+        call CSN.set();
+        call CSN.clr();
+        call SpiPacket.send(_cmd_buf, NULL, FM25LB_WRITE_CMD_LEN);
+        break;
+
+      case FM25LB_STATE_WRITE_SENT_CMD:
+        _state = FM25LB_STATE_WRITE_DONE;
+        call SpiPacket.send(_buf, NULL, _len);
+        break;
+
+      case FM25LB_STATE_WRITE_DONE:
+        _state = FM25LB_STATE_DONE;
+        call WP.clr();
+        call CSN.set();
+        call SpiResource.release();
+        signal Fm25lb.writeDone(FM25LB_GET_ADDRESS(_cmd_buf[0], _cmd_buf[1]),
+                                _buf, _len, local_error);
+        break;
+
+      // READ STATUS
+      case FM25LB_STATE_READ_STATUS_GOT_SPI:
+        _state = FM25LB_STATE_READ_STATUS_DONE;
+        call CSN.clr();
+        call SpiPacket.send(_cmd_buf, _cmd_buf, FM25LB_READ_STATUS_CMD_LEN+
+                                                FM25LB_READ_STATUS_DATA_LEN);
+        break;
+
+      case FM25LB_STATE_READ_STATUS_DONE:
+        _state = FM25LB_STATE_DONE;
+        call CSN.set();
+        call SpiResource.release();
+        signal Fm25lb.readStatusDone(_cmd_buf[1], local_error);
+        break;
+
+      // WRITE STATUS
+      case FM25LB_STATE_WRITE_STATUS_GOT_SPI:
+        _state = FM25LB_STATE_WRITE_STATUS_DONE;
+        call CSN.clr();
+        call SpiPacket.send(_cmd_buf, NULL, FM25LB_WRITE_STATUS_CMD_LEN+
+                                            FM25LB_WRITE_STATUS_DATA_LEN);
+        break;
+
+      case FM25LB_STATE_WRITE_STATUS_DONE:
+        _state = FM25LB_STATE_DONE;
+        call CSN.set();
+        call SpiResource.release();
+        signal Fm25lb.writeStatusDone(local_error);
+        break;
+
+      case FM25LB_STATE_DONE:
+        break;
+
     }
-    else {
-      call CSN.set();
-      call SpiResource.release();
-      signalDone(SUCCESS);
-    }
+
   }
 
-  async event void SpiPacket.sendDone(uint8_t* txBuf,
-                                      uint8_t* rxBuf,
-                                      uint16_t len,
-                                      error_t error) {
-    atomic tx_buf_spidone = txBuf;
-    post spiSendDone();
-  }
-
-  void signalDone(error_t err) {
-    switch(m_cmd[0]) {
-    case WREN:
-      signal Fm25lb.writeEnableDone();
-      break;
-    case RDSR:
-      signal Fm25lb.readStatusDone(m_buf, err);
-      break;
-    case WRSR:
-      signal Fm25lb.writeStatusDone(m_buf, err);
-      break;
-    case READ:
-      signal Fm25lb.readDone(m_cmd[1], m_buf, m_len, err);
-      break;
-    case WRITE:
-      call WP.clr();
-      signal Fm25lb.writeDone(m_cmd[1], m_buf, m_len, err);
-      break;
-    }
-  }
-
-  default event void Fm25lb.readDone(fm25lb_addr_t addr, uint8_t* buf,
-    fm25lb_len_t len, error_t err) {}
-  default event void Fm25lb.writeDone(fm25lb_addr_t addr, uint8_t* buf,
-    fm25lb_len_t len, error_t err) {}
-  default event void Fm25lb.readStatusDone(uint8_t* buf, error_t err) {}
-  default event void Fm25lb.writeStatusDone(uint8_t* buf, error_t err) {}
-  default event void Fm25lb.writeEnableDone() {}
+  default event void Fm25lb.readDone(uint16_t addr, uint8_t* buf,
+    uint16_t len, error_t err) {}
+  default event void Fm25lb.writeDone(uint16_t addr, uint8_t* buf,
+    uint16_t len, error_t err) {}
+  default event void Fm25lb.readStatusDone(uint8_t status, error_t err) {}
+  default event void Fm25lb.writeStatusDone(error_t err) {}
 
 }
