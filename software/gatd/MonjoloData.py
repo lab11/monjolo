@@ -5,21 +5,29 @@ import socket
 import sys
 import threading
 
+try:
+	import socketIO_client as sioc
+except ImportError:
+	print('Could not import the socket.io client library.')
+	print('sudo pip install socketIO-client')
+	sys.exit(1)
 
-HOST, PORT = "inductor.eecs.umich.edu", 22500
+# List of ccid_macs that should included in the queue
+ids = []
+q = Queue.Queue()
 
 ####
 # Class that implements the various functions for retrieving monjolo data
 ####
 class MonjoloData:
 
-	query = {'profile_id': '7aiOPJapXF'}
+	SOCKETIO_HOST      = 'inductor.eecs.umich.edu'
+	SOCKETIO_PORT      = 8080
+	SOCKETIO_NAMESPACE = 'stream'
+
+	MONJOLO_PID = '7aiOPJapXF'
 
 	versions = {1: 'coilcube'}
-
-	# List of ccid_macs that should included in the queue
-	id_list = []
-	q = Queue.Queue()
 
 	####
 	# Gets data from GATD that correspond to coilcubes and puts it in the queue
@@ -39,32 +47,25 @@ class MonjoloData:
 	# type       the type of packet in GATD land. always going to be 'coilcube_raw'
 	# public     whether the packet should be viewable by all. Always True
 	####
-	def stream_receiver (self):
-		# Create a socket (SOCK_STREAM means a TCP socket)
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	class stream_receiver (sioc.BaseNamespace):
+		def on_data (self, *args):
+			global ids, q
+			pkt = args[0]
 
-		# Connect to server and send the query for all monjolo sensors
-		sock.connect((HOST, PORT))
-		sock.sendall(json.dumps(self.query) + "\n")
-
-		# Receive data from the server and shut down
-		while True:
-			r = sock.recv(1024)
-
-			pkt = json.loads(r)
-
-			try:
-				if pkt['type'] != 'coilcube_raw':
-					continue
-			except KeyError:
-				continue
-
-			ccid = '{:0>16x}'.format(pkt['ccid'])
-			pkt['ccid_mac'] = ':'.join([ccid[i:i+2] for i in range(0, 16, 2)])
 			pkt['ip'] = str(IPy.IP(pkt['address']))
 
-			if pkt['ccid_mac'] in self.id_list:
-				self.q.put(pkt)
+			if pkt['ccid_mac'] in ids:
+				q.put(pkt)
+
+	def socketio (self):
+		socketIO = sioc.SocketIO(self.SOCKETIO_HOST, self.SOCKETIO_PORT)
+		stream_namespace = socketIO.define(self.stream_receiver,
+			'/{}'.format(self.SOCKETIO_NAMESPACE))
+
+		stream_namespace.emit('query', {'profile_id': self.MONJOLO_PID,
+			                            'type':       'coilcube_raw'
+						               })
+		socketIO.wait()
 
 	####
 	# Call this to specify which nodes you would like data for. ids should be a list
@@ -72,8 +73,9 @@ class MonjoloData:
 	#
 	# example:  register_ids(['00:12:6d:43:4f:e1:b2:64', '00:12:6d:43:4f:e2:81:b6'])
 	####
-	def register_ids (self, ids):
-		self.id_list = list(ids)
+	def register_ids (self, id_list):
+		global ids
+		ids = list(id_list)
 
 	####
 	# Call this to get the next item from the queue
@@ -81,8 +83,9 @@ class MonjoloData:
 	# Returns none if there is no new data
 	####
 	def next_data (self):
+		global q
 		try:
-			return self.q.get(block=False)
+			return q.get(block=False)
 		except Queue.Empty:
 			return None
 
@@ -98,8 +101,9 @@ class MonjoloData:
 	# Call this to start the threads and to start filling the queue
 	####
 	def start (self, processing_function):
+		global q
 		# Start the threads
-		a = threading.Thread(target=self.stream_receiver)
+		a = threading.Thread(target=self.socketio)
 		a.deamon = True
 		a.start()
 
@@ -107,4 +111,4 @@ class MonjoloData:
 		b.deamon = True
 		b.start()
 
-		self.q.join()
+		q.join()
