@@ -17,9 +17,9 @@ implementation {
   FramP.Init <- MainC.SoftwareInit;
 
   components new Msp430Spi0C() as SpiC;
-  FramP.SpiResource -> SpiC;
-  FramP.SpiByte -> SpiC;
-  FramP.SpiPacket -> SpiC;
+  FramP.SpiResource -> SpiC.Resource;
+  FramP.SpiByte -> SpiC.SpiByte;
+  FramP.SpiPacket -> SpiC.SpiPacket;
 
   components HplFm25lbPinsC as FramC;
   FramP.CSN -> FramC.CSN;

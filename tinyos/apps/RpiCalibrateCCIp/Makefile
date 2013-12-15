@@ -7,5 +7,7 @@ PFLAGS += -DIN6_PREFIX="\"fec0\""
 
 PFLAGS += "-I../Monjolo/"
 
+GOALS += blip
+
 TINYOS_ROOT_DIR?=../..
 include $(TINYOS_ROOT_DIR)/Makefile.include

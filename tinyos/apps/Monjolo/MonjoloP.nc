@@ -148,16 +148,16 @@ implementation {
     post state_machine();
   }
 
-  event void Fram.readDone(fm25lb_addr_t addr,
+  event void Fram.readDone(uint16_t addr,
                            uint8_t* buf,
-                           fm25lb_len_t len,
+                           uint16_t len,
                            error_t err) {
     post state_machine();
   }
 
-  event void Fram.writeDone(fm25lb_addr_t addr,
+  event void Fram.writeDone(uint16_t addr,
                             uint8_t* buf,
-                            fm25lb_len_t len,
+                            uint16_t len,
                             error_t err) {
     post state_machine();
   }
@@ -173,15 +173,11 @@ implementation {
     return SUCCESS;
   }
 
-  event void Fram.writeEnableDone() {
+  event void Fram.readStatusDone (uint8_t status, error_t err) {
     post state_machine();
   }
 
-  event void Fram.readStatusDone(uint8_t* buf, error_t err) {
-    post state_machine();
-  }
-
-  event void Fram.writeStatusDone(uint8_t* buf, error_t err) {
+  event void Fram.writeStatusDone(error_t err) {
     post state_machine();
   }
 
