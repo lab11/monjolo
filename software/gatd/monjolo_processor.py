@@ -6,7 +6,7 @@ import MonjoloData
 ####
 def processor ():
 	global md
-	md.register_ids(['00:12:6d:43:4f:e1:b2:64', '00:12:6d:43:4f:e1:b5:ba'])
+	md.register_ids(['c0:98:e5:43:4f:f3:36:09'])
 	while True:
 		d = md.next_data()
 		if not d:

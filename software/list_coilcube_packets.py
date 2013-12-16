@@ -1,10 +1,24 @@
+#!/usr/bin/env python
+
 import IPy
 import json
 import socket
 import sys
 
-HOST, PORT = "inductor.eecs.umich.edu", 22500
-query = {'profile_id': '7aiOPJapXF'}
+try:
+	import socketIO_client as sioc
+except ImportError:
+	print('Could not import the socket.io client library.')
+	print('sudo pip install socketIO-client')
+	sys.exit(1)
+
+SOCKETIO_HOST      = 'inductor.eecs.umich.edu'
+SOCKETIO_PORT      = 8080
+SOCKETIO_NAMESPACE = 'stream'
+
+query = {'profile_id': '7aiOPJapXF',
+         'type': 'coilcube_raw',
+         'description': {'$exists': True}}
 
 versions = {1: 'coilcube'}
 
@@ -13,34 +27,18 @@ s = """Packet: {}
 	addr: {}
 """
 
-# Create a socket (SOCK_STREAM means a TCP socket)
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+class stream_receiver (sioc.BaseNamespace):
+	def on_data (self, *args):
+		global ids, q
+		pkt = args[0]
 
-try:
-	# Connect to server and send the query for all monjolo sensors
-	sock.connect((HOST, PORT))
-	sock.sendall(json.dumps(query) + "\n")
+		pkt['ip'] = str(IPy.IP(pkt['address']))
 
-	# Receive data from the server and shut down
-	while True:
-		r = sock.recv(1024)
+		print(pkt)
 
-		pkt = json.loads(r)
+socketIO = sioc.SocketIO(SOCKETIO_HOST, SOCKETIO_PORT)
+stream_namespace = socketIO.define(stream_receiver,
+	'/{}'.format(SOCKETIO_NAMESPACE))
 
-		if 'type' not in pkt:
-			continue
-
-		if pkt['type'] != 'coilcube_raw':
-			continue
-
-		ccid = '{:0>16x}'.format(pkt['ccid'])
-		ccid_mac = ':'.join([ccid[i:i+2] for i in range(0, 16, 2)])
-		ip_str = IPy.IP(pkt['address'])
-
-		print(s.format(versions[pkt['version']], ccid_mac, ip_str))
-
-
-
-finally:
-	print "closeit"
-	sock.close()
+stream_namespace.emit('query', query)
+socketIO.wait()
