@@ -27,6 +27,9 @@ s = """Packet: {}
 	addr: {}
 """
 
+if len(sys.argv) > 1:
+	query['ccid_mac'] = sys.argv[1]
+
 class stream_receiver (sioc.BaseNamespace):
 	def on_data (self, *args):
 		global ids, q
