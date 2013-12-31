@@ -1885,14 +1885,12 @@ This Sunstone Circuits 2 Layer .DRU has been set to cover our minimum requiremen
 <attribute name="VALUE" x="19.812" y="0.5969" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center"/>
 </element>
 <element name="R4" library="rcl" package="R0603" value="1M" x="23.3172" y="30.7086" smashed="yes" rot="R270">
-<attribute name="DIGIKEY" value="RHM1.00MCFCT-ND
-" x="23.3172" y="30.7086" size="1.016" layer="27" ratio="12" rot="R270" display="off"/>
+<attribute name="DIGIKEY" value="RHM1.00MCFCT-ND " x="23.3172" y="30.7086" size="1.016" layer="27" ratio="12" rot="R270" display="off"/>
 <attribute name="NAME" x="23.9268" y="30.7086" size="1.016" layer="25" font="vector" ratio="12" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="21.4122" y="31.3436" size="1.27" layer="27" rot="R270"/>
 </element>
 <element name="R5" library="rcl" package="R0603" value="4.7M" x="20.9804" y="30.7086" smashed="yes" rot="R270">
-<attribute name="DIGIKEY" value="RHM4.7MCGDKR-ND
-" x="20.9804" y="30.7086" size="1.016" layer="27" ratio="12" rot="R270" display="off"/>
+<attribute name="DIGIKEY" value="RHM4.7MCGDKR-ND " x="20.9804" y="30.7086" size="1.016" layer="27" ratio="12" rot="R270" display="off"/>
 <attribute name="NAME" x="21.6408" y="30.7086" size="1.016" layer="25" font="vector" ratio="12" rot="R270" align="bottom-center"/>
 <attribute name="VALUE" x="19.0754" y="31.3436" size="1.27" layer="27" rot="R270"/>
 </element>

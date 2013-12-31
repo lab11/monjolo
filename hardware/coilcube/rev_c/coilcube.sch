@@ -9505,7 +9505,7 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 </library>
 </libraries>
 <attributes>
-<attribute name="REV" value="2v0"/>
+<attribute name="REV" value="C"/>
 <attribute name="TITLE" value="Coilcube"/>
 </attributes>
 <variantdefs>
