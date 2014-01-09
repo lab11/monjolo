@@ -1,3 +1,4 @@
-AUTHOR: Brad Campbell
-REV: A
-TITLE: Coilcube Power Supply
+title: Coilcube Power Supply
+rev: A
+description: Power supply for the coilcube board. Rectifies an AC signal from a current transformer and charges a bank of capacitors.
+author: Brad Campbell
