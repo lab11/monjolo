@@ -1,4 +1,5 @@
-AUTHOR: Brad Campbell
-REV: C
-TITLE: Impulse
+github: http://github.com/lab11/monjolo
+author: Brad Campbell
+rev: C
 description: Microcontroller board for Monjolo nodes. Designed to transmit a packet with minimal energy. Also includes FRAM for persistent storage and a capacitor for reducing the frequency of wakeups.
+title: Impulse
