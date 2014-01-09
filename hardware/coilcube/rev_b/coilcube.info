@@ -1,5 +1,5 @@
-title: Coilcube
-github: http://github.com/lab11/monjolo
-rev: C
-description: Energy-meter for plug-loads based on the Monjolo principle. Uses epic for the microcontroller and radio and is designed to fit in a particular case.
 author: Sam DeBruin, Brad Campbell
+github: http://github.com/lab11/monjolo
+rev: 2v0
+description: Energy-meter for plug-loads based on the Monjolo principle. Uses epic for the microcontroller and radio and is designed to fit in a particular case.
+title: Coilcube
