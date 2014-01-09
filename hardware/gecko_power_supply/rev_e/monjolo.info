@@ -1,0 +1,4 @@
+github: http://github.com/lab11/monjolo
+revision: E
+description: Solar powered energy-harvester. Charges a bank of capacitors until a voltage is met and then enables a voltage regulator.
+author: Lohit Yerva, Prabal Dutta, Brad Campbell
