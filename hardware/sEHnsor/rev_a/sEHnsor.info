@@ -1,2 +1,5 @@
-REVISION: A
-TITLE: sEHnsor
+github: http://github.com/lab11/monjolo
+description: Microprocessor and radio (CC2538) for activating and transmitting a packet. Includes FRAM and a capacitor for keeping rough time.
+title: sEHnsor
+author: Brad Campbell
+revision: A
