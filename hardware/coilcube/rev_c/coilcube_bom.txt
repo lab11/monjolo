@@ -9,7 +9,7 @@ Qty  Value                   Device                  Package         Parts      
 1    4.7uF                   C-EUC0603               C0603           C7                       CAPACITOR, European symbol        445-5178-1-ND         445-5178-6-ND          
 1    10uF                    C-EUC1206               C1206           C8                       CAPACITOR, European symbol        399-8152-1-ND         399-8152-6-ND          
 1    47uF                    CAP_POL1206             EIA3216         C9                       Capacitor Polarized               399-3700-1-ND         399-3700-6-ND          
-5    100uF 25V               2917_CAP_POL            2917_CAP_POL    C10, C11, C12, C13, C14                                    399-5175-1-ND         399-5175-6-ND          
+5    100uF 25V               2917_CAP_POL            2917_CAP_POL    C10, C11, C12, C13, C14                                    399-5175-1-ND         399-5175-6-ND          Replacement: 399-8410-1-ND
 1    SCREW-TERMINAL_2_0.100  SCREW-TERMINAL_2_0.100  CONN_BLOCK_2    J1                       2x 0.100 in screw terminal block  277-1273-ND                                  
 1    10uH                    INDUCTOR1210            1210            L1                       Inductors                         587-1625-1-ND         587-1625-6-ND          
 3    4.7k                    R-US_R0603              R0603           R1, R2, R3               RESISTOR, American symbol         P4.7KGCT-ND           P4.7KGDKR-ND           
