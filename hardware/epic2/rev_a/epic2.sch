@@ -2595,6 +2595,36 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="-6.35" y1="-1.0668" x2="-6.35" y2="1.0668" width="0.127" layer="21"/>
 <text x="-6.477" y="0" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="bottom-center">&gt;NAME</text>
 </package>
+<package name="1X10/1MM">
+<pad name="1" x="-4.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="2" x="-3.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="3" x="-2.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="4" x="-1.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="5" x="-0.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="6" x="0.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="7" x="1.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="8" x="2.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="9" x="3.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="10" x="4.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<wire x1="-5" y1="0.635" x2="5" y2="0.635" width="0.127" layer="21"/>
+<wire x1="5" y1="0.635" x2="5" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="5" y1="-0.635" x2="-5" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="-5" y1="-0.635" x2="-5" y2="0.635" width="0.127" layer="21"/>
+<text x="-5.5" y="0" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="bottom-center">&gt;NAME</text>
+</package>
+<package name="1X6/1MM">
+<pad name="1" x="-2.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="2" x="-1.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="3" x="-0.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="4" x="0.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="5" x="1.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<pad name="6" x="2.5" y="0" drill="0.45" diameter="0.8" rot="R180"/>
+<wire x1="-3" y1="0.635" x2="3" y2="0.635" width="0.127" layer="21"/>
+<wire x1="3" y1="0.635" x2="3" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="3" y1="-0.635" x2="-3" y2="-0.635" width="0.127" layer="21"/>
+<wire x1="-3" y1="-0.635" x2="-3" y2="0.635" width="0.127" layer="21"/>
+<text x="-3.5" y="0" size="1.016" layer="21" font="vector" ratio="12" rot="R90" align="bottom-center">&gt;NAME</text>
+</package>
 </packages>
 <symbols>
 <symbol name="PINHD10">
@@ -2615,6 +2645,20 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <pin name="9" x="-2.54" y="-10.16" visible="pad" length="short" direction="pas" function="dot"/>
 <pin name="10" x="-2.54" y="-12.7" visible="pad" length="short" direction="pas" function="dot"/>
 </symbol>
+<symbol name="PINHD6">
+<wire x1="-6.35" y1="-7.62" x2="1.27" y2="-7.62" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-7.62" x2="1.27" y2="10.16" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="10.16" x2="-6.35" y2="10.16" width="0.4064" layer="94"/>
+<wire x1="-6.35" y1="10.16" x2="-6.35" y2="-7.62" width="0.4064" layer="94"/>
+<text x="-6.35" y="10.795" size="1.778" layer="95">&gt;NAME</text>
+<text x="-6.35" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-2.54" y="7.62" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="2" x="-2.54" y="5.08" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="3" x="-2.54" y="2.54" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="4" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="5" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="6" x="-2.54" y="-5.08" visible="pad" length="short" direction="pas" function="dot"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="PINHD-1X10/0.050" prefix="J">
@@ -2634,6 +2678,50 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PINHD-1X10/1MM" prefix="J">
+<gates>
+<gate name="G$1" symbol="PINHD10" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1X10/1MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PINHD-1X06/1MM" prefix="J">
+<gates>
+<gate name="G$1" symbol="PINHD6" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1X6/1MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2705,6 +2793,11 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="C16" library="passives" deviceset="CAPACITOR" device="" value="22pF"/>
 <part name="C17" library="passives" deviceset="CAPACITOR" device="" value="22pF"/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="J4" library="headers" deviceset="PINHD-1X10/1MM" device=""/>
+<part name="J5" library="headers" deviceset="PINHD-1X10/1MM" device=""/>
+<part name="J6" library="headers" deviceset="PINHD-1X10/1MM" device=""/>
+<part name="J7" library="headers" deviceset="PINHD-1X06/1MM" device=""/>
+<part name="J8" library="headers" deviceset="PINHD-1X06/1MM" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -2771,6 +2864,11 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <instance part="C16" gate="G$1" x="104.14" y="101.6" rot="R90"/>
 <instance part="C17" gate="G$1" x="104.14" y="86.36" rot="R90"/>
 <instance part="GND1" gate="1" x="116.84" y="88.9"/>
+<instance part="J4" gate="G$1" x="264.16" y="170.18"/>
+<instance part="J5" gate="G$1" x="276.86" y="170.18"/>
+<instance part="J6" gate="G$1" x="289.56" y="170.18"/>
+<instance part="J7" gate="G$1" x="266.7" y="137.16"/>
+<instance part="J8" gate="G$1" x="279.4" y="137.16"/>
 </instances>
 <busses>
 </busses>
