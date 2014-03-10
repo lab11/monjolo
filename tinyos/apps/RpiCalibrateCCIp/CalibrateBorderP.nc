@@ -62,6 +62,7 @@ implementation {
     printf("\"id\":%llu,", id);
     printf("\"mac\":\"%s\",", mac);
     printf("\"timestamp\":%llu,", timestamp);
+    printf("\"version\":%i,", ccpkt->version);
     printf("\"seq_no\":%i,", ccpkt->seq_no);
     printf("\"counter\":%i}\n", ccpkt->counter);
 
