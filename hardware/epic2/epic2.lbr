@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.5" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.0666" altunitdist="mm" altunit="mm"/>
+<grid distance="0.5" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.089789" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
@@ -137,6 +137,74 @@
 <pad name="30" x="-7.4789" y="9.1123" drill="0.45" diameter="0.8"/>
 <pad name="31" x="-8.4789" y="9.1123" drill="0.45" diameter="0.8"/>
 <pad name="32" x="-9.4789" y="9.1123" drill="0.45" diameter="0.8"/>
+</package>
+<package name="EPIC2-LANDING">
+<smd name="P$1" x="0.3" y="-1.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$2" x="0.3" y="1.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$3" x="0.3" y="-2.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$4" x="0.3" y="-3.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$5" x="0.3" y="-4.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$6" x="0.3" y="-5.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$7" x="0.3" y="-6.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$8" x="0.3" y="-7.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$9" x="0.3" y="2.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$10" x="0.3" y="3.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$11" x="0.3" y="4.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$12" x="0.3" y="5.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$13" x="0.3" y="6.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$14" x="0.3" y="7.5" dx="1.5" dy="0.754" layer="1"/>
+<smd name="P$15" x="-1.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$16" x="-1.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$17" x="-2.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$18" x="-3.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$19" x="-4.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$20" x="-5.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$21" x="-6.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$22" x="-7.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$23" x="-8.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$24" x="-9.4789" y="-9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$25" x="-2.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$26" x="-3.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$27" x="-4.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$28" x="-5.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$29" x="-6.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$30" x="-7.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$31" x="-8.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<smd name="P$32" x="-9.4789" y="9.2789" dx="1.5" dy="0.754" layer="1" rot="R90"/>
+<wire x1="-17.9578" y1="-8.9789" x2="-17.9578" y2="8.9789" width="0.127" layer="21"/>
+<wire x1="-17.9578" y1="8.9789" x2="-10.14615625" y2="8.9789" width="0.127" layer="21"/>
+<wire x1="0" y1="8.9789" x2="-0.897890625" y2="8.9789" width="0.127" layer="21"/>
+<wire x1="0" y1="-8.9789" x2="-0.897890625" y2="-8.9789" width="0.127" layer="21"/>
+<wire x1="-17.9578" y1="-8.9789" x2="-10.14615625" y2="-8.9789" width="0.127" layer="21"/>
+<wire x1="0" y1="0.897890625" x2="0" y2="-0.897890625" width="0.127" layer="21"/>
+<wire x1="0" y1="8.9789" x2="0" y2="8.081009375" width="0.127" layer="21"/>
+<wire x1="0" y1="-8.9789" x2="0" y2="-8.081009375" width="0.127" layer="21"/>
+<wire x1="-17.5" y1="-8.5" x2="-14" y2="-8.5" width="0.127" layer="51"/>
+<wire x1="-14" y1="-8.5" x2="-14" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="-14" y1="-0.5" x2="-17.5" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="-17.5" y1="-0.5" x2="-17.5" y2="-8.5" width="0.127" layer="51"/>
+<text x="-15.5" y="-4.5" size="0.762" layer="51" font="vector" ratio="12" rot="R90" align="bottom-center">ANTENNA</text>
+<wire x1="-10" y1="1" x2="-2" y2="1" width="0.127" layer="51"/>
+<wire x1="-10" y1="-7" x2="-10" y2="1" width="0.127" layer="51"/>
+<wire x1="-2" y1="-7" x2="-10" y2="-7" width="0.127" layer="51"/>
+<wire x1="-2" y1="1" x2="-2" y2="-7" width="0.127" layer="51"/>
+<text x="-5.5" y="-3" size="0.762" layer="51" font="vector" ratio="12" rot="R90" align="bottom-center">CC2538</text>
+<wire x1="-6" y1="6.5" x2="-6" y2="4" width="0.127" layer="51"/>
+<wire x1="-6" y1="4" x2="-2" y2="4" width="0.127" layer="51"/>
+<wire x1="-2" y1="4" x2="-2" y2="6.5" width="0.127" layer="51"/>
+<wire x1="-2" y1="6.5" x2="-6" y2="6.5" width="0.127" layer="51"/>
+<wire x1="-14" y1="7.5" x2="-14" y2="2" width="0.127" layer="51"/>
+<wire x1="-14" y1="2" x2="-10" y2="2" width="0.127" layer="51"/>
+<wire x1="-10" y1="2" x2="-10" y2="7.5" width="0.127" layer="51"/>
+<wire x1="-10" y1="7.5" x2="-14" y2="7.5" width="0.127" layer="51"/>
+<wire x1="-17.5" y1="8.5" x2="-15.5" y2="8.5" width="0.127" layer="51"/>
+<wire x1="-15.5" y1="8.5" x2="-15.5" y2="6.5" width="0.127" layer="51"/>
+<wire x1="-15.5" y1="6.5" x2="-17.5" y2="6.5" width="0.127" layer="51"/>
+<wire x1="-17.5" y1="6.5" x2="-17.5" y2="8.5" width="0.127" layer="51"/>
+<text x="-4" y="5" size="0.762" layer="51" font="vector" ratio="12" align="bottom-center">RTC</text>
+<text x="-12" y="5" size="0.762" layer="51" font="vector" ratio="12" rot="R90" align="center">FRAM</text>
+<text x="-16.5" y="7.5" size="0.508" layer="51" font="vector" ratio="12" rot="R90" align="center">LED</text>
+<text x="0.5" y="0" size="0.762" layer="25" font="vector" ratio="12" rot="R270" align="bottom-center">&gt;NAME</text>
 </package>
 </packages>
 <symbols>

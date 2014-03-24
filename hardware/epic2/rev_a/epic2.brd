@@ -9,7 +9,7 @@
 <grid distance="0.01" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.001" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="2" name="Route2" color="13" fill="10" visible="no" active="yes"/>
+<layer number="2" name="Route2" color="13" fill="10" visible="yes" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
 <layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
@@ -22,8 +22,8 @@
 <layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
 <layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
-<layer number="15" name="Route15" color="3" fill="6" visible="no" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="3" fill="6" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -59,7 +59,7 @@
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
 <layer number="51" name="tDocu" color="14" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="14" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
@@ -140,27 +140,6 @@
 <libraries>
 <library name="logos">
 <packages>
-<package name="UMICH_SOLID_75MIL">
-<description>University of Michigan - Solid block M 0.075 in tall.</description>
-<rectangle x1="0" y1="1.3716" x2="0.8001" y2="1.905" layer="21"/>
-<wire x1="0.8001" y1="1.8923" x2="1.3335" y2="1.1811" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="1.1811" x2="1.8669" y2="1.8923" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="0.3429" x2="1.8923" y2="1.0668" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="0.3429" x2="0.7747" y2="1.0541" width="0.0254" layer="21"/>
-<rectangle x1="0.2032" y1="0.5334" x2="0.7874" y2="1.3716" layer="21"/>
-<rectangle x1="0" y1="0" x2="1.016" y2="0.5334" layer="21"/>
-<rectangle x1="1.651" y1="0" x2="2.667" y2="0.5334" layer="21"/>
-<rectangle x1="1.8796" y1="0.5334" x2="2.4638" y2="1.3716" layer="21"/>
-<rectangle x1="1.8669" y1="1.3716" x2="2.667" y2="1.905" layer="21"/>
-<polygon width="0.0254" layer="21">
-<vertex x="1.8669" y="1.8923"/>
-<vertex x="1.3335" y="1.1811"/>
-<vertex x="0.8001" y="1.8923"/>
-<vertex x="0.8001" y="1.0414"/>
-<vertex x="1.3335" y="0.3683"/>
-<vertex x="1.8796" y="1.0795"/>
-</polygon>
-</package>
 <package name="UMICH_SOLID_50MIL">
 <rectangle x1="-0.885825" y1="0.27305" x2="-0.358775" y2="0.635" layer="21"/>
 <rectangle x1="-0.752475" y1="-0.27305" x2="-0.358775" y2="0.27305" layer="21"/>
@@ -1764,7 +1743,6 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 </pass>
 </autorouter>
 <elements>
-<element name="U$1" library="logos" package="UMICH_SOLID_75MIL" value="UMICH_SOLID_SMALL" x="-0.7112" y="0.9652" rot="R90"/>
 <element name="U2" library="chips" package="TDFN-8" value="FM25LBTDFN-8" x="5.5954" y="15.469" smashed="yes" rot="R270">
 <attribute name="DIGIKEY" value="FM25L04B-DGRA-ND" x="5.5954" y="15.469" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MOUSER" value=" 877-FM25L04B-DG " x="5.5954" y="15.469" size="1.778" layer="27" rot="R270" display="off"/>
@@ -2594,10 +2572,10 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <wire x1="4.0894" y1="12.9286" x2="5.0292" y2="12.9286" width="0.1524" layer="15"/>
 <wire x1="5.0292" y1="12.9286" x2="5.6134" y2="12.3444" width="0.1524" layer="15"/>
 <wire x1="3.5052" y1="12.3444" x2="1.3716" y2="12.3444" width="0.1524" layer="15"/>
-<wire x1="0.6096" y1="14.62913125" x2="0.5588" y2="14.34973125" width="0.1524" layer="1"/>
-<wire x1="0.5588" y1="14.34973125" x2="0.8636" y2="13.8938" width="0.1524" layer="1"/>
 <wire x1="1.3716" y1="12.3444" x2="0.8636" y2="12.8524" width="0.1524" layer="15"/>
 <wire x1="0.8636" y1="12.8524" x2="0.8636" y2="13.8938" width="0.1524" layer="15"/>
+<wire x1="0.6096" y1="14.62913125" x2="0.6096" y2="14.1478" width="0.1524" layer="1"/>
+<wire x1="0.6096" y1="14.1478" x2="0.8636" y2="13.8938" width="0.1524" layer="1"/>
 </signal>
 <signal name="LED_RED">
 <contactref element="R2" pad="2"/>
@@ -2822,7 +2800,7 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <wire x1="16.8148" y1="15.72386875" x2="16.41553125" y2="15.72386875" width="0.1524" layer="1"/>
 <wire x1="16.41553125" y1="15.72386875" x2="15.7986" y2="16.3408" width="0.1524" layer="1"/>
 </signal>
-<signal name="!RTC_CS">
+<signal name="RTC_CE">
 <contactref element="U5" pad="8"/>
 <via x="14.5542" y="2.032" extent="1-16" drill="0.2032"/>
 <via x="13.7414" y="13.3604" extent="1-16" drill="0.2032"/>
