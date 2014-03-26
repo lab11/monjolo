@@ -1,3 +1,4 @@
-author: Brad Campbell
-rev: A
 title: BigBen
+rev: A
+author: Brad Campbell
+description: Time keeping and storage for the Impulse board stack.
