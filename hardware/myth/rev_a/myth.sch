@@ -6522,7 +6522,7 @@ Source: AVX .. aphvc.pdf</description>
 </libraries>
 <attributes>
 <attribute name="AUTHOR" value="Brad Campbell"/>
-<attribute name="REVISION" value="A"/>
+<attribute name="REV" value="A"/>
 <attribute name="TITLE" value="Myth"/>
 </attributes>
 <variantdefs>
