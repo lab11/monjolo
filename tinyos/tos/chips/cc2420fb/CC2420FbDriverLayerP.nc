@@ -322,7 +322,7 @@ implementation {
 
 
         for(idx = 0; idx<length; idx++) {
-        //    data[idx] = call FastSpiByte.splitRead();
+            data[idx] = call FastSpiByte.splitRead();
             waitForRxFifo();
             call FastSpiByte.splitWrite(0);
         }
@@ -983,12 +983,13 @@ if(status.tx_active == 0) {
     getHeader(rxMsg)->length = length;
 
     // we'll read the FCS/CRC separately
-    length -= 2;
+    //length -= 2;
+    length -= 3;
 
     spi_atomic {
         // download the whole payload
-        //readPayloadFromRxFifo(data, length );
-        readPayloadFromRxFifo(data, 13);
+        readPayloadFromRxFifo(data, length );
+        //readPayloadFromRxFifo(data, 13);
 
         // the last two bytes are not the fsc, but RSSI(8), CRC_ON(1)+LQI(7)
         readRssiFromRxFifo(&rssi);
