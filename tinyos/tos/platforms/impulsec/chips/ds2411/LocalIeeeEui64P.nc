@@ -15,7 +15,7 @@ implementation {
 
   bool have_id = FALSE;
 
-  #define FRAM_ID_ADDR 56
+  #define FRAM_ID_ADDR 0
 
   command ieee_eui64_t LocalIeeeEui64.getId () {
     uint8_t buf[6] = {0};
