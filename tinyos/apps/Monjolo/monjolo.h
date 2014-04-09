@@ -22,8 +22,8 @@
 // will be.
 #define IN6_PREFIX "::"
 
-#define FRAM_ADDR_COUNT  0
-#define FRAM_ADDR_SEQ_NO 1
+#define FRAM_ADDR_COUNT  8 // make room for ds2411 id
+#define FRAM_ADDR_SEQ_NO 9
 
 typedef struct {
 //  ieee_eui64_t id;
