@@ -5554,6 +5554,120 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="headers">
+<description>&lt;b&gt;LAB11&lt;/b&gt; - Headers for pins and wires.</description>
+<packages>
+<package name="1X3/SMD/SH/1MM">
+<smd name="1" x="-1" y="-3.425" dx="0.6" dy="1.55" layer="1"/>
+<smd name="2" x="0" y="-3.425" dx="0.6" dy="1.55" layer="1"/>
+<smd name="3" x="1" y="-3.425" dx="0.6" dy="1.55" layer="1"/>
+<smd name="MOUNT2" x="2.3" y="-0.9" dx="1.2" dy="1.8" layer="1"/>
+<smd name="MOUNT1" x="-2.3" y="-0.9" dx="1.2" dy="1.8" layer="1"/>
+<wire x1="-1.5" y1="-0.2" x2="1.5" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="2.5" y1="-2" x2="2.5" y2="-3.1" width="0.127" layer="21"/>
+<wire x1="2.5" y1="-3.1" x2="1.5" y2="-3.1" width="0.127" layer="21"/>
+<wire x1="-1.5" y1="-3.1" x2="-2.5" y2="-3.1" width="0.127" layer="21"/>
+<wire x1="-2.5" y1="-3.1" x2="-2.5" y2="-2" width="0.127" layer="21"/>
+<text x="0" y="0.1" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<text x="-1" y="-2.6" size="1" layer="51" ratio="12" align="bottom-center">1</text>
+<text x="0" y="-2.6" size="1" layer="51" ratio="12" align="bottom-center">2</text>
+<text x="1" y="-2.6" size="1" layer="51" ratio="12" align="bottom-center">3</text>
+</package>
+<package name="1X3/SMD/SH/RA/1MM">
+<smd name="1" x="-1" y="4.775" dx="0.6" dy="1.55" layer="1"/>
+<smd name="2" x="0" y="4.775" dx="0.6" dy="1.55" layer="1"/>
+<smd name="3" x="1" y="4.775" dx="0.6" dy="1.55" layer="1"/>
+<smd name="MOUNT2" x="2.3" y="0.9" dx="1.2" dy="1.8" layer="1"/>
+<wire x1="-2" y1="5" x2="-1.5" y2="5" width="0.127" layer="21"/>
+<wire x1="1.5" y1="5" x2="2" y2="5" width="0.127" layer="21"/>
+<wire x1="2" y1="5" x2="2" y2="2" width="0.127" layer="21"/>
+<smd name="MOUNT1" x="-2.3" y="0.9" dx="1.2" dy="1.8" layer="1"/>
+<text x="-1" y="3.9" size="1" layer="51" align="top-center">1</text>
+<text x="0" y="3.9" size="1" layer="51" align="top-center">2</text>
+<text x="1" y="3.9" size="1" layer="51" align="top-center">3</text>
+<wire x1="1.5" y1="0.2" x2="-1.5" y2="0.2" width="0.127" layer="21"/>
+<wire x1="-2" y1="2" x2="-2" y2="5" width="0.127" layer="21"/>
+<text x="0" y="5.6" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+</package>
+<package name="TESTPOINT_0.040IN">
+<pad name="TESTPOINT" x="0" y="0" drill="1.016"/>
+<text x="0" y="1.524" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-2.54" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center">&gt;VALUE</text>
+<circle x="0" y="0" radius="1.27" width="0.127" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="PINHD3">
+<wire x1="-6.35" y1="-5.08" x2="1.27" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-5.08" x2="1.27" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="5.08" x2="-6.35" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="-6.35" y1="5.08" x2="-6.35" y2="-5.08" width="0.4064" layer="94"/>
+<text x="-6.35" y="5.715" size="1.778" layer="95">&gt;NAME</text>
+<text x="-6.35" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-2.54" y="2.54" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="2" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
+<pin name="3" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas" function="dot"/>
+</symbol>
+<symbol name="TEST_POINT">
+<description>Test point.</description>
+<pin name="TESTPOINT" x="2.54" y="0" visible="off" length="short" rot="R180"/>
+<circle x="-1.27" y="0" radius="1.27" width="0.254" layer="94"/>
+<text x="-3.175" y="0" size="1.016" layer="95" ratio="12" align="center-right">&gt;NAME</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="SH_MALE_1X3/1MM" prefix="J">
+<description>CONN HEADER SH 3POS TOP 1MM TIN</description>
+<gates>
+<gate name="G$1" symbol="PINHD3" x="2.54" y="0"/>
+</gates>
+<devices>
+<device name="-TOP" package="1X3/SMD/SH/1MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DIGIKEY" value="455-1789-1-ND" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="-RA" package="1X3/SMD/SH/RA/1MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DIGIKEY" value="455-1803-1-ND" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TEST_POINT_0.040IN" prefix="TP">
+<description>0.040in Test Point</description>
+<gates>
+<gate name="G$1" symbol="TEST_POINT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TESTPOINT_0.040IN">
+<connects>
+<connect gate="G$1" pin="TESTPOINT" pad="TESTPOINT"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DIGIKEY" value="5001K-ND"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 <attribute name="AUTHOR" value="Brad Campbell"/>
@@ -5573,9 +5687,14 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="J3" library="gecko" deviceset="IMPULSE_GECKO_HEADER" device=""/>
 <part name="LOGO1" library="logos" deviceset="UMICH_SOLID" device="_TINY"/>
 <part name="Q1" library="fets" deviceset="NX3008PBK" device=""/>
-<part name="R6" library="rcl" deviceset="R-US_" device="R0603" value="100k"/>
+<part name="R1" library="rcl" deviceset="R-US_" device="R0603" value="100k"/>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
+<part name="J1" library="headers" deviceset="SH_MALE_1X3/1MM" device="-RA"/>
+<part name="J2" library="headers" deviceset="SH_MALE_1X3/1MM" device="-TOP"/>
+<part name="GND2" library="supply1" deviceset="GND" device=""/>
+<part name="GND3" library="supply1" deviceset="GND" device=""/>
+<part name="TP1" library="headers" deviceset="TEST_POINT_0.040IN" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5589,9 +5708,14 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <instance part="J3" gate="G$1" x="27.94" y="144.78"/>
 <instance part="LOGO1" gate="G$1" x="233.172" y="173.99"/>
 <instance part="Q1" gate="G$1" x="111.76" y="137.16"/>
-<instance part="R6" gate="G$1" x="99.06" y="144.78" rot="R90"/>
+<instance part="R1" gate="G$1" x="99.06" y="144.78" rot="R90"/>
 <instance part="P+3" gate="VCC" x="99.06" y="157.48"/>
 <instance part="P+4" gate="VCC" x="111.76" y="157.48"/>
+<instance part="J1" gate="G$1" x="76.2" y="91.44"/>
+<instance part="J2" gate="G$1" x="76.2" y="68.58"/>
+<instance part="GND2" gate="1" x="66.04" y="83.82"/>
+<instance part="GND3" gate="1" x="66.04" y="60.96"/>
+<instance part="TP1" gate="G$1" x="48.26" y="99.06" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -5603,6 +5727,18 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="53.34" y1="137.16" x2="53.34" y2="127" width="0.1524" layer="91"/>
 <pinref part="J3" gate="G$1" pin="GND"/>
 </segment>
+<segment>
+<pinref part="J1" gate="G$1" pin="3"/>
+<wire x1="73.66" y1="88.9" x2="66.04" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="88.9" x2="66.04" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="GND2" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="J2" gate="G$1" pin="3"/>
+<wire x1="73.66" y1="66.04" x2="66.04" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="66.04" x2="66.04" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="VCC" class="0">
 <segment>
@@ -5612,7 +5748,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <pinref part="J3" gate="G$1" pin="VREG"/>
 </segment>
 <segment>
-<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="99.06" y1="149.86" x2="99.06" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="P+3" gate="VCC" pin="VCC"/>
 </segment>
@@ -5627,13 +5763,6 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="40.64" y="154.94" size="1.27" layer="95" xref="yes"/>
 <pinref part="J3" gate="G$1" pin="VCAP"/>
 <wire x1="40.64" y1="154.94" x2="38.1" y2="154.94" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="SHD" class="0">
-<segment>
-<label x="40.64" y="144.78" size="1.27" layer="95" xref="yes"/>
-<pinref part="J3" gate="G$1" pin="SHTDWN/P2.0"/>
-<wire x1="40.64" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MOSI0" class="0">
@@ -5664,6 +5793,16 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="111.76" y1="127" x2="116.84" y2="127" width="0.1524" layer="91"/>
 <label x="116.84" y="127" size="1.27" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="J1" gate="G$1" pin="1"/>
+<wire x1="73.66" y1="93.98" x2="68.58" y2="93.98" width="0.1524" layer="91"/>
+<label x="68.58" y="93.98" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J2" gate="G$1" pin="1"/>
+<wire x1="73.66" y1="71.12" x2="68.58" y2="71.12" width="0.1524" layer="91"/>
+<label x="68.58" y="71.12" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
 </net>
 <net name="AIRFLOW_CTRL" class="0">
 <segment>
@@ -5672,7 +5811,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <wire x1="38.1" y1="147.32" x2="40.64" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R6" gate="G$1" pin="1"/>
+<pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="99.06" y1="139.7" x2="99.06" y2="137.16" width="0.1524" layer="91"/>
 <pinref part="Q1" gate="G$1" pin="G"/>
 <wire x1="99.06" y1="137.16" x2="104.14" y2="137.16" width="0.1524" layer="91"/>
@@ -5686,6 +5825,27 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <label x="40.64" y="142.24" size="1.27" layer="95" xref="yes"/>
 <pinref part="J3" gate="G$1" pin="TRIGGER/P2.1"/>
 <wire x1="40.64" y1="142.24" x2="38.1" y2="142.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="AIRFLOW_SIGNAL" class="0">
+<segment>
+<pinref part="J1" gate="G$1" pin="2"/>
+<wire x1="73.66" y1="91.44" x2="48.26" y2="91.44" width="0.1524" layer="91"/>
+<label x="45.72" y="91.44" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="TP1" gate="G$1" pin="TESTPOINT"/>
+<wire x1="48.26" y1="91.44" x2="45.72" y2="91.44" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="96.52" x2="48.26" y2="91.44" width="0.1524" layer="91"/>
+<junction x="48.26" y="91.44"/>
+</segment>
+<segment>
+<pinref part="J2" gate="G$1" pin="2"/>
+<wire x1="73.66" y1="68.58" x2="68.58" y2="68.58" width="0.1524" layer="91"/>
+<label x="68.58" y="68.58" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<label x="40.64" y="144.78" size="1.27" layer="95" xref="yes"/>
+<pinref part="J3" gate="G$1" pin="SHTDWN/P2.0"/>
+<wire x1="40.64" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
