@@ -1,0 +1,10 @@
+COMPONENT=AirflowDetectC
+
+CFLAGS += -DCC2420X_DEF_CHANNEL=21
+
+CFLAGS += -DASSERT_NONE
+
+GOALS += blip
+
+TINYOS_ROOT_DIR?=../..
+include $(TINYOS_ROOT_DIR)/Makefile.include
