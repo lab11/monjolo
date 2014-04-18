@@ -28,14 +28,14 @@ implementation {
       P3OUT = 0x00;
       P3DIR = 0xf1;
 
-      P4OUT = 0xdd;
-      P4DIR = 0xfd;
+      P4OUT = 0xdc;
+      P4DIR = 0xfc;
 
       P5OUT = 0xE7;
       P5DIR = 0xfb;
 
       P6OUT = 0x00;
-      P6DIR = 0xfe;
+      P6DIR = 0xfc;
 
       P1IE = 0;
       P2IE = 0;
