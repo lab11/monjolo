@@ -24,39 +24,54 @@ module CurrentTestP {
 
     interface HplMsp430GeneralIO as TimeControlGPIO;
 
-    interface ReadStream<uint16_t> as CoilAdcStream;
+  //  interface ReadStream<uint16_t> as CoilAdcStream;
 
     interface GpioCapture as SfdCapture;
 
     interface Timer<TMilli> as sendWaitTimer;
+
+    interface HplAdc12 as HplAdc;
+    interface Counter<T32khz,uint16_t> as ConversionTimeCapture;
+    interface HplMsp430GeneralIO as CoilIn;
   }
-  provides{
-    interface AdcConfigure<const msp430adc12_channel_config_t*> as CoilAdcConfigure;
-  }
+//  provides{
+//    interface AdcConfigure<const msp430adc12_channel_config_t*> as CoilAdcConfigure;
+//  }
 }
 implementation {
 
-  struct sockaddr_in6 dest; // Where to send the packet
-  struct in6_addr next_hop; // for default route setup
+  struct sockaddr_in6 voltage_dest;
+  struct in6_addr     voltage_next_hop;
+  struct sockaddr_in6 gatd_dest;
+  struct in6_addr     gatd_next_hop;
 
-  pkt_data_t pkt_data = {PROFILE_ID, 2, 0, 0, 0, 0, {0}};
+  pkt_hello_t pkt_hello = {0};
+  pkt_data_t  pkt_data = {PROFILE_ID, 2, 0, 0, 0, 0, 0, 0};
 
   uint16_t timing_cap_val;
 
   uint16_t sfd_capture_time = 0;
 
-  uint16_t current_samples[500];
+  uint16_t current_samples[NUM_CURRENT_SAMPLES];
+  uint16_t time_samples[NUM_CURRENT_SAMPLES];
 
 
   fram_data_t fram_data;
   cc_state_e state;
 
+  bool adc_started = FALSE;
+  uint8_t sfds = 0;
+
+  uint16_t sample_index = 0;
+
+  task void state_machine();
+/*
   msp430adc12_channel_config_t coiladc_config = {
     inch:         INPUT_CHANNEL_A2,
     sref:         REFERENCE_AVcc_AVss,
    // sref:         REFERENCE_VREFplus_VREFnegterm,
     ref2_5v:      REFVOLT_LEVEL_NONE,
-    adc12ssel:    SHT_SOURCE_ACLK,
+    adc12ssel:    SHT_SOURCE_SMCLK,
     adc12div:     SHT_CLOCK_DIV_1,
     sht:          SAMPLE_HOLD_4_CYCLES,
     sampcon_ssel: SAMPCON_SOURCE_SMCLK,
@@ -66,48 +81,68 @@ implementation {
   async command const msp430adc12_channel_config_t* CoilAdcConfigure.getConfiguration () {
     return &coiladc_config;
   }
-
+*/
   event void Boot.booted() {
     call FlagGPIO.makeOutput();
     call FlagGPIO.clr();
-    // Get binary version of the ip address to send the packets to
-  //  inet_pton6(RECEIVER_ADDR, &dest.sin6_addr);
-  //  dest.sin6_port = htons(RECEIVER_PORT);
 
-    inet_pton6(CC2538_ADDR, &dest.sin6_addr);
-    dest.sin6_port = htons(VOLTAGE_PORT);
+    call CoilIn.selectModuleFunc();
+    call CoilIn.makeInput();
 
-    // Setup a default broadcast route for that destination
-    inet_pton6(CC2538_ADDR_LINKL, &next_hop);
-    //inet_pton6(ADDR_ALL_ROUTERS, &next_hop);
-    call ForwardingTable.addRoute(dest.sin6_addr.s6_addr, 128, &next_hop,
-      ROUTE_IFACE_154);
+    // Add the address and route to send to GATD
+    inet_pton6(GATD_ADDR, &gatd_dest.sin6_addr);
+    gatd_dest.sin6_port = htons(GATD_PORT);
+    inet_pton6(ADDR_ALL_ROUTERS, &gatd_next_hop);
+    call ForwardingTable.addRoute(gatd_dest.sin6_addr.s6_addr,
+                                  128,
+                                  &gatd_next_hop,
+                                  ROUTE_IFACE_154);
 
-    call Udp.bind(VOLTAGE_PORT);
+    // Add the address and route to send to the neighboring voltage node
+    inet_pton6(CC2538_ADDR, &voltage_dest.sin6_addr);
+    voltage_dest.sin6_port = htons(VOLTAGE_REQUEST_PORT);
+    inet_pton6(CC2538_ADDR_LINKL, &gatd_next_hop);
+    call ForwardingTable.addRoute(voltage_dest.sin6_addr.s6_addr,
+                                  128,
+                                  &gatd_next_hop,
+                                  ROUTE_IFACE_154);
 
+    // Want to be able to receive packets from the voltage nodes
+    call Udp.bind(VOLTAGE_REQUEST_PORT);
+
+    // We need to know when packets go in and out
     call SfdCapture.captureRisingEdge();
 
-//    state = STATE_READ_TIMING_CAP;
-    state = STATE_READ_TIMING_CAP_DONE;
+    state = STATE_START;
     call BlipControl.start();
   }
 
-  void sendMsg () {
+  // Let the ACme++ nodes know I'm alive and they should send the recent
+  // voltage
+  void send_hello_message () {
+    // Tell the radio driver what sequence number to use
+    call SeqNoControl.set_sequence_number(fram_data.seq_no);
+
+    // Send a "hello" message to the voltage meter
+    call Udp.sendto(&voltage_dest, &pkt_hello, sizeof(pkt_hello_t));
+
+    post state_machine();
+  }
+
+  void send_power_message () {
     // Tell the radio driver what sequence number to use
     call SeqNoControl.set_sequence_number(fram_data.seq_no);
 
     // Set the payload as the pkt data
-   // pkt_data.counter = fram_data.counter;
-    pkt_data.seq_no = fram_data.seq_no;
+    pkt_data.pkt_type       = PKT_TYPE_POWER;
+    pkt_data.seq_no         = fram_data.seq_no;
+    pkt_data.wakeup_counter = fram_data.wakeup_counter;
+    pkt_data.power          = fram_data.power;
+    pkt_data.power_factor   = fram_data.power_factor;
 
-    pkt_data.recv_count = fram_data.recv_count;
-    pkt_data.sfd_capture = fram_data.sfd_capture;
+    call Udp.sendto(&gatd_dest, &pkt_data, sizeof(pkt_data_t));
 
-    call Udp.sendto(&dest, &pkt_data, sizeof(pkt_data_t));
-    // Not much we can do if this returns an error
-
- //   call sendWaitTimer.startOneShot(50);
-   // call SfdCapture.captureRisingEdge();
+    post state_machine();
   }
 
   event void sendWaitTimer.fired () {
@@ -119,13 +154,97 @@ implementation {
                            void *data,
                            uint16_t len,
                            struct ip6_metadata *meta) {
-    fram_data.recv_count++;
-    fram_data.sfd_capture = htons(sfd_capture_time);
 
-    state = STATE_DONE;
-  //  call Fram.write(FRAM_ADDR_BASE, &fram_data.counter, sizeof(fram_data_t));
+
+    //post state_machine();
+    call Fram.write(30, (uint8_t) (current_samples), sample_index);
   }
 
+
+
+  void start_adc () {
+
+// Setup ADC
+
+    // Automatically do the next conversion after the last completed
+    ADC12CTL0 = 0;
+    ADC12CTL0 = (1<<7);
+    // Sample as fast as possible
+    ADC12CTL0 &= ~(0xFF<<8);
+    // Single channel multiple, SMCLK, clock divider of 1, SAMPCON from the
+    // sampling timer
+    ADC12CTL1 = (1<<9) | (0x3<<3) | (0x2<<1);
+    // Use channel A2, VCC/GND, and end of sequence (only one channel)
+    ADC12MCTL0 = (1<<7) | (0x2);
+    // Enable interrupt
+    ADC12IE = 1;
+    // Enable and start
+    ADC12CTL0 |= (1<<4) | (1<<1) | 1;
+
+    adc_started = TRUE;
+
+    // Setup DMA
+/*
+    // Set the DMA trigger select to be the ADC interrupt
+    // Use channel 0
+    DMACTL0 &= ~(0xF << 0);
+//    DMACTL0 |= (0x6 << 0);
+    // Nothing interesting here
+    DMACTL1 = 0;
+    // Enable interrupt, edge sensitive trigger, word level transfers,
+    // destination is a word, increment
+    // the destination address, use repeated single transfer
+    DMA0CTL = DMADT2 | DMADSTINCR1 | DMADSTINCR0 | DMAIE;
+    // Set the source address to the ADC memory
+    DMA0SA = ADC12MEM;
+    // Set the destination address to be an array in this app
+    DMA0DA = current_samples;
+    // Set the size to 1
+    DMA0SZ = 1;
+    // Enable DMA
+    DMA0CTL |= DMAEN;
+*/
+
+
+  }
+/*
+  TOSH_SIGNAL(DACDMA_VECTOR) {
+    if (DMA0CTL & DMAIFG) {
+      DMA0CTL &= ~DMAIFG;
+      DMA0CTL &= ~DMAABORT;
+      // DMA done
+    }
+      call FlagGPIO.toggle();
+   // }
+  }*/
+/*
+  TOSH_SIGNAL(ADC12_VECTOR) {
+    if (ADC12IV > 4) {
+      call FlagGPIO.toggle();
+    }
+  }
+*/
+
+  void stop_adc () {
+    uint16_t ctl1 = ADC12CTL1;
+    ADC12CTL1 &= ~(CONSEQ0 | CONSEQ1);
+    ADC12CTL0 &= ~(ADC12SC + ENC);
+    ADC12CTL0 &= ~(ADC12ON);
+    ADC12CTL1 |= (ctl1 & (CONSEQ0 | CONSEQ1));
+
+ //   DMA0CTL = 0;
+
+    adc_started = FALSE;
+  }
+
+  async event void HplAdc.conversionDone(uint16_t iv) {
+  //  ADC12CTL0 |= 1;
+    call FlagGPIO.toggle();
+    time_samples[sample_index] = call ConversionTimeCapture.get();
+    current_samples[sample_index++] = ADC12MEM[0];
+    //ADC12MEM
+  //  DMA0CTL |= DMAREQ;
+  }
 
 
   task void state_machine () {
@@ -146,6 +265,8 @@ implementation {
           fram_data.version_hash = IDENT_UIDHASH;
           fram_data.wakeup_counter = 0;
           fram_data.seq_no = 0;
+          fram_data.power = 0;
+          fram_data.power_factor = 0;
           state = STATE_DONE;
           call Fram.write(FRAM_ADDR_BASE, (uint8_t*) &fram_data, sizeof(fram_data_t));
         }
@@ -163,12 +284,16 @@ implementation {
         //if ((timing_cap_val >> 8) <= 2) {
           fram_data.seq_no++;
           state = STATE_SEND_HELLO_MESSAGE;
-          call Fram.write(FRAM_ADDR_BASE, (uint8_t*) &fram_data, sizeof(fram_data_t));
         } else {
-          state = STATE_DONE;
+          if (fram_data.power > 0) {
+            fram_data.seq_no++;
+            state = STATE_SEND_POWER;
+          } else {
+            state = STATE_DONE;
+          }
         }
 
-        call Fram.read(FRAM_ADDR_COUNT, (uint8_t*) &fram_data, sizeof(fram_data_t));
+        call Fram.write(FRAM_ADDR_BASE, (uint8_t*) &fram_data, sizeof(fram_data_t));
 
         break;
 
@@ -180,46 +305,80 @@ implementation {
         send_hello_message();
         break;
 
-      case STATE_SENT_HELLO_MESSAGE:
+      case STATE_SENT_HELLO_MESSAGE: {
         // Sample the ADC
 
+        int i;
+
         state = STATE_SAMPLE_CURRENT_DONE;
-        call CoilAdcStream.postBuffer(current_samples, NUM_CURRENT_SAMPLES);
-        call CoilAdcStream.read(0);
+
+        start_adc();
+    //    call FlagGPIO.toggle();
+
+    //    for (i=0; i<NUM_CURRENT_SAMPLES; i+=64) {
+    //      call CoilAdcStream.postBuffer(current_samples+i, 64);
+    //    }
+
+       // call CoilAdcStream.postBuffer(current_samples, NUM_CURRENT_SAMPLES);
+    //    call CoilAdcStream.read(0);
         break;
+      }
 
       case STATE_SAMPLE_CURRENT_DONE:
         // Wait for packet
+        state = STATE_CALCULATE_CURRENT;
+
+        call Fram.write(30, (uint8_t) (time_samples), sample_index);
+
+        break;
+
+      case STATE_CALCULATE_CURRENT:
         break;
 
 
 
-      case STATE_READ_FRAM_DONE:
-        fram_data.seq_no++;
-        state = STATE_WRITE_FRAM_DONE;
-        call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, sizeof(fram_data_t));
+
+      case STATE_SEND_POWER:
+        state = STATE_CLEAR_POWER;
+        send_power_message();
         break;
 
-      case STATE_WRITE_FRAM_DONE: {
-        error_t e;
-
+      case STATE_CLEAR_POWER:
         state = STATE_DONE;
-        sendMsg();
+        fram_data.power = 0;
+        fram_data.power_factor = 0;
+        call Fram.write(FRAM_ADDR_BASE, (uint8_t*) &fram_data, sizeof(fram_data_t));
+        break;
+
+
+
+
+//      case STATE_READ_FRAM_DONE:
+//        fram_data.seq_no++;
+//        state = STATE_WRITE_FRAM_DONE;
+//        call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, sizeof(fram_data_t));
+//        break;
+
+ //     case STATE_WRITE_FRAM_DONE: {
+ //       error_t e;
+
+//        state = STATE_DONE;
+//        sendMsg();
 
 
   //      state = STATE_SAMPLE_CURRENT_DONE;
   //      call CoilAdcStream.postBuffer(pkt_data.samples, NUM_CURRENT_SAMPLES);
   //      call CoilAdcStream.read(0);
 
-        break;
-      }
-      case STATE_SAMPLE_CURRENT_DONE:
-        state = STATE_DONE;
-        call TimeControlGPIO.makeOutput();
-        call TimeControlGPIO.set();
-        sendMsg();
+//        break;
+//      }
+//      case STATE_SAMPLE_CURRENT_DONE:
+//        state = STATE_DONE;
+//        call TimeControlGPIO.makeOutput();
+//        call TimeControlGPIO.set();
+//        sendMsg();
 
-        break;
+//        break;
 
 /*
       case STATE_INITIAL_READ:
@@ -295,8 +454,21 @@ implementation {
   }
 
   async event void SfdCapture.captured (uint16_t time) {
-    call FlagGPIO.toggle();
+    uint8_t sfds_local;
+  //  call FlagGPIO.toggle();
     atomic sfd_capture_time = time;
+
+    atomic {
+      sfds++;
+      sfds_local = sfds;
+    }
+
+ //   call FlagGPIO.toggle();
+
+    // stop adc
+    if (sfds_local > 1) {
+      stop_adc();
+    }
 
     //atomic sfd_capture_time++;
     //call SfdCapture.disable();
@@ -326,16 +498,16 @@ implementation {
     post state_machine();
   }
 
-  event void CoilAdcStream.readDone (error_t result, uint32_t usActualPeriod) {
+//  event void CoilAdcStream.readDone (error_t result, uint32_t usActualPeriod) {
   //  if (result == SUCCESS) {
    //   pkt_data.counter = 1;
   //  } else {
   //    pkt_data.counter = 2;
  ///   }
-    pkt_data.counter = (uint8_t) (usActualPeriod & 0xFF);
+   // pkt_data.counter = (uint8_t) (usActualPeriod & 0xFF);
    // pkt_data.counter = (uint8_t) (result);
- //   post state_machine();
-  }
+//    post state_machine();
+//  }
 
   event void Fram.readStatusDone (uint8_t status, error_t err) {
     post state_machine();
@@ -349,10 +521,12 @@ implementation {
     post state_machine();
   }
 
-  event void CoilAdcStream.bufferDone (error_t result, uint16_t* buf,
-    uint16_t count) {
-post state_machine();
-  }
+//  event void CoilAdcStream.bufferDone (error_t result, uint16_t* buf,
+//    uint16_t count) {
+//    post state_machine();
+//  }
+
+  async event void ConversionTimeCapture.overflow(){}
 
 
 }

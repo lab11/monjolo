@@ -38,9 +38,9 @@ implementation {
   App.VTimerRead -> Adc.Read;
   Adc.AdcConfigure -> HplVTimerC.VTimerAdcConfig;
 
-  components new AdcReadStreamClientC() as CoilAdc;
-  App.CoilAdcStream -> CoilAdc.ReadStream;
-  App.CoilAdcConfigure <- CoilAdc.AdcConfigure;
+//  components new AdcReadStreamClientC() as CoilAdc;
+//  App.CoilAdcStream -> CoilAdc.ReadStream;
+//  App.CoilAdcConfigure <- CoilAdc.AdcConfigure;
 
 
   components new GpioCaptureC() as SfdCapture;
@@ -57,4 +57,10 @@ implementation {
 
   components new TimerMilliC();
   App.sendWaitTimer -> TimerMilliC.Timer;
+
+  components HplAdc12P as HplAdc;
+  App.HplAdc -> HplAdc.HplAdc12;
+  components Counter32khz16C ;
+  App.ConversionTimeCapture -> Counter32khz16C.Counter;
+  App.CoilIn -> MspGpio.Port62;
 }
