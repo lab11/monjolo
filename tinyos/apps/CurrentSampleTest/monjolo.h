@@ -3,14 +3,7 @@
 
 #include "Ieee154.h"
 
-// MONJOLO_VERSION
-// Constant to keep track of which revision of monjolo sent the packet.
-// 0: unused
-// 1: coilcube rev a, rev b, rev c
-// 2: sEHnsor
-// 3: impulse rev a, rev b
-// 4: coilcube/splitcore with impulse
-// 5: gecko power supply + impulse
+
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 
@@ -24,6 +17,7 @@
 #define PROFILE_ID "jjAZl032Np"
 
 #define PKT_TYPE_POWER 0
+#define PKT_TYPE_SAMPLES 5
 
 #define VOLTAGE_REQUEST_PORT 39888L
 
@@ -58,6 +52,15 @@ typedef struct {
   uint32_t power_factor;
 } __attribute__((packed)) pkt_data_t;
 
+typedef struct {
+  char     profile[10]; // GATD profile ID
+  uint8_t  version;  // version of the coilcube
+  uint8_t  pkt_type; // what data this packet contains
+  uint8_t  seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
+  uint8_t  reserved;
+  uint16_t samples[NUM_CURRENT_SAMPLES];
+} __attribute__((packed)) pkt_samples_t;
+
 typedef enum {
   STATE_START,
   STATE_FRAM_READ,
@@ -69,7 +72,8 @@ typedef enum {
   STATE_CALCULATE_CURRENT,
   STATE_SEND_POWER,
   STATE_CLEAR_POWER,
-  STATE_DONE
+  STATE_DONE,
+  STATE_CALCULATE_CURRENT2
 } cc_state_e;
 
 

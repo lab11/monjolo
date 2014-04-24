@@ -43,10 +43,12 @@ implementation {
   struct sockaddr_in6 voltage_dest;
   struct in6_addr     voltage_next_hop;
   struct sockaddr_in6 gatd_dest;
+  struct sockaddr_in6 gatd_dest2;
   struct in6_addr     gatd_next_hop;
 
   pkt_hello_t pkt_hello = {0};
   pkt_data_t  pkt_data = {PROFILE_ID, 2, 0, 0, 0, 0, 0, 0};
+  pkt_samples_t pkt_samp = {PROFILE_ID, 2, 0, 0, 0, {0}};
 
   uint16_t timing_cap_val;
 
@@ -63,6 +65,7 @@ implementation {
   uint8_t sfds = 0;
 
   uint16_t sample_index = 0;
+  uint16_t write_index = 0;
 
   task void state_machine();
 /*
@@ -92,6 +95,8 @@ implementation {
     // Add the address and route to send to GATD
     inet_pton6(GATD_ADDR, &gatd_dest.sin6_addr);
     gatd_dest.sin6_port = htons(GATD_PORT);
+    inet_pton6(GATD_ADDR, &gatd_dest2.sin6_addr);
+    gatd_dest2.sin6_port = htons(6002);
     inet_pton6(ADDR_ALL_ROUTERS, &gatd_next_hop);
     call ForwardingTable.addRoute(gatd_dest.sin6_addr.s6_addr,
                                   128,
@@ -145,6 +150,20 @@ implementation {
     post state_machine();
   }
 
+  void send_samples () {
+    // Tell the radio driver what sequence number to use
+    call SeqNoControl.set_sequence_number(fram_data.seq_no);
+
+    // Set the payload as the pkt data
+    pkt_samp.pkt_type       = PKT_TYPE_SAMPLES;
+    pkt_samp.seq_no         = fram_data.seq_no;
+    memcpy(pkt_samp.samples, current_samples, sample_index);
+
+    call Udp.sendto(&gatd_dest2, &pkt_samp, 14+(2*30));
+
+    //post state_machine();
+  }
+
   event void sendWaitTimer.fired () {
   //  sfd_capture_time++;
   //  call SfdCapture.captureRisingEdge();
@@ -156,8 +175,8 @@ implementation {
                            struct ip6_metadata *meta) {
 
 
-    //post state_machine();
-    call Fram.write(30, (uint8_t) (current_samples), sample_index);
+    post state_machine();
+
   }
 
 
@@ -324,16 +343,78 @@ implementation {
         break;
       }
 
-      case STATE_SAMPLE_CURRENT_DONE:
+      case STATE_SAMPLE_CURRENT_DONE: {
+        uint16_t to_write = 50;
+
+
+
+        if (write_index >= sample_index) {
+          state = STATE_CALCULATE_CURRENT2;
+          write_index = 0;
+          // done
+
+          call Fram.write(30, (uint8_t) (time_samples+write_index), to_write);
+
+          write_index += to_write;
+
+        } else {
+          state = STATE_SAMPLE_CURRENT_DONE;
+
+          if (sample_index-write_index < to_write) {
+            to_write = sample_index-write_index;
+          }
+
+          call Fram.write(30, (uint8_t) (current_samples+write_index), to_write);
+
+          write_index += to_write;
+
+        }
+
+
         // Wait for packet
-        state = STATE_CALCULATE_CURRENT;
+    //    state = STATE_CALCULATE_CURRENT;
 
-        call Fram.write(30, (uint8_t) (time_samples), sample_index);
+
+
+    //    call Fram.write(30, (uint8_t) (time_samples), sample_index);
 
         break;
-
+}
       case STATE_CALCULATE_CURRENT:
+
+
+
         break;
+
+
+
+
+      case STATE_CALCULATE_CURRENT2:{
+        uint16_t to_write = 50;
+
+        if (write_index >= sample_index) {
+          state = STATE_DONE;
+          send_samples();
+        } else {
+
+          state = STATE_CALCULATE_CURRENT2;
+          // done
+
+          if (sample_index-write_index < to_write) {
+            to_write = sample_index-write_index;
+          }
+
+          call Fram.write(30, (uint8_t) (time_samples+write_index), to_write);
+
+          write_index += to_write;
+
+        }
+
+
+
+        break;
+
+}
 
 
 
