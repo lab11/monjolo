@@ -50,12 +50,60 @@ implementation {
   pkt_data_t  pkt_data = {PROFILE_ID, 2, 0, 0, 0, 0, 0, 0};
   pkt_samples_t pkt_samp = {PROFILE_ID, 2, 0, 0, 0, {0}};
 
+  // 16000 us period sine wave sampled every 40.375 us
+  // scaled by 32767
+  int16_t SIN_SAMPLES[396] = {
+  0, 519, 1039, 1559, 2078, 2596, 3114, 3631, 4148, 4663, 5177, 5689, 6201,
+  6710, 7218, 7725, 8229, 8731, 9231, 9729, 10224, 10717, 11206, 11694, 12178,
+  12659, 13137, 13611, 14083, 14550, 15014, 15474, 15931, 16383, 16831, 17275,
+  17715, 18150, 18580, 19006, 19427, 19844, 20255, 20661, 21062, 21457, 21848,
+  22232, 22611, 22985, 23352, 23714, 24070, 24420, 24763, 25100, 25431, 25756,
+  26074, 26386, 26691, 26989, 27280, 27565, 27842, 28113, 28377, 28633, 28882,
+  29124, 29359, 29586, 29805, 30018, 30222, 30419, 30609, 30790, 30964, 31130,
+  31289, 31439, 31582, 31716, 31843, 31961, 32072, 32174, 32269, 32355, 32433,
+  32503, 32565, 32618, 32663, 32701, 32729, 32750, 32762, 32767, 32762, 32750,
+  32729, 32701, 32663, 32618, 32565, 32503, 32433, 32355, 32269, 32174, 32072,
+  31961, 31843, 31716, 31582, 31439, 31289, 31130, 30964, 30790, 30609, 30419,
+  30222, 30018, 29805, 29586, 29359, 29124, 28882, 28633, 28377, 28113, 27842,
+  27565, 27280, 26989, 26691, 26386, 26074, 25756, 25431, 25100, 24763, 24420,
+  24070, 23714, 23352, 22985, 22611, 22232, 21848, 21457, 21062, 20661, 20255,
+  19844, 19427, 19006, 18580, 18150, 17715, 17275, 16831, 16383, 15931, 15474,
+  15014, 14550, 14083, 13611, 13137, 12659, 12178, 11694, 11206, 10717, 10224,
+  9729, 9231, 8731, 8229, 7725, 7218, 6710, 6201, 5689, 5177, 4663, 4148, 3631,
+  3114, 2596, 2078, 1559, 1039, 519, 0, -519, -1039, -1559, -2078, -2596, -3114,
+  -3631, -4148, -4663, -5177, -5689, -6201, -6710, -7218, -7725, -8229, -8731,
+  -9231, -9729, -10224, -10717, -11206, -11694, -12178, -12659, -13137, -13611,
+  -14083, -14550, -15014, -15474, -15931, -16383, -16831, -17275, -17715,
+  -18150, -18580, -19006, -19427, -19844, -20255, -20661, -21062, -21457,
+  -21848, -22232, -22611, -22985, -23352, -23714, -24070, -24420, -24763,
+  -25100, -25431, -25756, -26074, -26386, -26691, -26989, -27280, -27565,
+  -27842, -28113, -28377, -28633, -28882, -29124, -29359, -29586, -29805,
+  -30018, -30222, -30419, -30609, -30790, -30964, -31130, -31289, -31439,
+  -31582, -31716, -31843, -31961, -32072, -32174, -32269, -32355, -32433,
+  -32503, -32565, -32618, -32663, -32701, -32729, -32750, -32762, -32767,
+  -32762, -32750, -32729, -32701, -32663, -32618, -32565, -32503, -32433,
+  -32355, -32269, -32174, -32072, -31961, -31843, -31716, -31582, -31439,
+  -31289, -31130, -30964, -30790, -30609, -30419, -30222, -30018, -29805,
+  -29586, -29359, -29124, -28882, -28633, -28377, -28113, -27842, -27565,
+  -27280, -26989, -26691, -26386, -26074, -25756, -25431, -25100, -24763,
+  -24420, -24070, -23714, -23352, -22985, -22611, -22232, -21848, -21457,
+  -21062, -20661, -20255, -19844, -19427, -19006, -18580, -18150, -17715,
+  -17275, -16831, -16383, -15931, -15474, -15014, -14550, -14083, -13611,
+  -13137, -12659, -12178, -11694, -11206, -10717, -10224, -9729, -9231, -8731,
+  -8229, -7725, -7218, -6710, -6201, -5689, -5177, -4663, -4148, -3631, -3114,
+  -2596, -2078, -1559, -1039, -519
+  };
+
   uint16_t timing_cap_val;
 
   uint16_t sfd_capture_time = 0;
 
   uint16_t current_samples[NUM_CURRENT_SAMPLES];
-  uint16_t time_samples[NUM_CURRENT_SAMPLES];
+ // uint16_t time_samples[NUM_CURRENT_SAMPLES];
+
+  int32_t power[396] = {0};
+
+  uint16_t tdelta0 = 45;
 
 
   fram_data_t fram_data;
@@ -259,7 +307,7 @@ implementation {
   async event void HplAdc.conversionDone(uint16_t iv) {
   //  ADC12CTL0 |= 1;
     call FlagGPIO.toggle();
-    time_samples[sample_index] = call ConversionTimeCapture.get();
+  //  time_samples[sample_index] = call ConversionTimeCapture.get();
     current_samples[sample_index++] = ADC12MEM[0];
     //ADC12MEM
   //  DMA0CTL |= DMAREQ;
@@ -343,6 +391,36 @@ implementation {
         break;
       }
 
+
+
+      case STATE_SAMPLE_CURRENT_DONE: {
+        int i;
+
+        // Find the index of the current sample that was taken closest to when
+        // the voltage waveform had a rising zero crossing.
+        uint16_t zero_cross_index =  sample_index - 1 - tdelta0;
+
+        for (i=0; i<sample_index; i++) {
+          int32_t adc_val;
+
+
+          // Find the sample of the current waveform that we need to multiply
+          // with.
+          uint16_t current_index = (zero_cross_index + i) % sample_index;
+
+          // Shift the ADC value down from our bias offset
+          adc_val = ((int32_t) (current_samples[current_index])) - 2048;
+
+          // Get some crazy scaled value for the instantaneous power
+          // at this point in the voltage waveform (that always starts at 0);
+          power[i] = SIN_SAMPLES[i] * adc_val;
+
+        }
+      }
+
+
+
+/*
       case STATE_SAMPLE_CURRENT_DONE: {
         uint16_t to_write = 50;
 
@@ -353,7 +431,7 @@ implementation {
           write_index = 0;
           // done
 
-          call Fram.write(30, (uint8_t) (time_samples+write_index), to_write);
+          call Fram.write(30, (uint8_t*) (time_samples+write_index), to_write);
 
           write_index += to_write;
 
@@ -364,7 +442,7 @@ implementation {
             to_write = sample_index-write_index;
           }
 
-          call Fram.write(30, (uint8_t) (current_samples+write_index), to_write);
+          call Fram.write(30, (uint8_t*) (current_samples+write_index), to_write);
 
           write_index += to_write;
 
@@ -393,8 +471,8 @@ implementation {
         uint16_t to_write = 50;
 
         if (write_index >= sample_index) {
-          state = STATE_DONE;
-          send_samples();
+          state = STATE_SEND_SAMPLES;
+          call Fram.write(2, (uint8_t*) &sfd_capture_time, 2);
         } else {
 
           state = STATE_CALCULATE_CURRENT2;
@@ -404,7 +482,7 @@ implementation {
             to_write = sample_index-write_index;
           }
 
-          call Fram.write(30, (uint8_t) (time_samples+write_index), to_write);
+          call Fram.write(30, (uint8_t*) (time_samples+write_index), to_write);
 
           write_index += to_write;
 
@@ -417,7 +495,12 @@ implementation {
 }
 
 
+      case STATE_SEND_SAMPLES:
+        state = STATE_DONE;
+        send_samples();
+        break;
 
+*/
 
       case STATE_SEND_POWER:
         state = STATE_CLEAR_POWER;

@@ -58,7 +58,7 @@ typedef struct {
   uint8_t  pkt_type; // what data this packet contains
   uint8_t  seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
   uint8_t  reserved;
-  uint16_t samples[NUM_CURRENT_SAMPLES];
+  uint16_t samples[30];
 } __attribute__((packed)) pkt_samples_t;
 
 typedef enum {
@@ -73,7 +73,8 @@ typedef enum {
   STATE_SEND_POWER,
   STATE_CLEAR_POWER,
   STATE_DONE,
-  STATE_CALCULATE_CURRENT2
+  STATE_CALCULATE_CURRENT2,
+  STATE_SEND_SAMPLES
 } cc_state_e;
 
 
