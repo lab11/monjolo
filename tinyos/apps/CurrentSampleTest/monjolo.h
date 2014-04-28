@@ -7,9 +7,10 @@
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 
-#define ACME_ADDR "2607:f018:800:103:60f:7db8:12:4b00"
+#define ACME_ADDR       "2607:f018:800:103:60f:7db8:12:4b00"
+#define ACME_ADDR_LINKL "fe80::60f:7db8:12:4b00"
 
-#define CC2538_ADDR "2607:f018:800:103:1034:5678:90ab:cdef"
+#define CC2538_ADDR       "2607:f018:800:103:1034:5678:90ab:cdef"
 #define CC2538_ADDR_LINKL "fe80::1034:5678:90ab:cdef"
 
 #define GATD_ADDR "2001:470:1f10:1320::2"
@@ -19,7 +20,7 @@
 #define PKT_TYPE_POWER 0
 #define PKT_TYPE_SAMPLES 5
 
-#define VOLTAGE_REQUEST_PORT 39888L
+#define VOLTAGE_REQUEST_PORT 39888U
 
 #define NUM_CURRENT_SAMPLES 500
 
@@ -54,7 +55,7 @@ typedef struct {
 
 typedef struct {
   char     profile[10]; // GATD profile ID
-  uint8_t  version;  // version of the coilcube
+  uint8_t  version;  // ver `sion of the coilcube
   uint8_t  pkt_type; // what data this packet contains
   uint8_t  seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
   uint8_t  reserved;
@@ -64,7 +65,7 @@ typedef struct {
 typedef enum {
   STATE_START,
   STATE_FRAM_READ,
-  STATE_READ_TIMING_CAP,
+  //STATE_READ_TIMING_CAP,
   STATE_READ_TIMING_CAP_DONE,
   STATE_SEND_HELLO_MESSAGE,
   STATE_SENT_HELLO_MESSAGE,

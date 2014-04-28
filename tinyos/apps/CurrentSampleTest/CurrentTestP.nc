@@ -20,7 +20,7 @@ module CurrentTestP {
 
     interface HplMsp430GeneralIO as FlagGPIO;
 
-    interface Read<uint16_t> as VTimerRead;
+  //  interface Read<uint16_t> as VTimerRead;
 
     interface HplMsp430GeneralIO as TimeControlGPIO;
 
@@ -30,9 +30,13 @@ module CurrentTestP {
 
     interface Timer<TMilli> as sendWaitTimer;
 
-    interface HplAdc12 as HplAdc;
+  //  interface HplAdc12 as HplAdc;
     interface Counter<T32khz,uint16_t> as ConversionTimeCapture;
     interface HplMsp430GeneralIO as CoilIn;
+
+    interface Msp430Timer as TimerA;;
+    interface Msp430TimerControl as ControlA1;
+    interface Msp430Compare as CompareA1;
   }
 //  provides{
 //    interface AdcConfigure<const msp430adc12_channel_config_t*> as CoilAdcConfigure;
@@ -98,12 +102,14 @@ implementation {
 
   uint16_t sfd_capture_time = 0;
 
-  uint16_t current_samples[NUM_CURRENT_SAMPLES];
+  uint16_t adc_current_samples[NUM_CURRENT_SAMPLES];
  // uint16_t time_samples[NUM_CURRENT_SAMPLES];
 
   int32_t power[396] = {0};
 
   uint16_t tdelta0 = 45;
+
+  uint32_t voltage_ac_max = 0;
 
 
   fram_data_t fram_data;
@@ -114,6 +120,10 @@ implementation {
 
   uint16_t sample_index = 0;
   uint16_t write_index = 0;
+
+
+
+  int64_t power_average = 0;
 
   task void state_machine();
 /*
@@ -152,6 +162,15 @@ implementation {
                                   ROUTE_IFACE_154);
 
     // Add the address and route to send to the neighboring voltage node
+#if 1
+    inet_pton6(ACME_ADDR, &voltage_dest.sin6_addr);
+    voltage_dest.sin6_port = htons(VOLTAGE_REQUEST_PORT);
+    inet_pton6(ACME_ADDR_LINKL, &gatd_next_hop);
+    call ForwardingTable.addRoute(voltage_dest.sin6_addr.s6_addr,
+                                  128,
+                                  &gatd_next_hop,
+                                  ROUTE_IFACE_154);
+#else
     inet_pton6(CC2538_ADDR, &voltage_dest.sin6_addr);
     voltage_dest.sin6_port = htons(VOLTAGE_REQUEST_PORT);
     inet_pton6(CC2538_ADDR_LINKL, &gatd_next_hop);
@@ -159,7 +178,7 @@ implementation {
                                   128,
                                   &gatd_next_hop,
                                   ROUTE_IFACE_154);
-
+#endif
     // Want to be able to receive packets from the voltage nodes
     call Udp.bind(VOLTAGE_REQUEST_PORT);
 
@@ -190,10 +209,11 @@ implementation {
     pkt_data.pkt_type       = PKT_TYPE_POWER;
     pkt_data.seq_no         = fram_data.seq_no;
     pkt_data.wakeup_counter = fram_data.wakeup_counter;
-    pkt_data.power          = fram_data.power;
+    pkt_data.power          = htonl((uint32_t) power_average);
     pkt_data.power_factor   = fram_data.power_factor;
+    pkt_data.power_factor   = 0xAABBEEDD;
 
-    call Udp.sendto(&gatd_dest, &pkt_data, sizeof(pkt_data_t));
+    call Udp.sendto(&gatd_dest2, &pkt_data, sizeof(pkt_data_t));
 
     post state_machine();
   }
@@ -205,7 +225,7 @@ implementation {
     // Set the payload as the pkt data
     pkt_samp.pkt_type       = PKT_TYPE_SAMPLES;
     pkt_samp.seq_no         = fram_data.seq_no;
-    memcpy(pkt_samp.samples, current_samples, sample_index);
+    memcpy(pkt_samp.samples, adc_current_samples, sample_index);
 
     call Udp.sendto(&gatd_dest2, &pkt_samp, 14+(2*30));
 
@@ -222,7 +242,7 @@ implementation {
                            uint16_t len,
                            struct ip6_metadata *meta) {
 
-
+    call FlagGPIO.toggle();
     post state_machine();
 
   }
@@ -232,7 +252,7 @@ implementation {
   void start_adc () {
 
 // Setup ADC
-
+/* try 1
     // Automatically do the next conversion after the last completed
     ADC12CTL0 = 0;
     ADC12CTL0 = (1<<7);
@@ -241,6 +261,36 @@ implementation {
     // Single channel multiple, SMCLK, clock divider of 1, SAMPCON from the
     // sampling timer
     ADC12CTL1 = (1<<9) | (0x3<<3) | (0x2<<1);
+    // Use channel A2, VCC/GND, and end of sequence (only one channel)
+    ADC12MCTL0 = (1<<7) | (0x2);
+    // Enable interrupt
+    ADC12IE = 1;
+    // Enable and start
+    ADC12CTL0 |= (1<<4) | (1<<1) | 1;
+
+    adc_started = TRUE;*/
+
+
+    msp430_compare_control_t com_ctrl = {
+      ccifg : 0, cov : 0, out : 1, cci : 0, ccie : 0,
+      outmod : 4, cap : 0, clld : 0, scs : 0, ccis : 0, cm : 0 };
+
+
+    call TimerA.setMode(MSP430TIMER_STOP_MODE);
+    call TimerA.clear();
+    call TimerA.disableEvents();
+    call TimerA.setClockSource(0x2);
+    call TimerA.setInputDivider(0);
+    call CompareA1.setEvent(40);
+    call ControlA1.setControl(com_ctrl);
+    call TimerA.setMode(MSP430TIMER_UP_MODE);
+
+
+    // Sample as fast as possible, no auto start after each conversion
+    ADC12CTL0 = 0;
+    // Single channel multiple, SMCLK, clock divider of 1, SAMPCON from the
+    // sampling timer, sample and hold from timer A, conversion address 0
+    ADC12CTL1 = (0x1<<10) | (1<<9) | (0x3<<3) | (0x2<<1);
     // Use channel A2, VCC/GND, and end of sequence (only one channel)
     ADC12MCTL0 = (1<<7) | (0x2);
     // Enable interrupt
@@ -284,13 +334,14 @@ implementation {
       call FlagGPIO.toggle();
    // }
   }*/
-/*
+
   TOSH_SIGNAL(ADC12_VECTOR) {
     if (ADC12IV > 4) {
-      call FlagGPIO.toggle();
+      P5OUT ^= 0x20;
+      adc_current_samples[0] = ADC12MEM[0];
     }
   }
-*/
+
 
   void stop_adc () {
     uint16_t ctl1 = ADC12CTL1;
@@ -303,15 +354,19 @@ implementation {
 
     adc_started = FALSE;
   }
-
+/*
   async event void HplAdc.conversionDone(uint16_t iv) {
   //  ADC12CTL0 |= 1;
-    call FlagGPIO.toggle();
+  //  call FlagGPIO.toggle();
   //  time_samples[sample_index] = call ConversionTimeCapture.get();
-    current_samples[sample_index++] = ADC12MEM[0];
+    atomic {
+      if (sample_index < NUM_CURRENT_SAMPLES-50) {
+        adc_current_samples[sample_index++] = ADC12MEM[0];
+      }
+    }
     //ADC12MEM
   //  DMA0CTL |= DMAREQ;
-  }
+  }*/
 
 
   task void state_machine () {
@@ -325,8 +380,26 @@ implementation {
       case STATE_FRAM_READ:
         if (fram_data.version_hash == IDENT_UIDHASH) {
           fram_data.wakeup_counter++;
-          state = STATE_READ_TIMING_CAP_DONE;
-          call VTimerRead.read();
+ //         state = STATE_READ_TIMING_CAP_DONE;
+ //         call VTimerRead.read();
+
+          if (1) {
+          //if ((timing_cap_val >> 8) <= 2) {
+            fram_data.seq_no++;
+            state = STATE_SEND_HELLO_MESSAGE;
+          } else {
+            if (fram_data.power > 0) {
+              fram_data.seq_no++;
+              state = STATE_SEND_POWER;
+            } else {
+              state = STATE_DONE;
+            }
+          }
+
+          call Fram.write(FRAM_ADDR_BASE, (uint8_t*) &fram_data, sizeof(fram_data_t));
+
+
+
         } else {
           // Initialize
           fram_data.version_hash = IDENT_UIDHASH;
@@ -340,10 +413,10 @@ implementation {
 
         break;
 
-      case STATE_READ_TIMING_CAP:
+  /*    case STATE_READ_TIMING_CAP:
         state = STATE_READ_TIMING_CAP_DONE;
         call VTimerRead.read();
-        break;
+        break;*/
 
       case STATE_READ_TIMING_CAP_DONE: {
 
@@ -375,11 +448,14 @@ implementation {
       case STATE_SENT_HELLO_MESSAGE: {
         // Sample the ADC
 
-        int i;
 
         state = STATE_SAMPLE_CURRENT_DONE;
 
         start_adc();
+
+
+
+
     //    call FlagGPIO.toggle();
 
     //    for (i=0; i<NUM_CURRENT_SAMPLES; i+=64) {
@@ -398,24 +474,58 @@ implementation {
 
         // Find the index of the current sample that was taken closest to when
         // the voltage waveform had a rising zero crossing.
-        uint16_t zero_cross_index =  sample_index - 1 - tdelta0;
+        uint16_t zero_cross_index;
+        uint16_t local_sample_index;
 
-        for (i=0; i<sample_index; i++) {
-          int32_t adc_val;
+        int64_t power_total = 0;
+
+        atomic {
+          local_sample_index = sample_index;
+        }
+
+zero_cross_index =  local_sample_index - 1 - tdelta0;
+
+
+        state = STATE_DONE;
+
+        for (i=0; i<local_sample_index; i++) {
+          int32_t adc_current_no_bias;
+
+
 
 
           // Find the sample of the current waveform that we need to multiply
           // with.
-          uint16_t current_index = (zero_cross_index + i) % sample_index;
+          uint16_t current_index = (zero_cross_index + i) % local_sample_index;
+
+          if (i > 395) {
+            break;
+          }
+
+
 
           // Shift the ADC value down from our bias offset
-          adc_val = ((int32_t) (current_samples[current_index])) - 2048;
+          adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2048;
 
           // Get some crazy scaled value for the instantaneous power
           // at this point in the voltage waveform (that always starts at 0);
-          power[i] = SIN_SAMPLES[i] * adc_val;
+          power[i] = ((int32_t) SIN_SAMPLES[i]) * voltage_ac_max * adc_current_no_bias;
+
+
+
+          power_total += (int64_t) power[i];
+
+          call FlagGPIO.toggle();
 
         }
+
+        power_average =  power_total / (int64_t) local_sample_index;
+
+        call FlagGPIO.toggle();
+
+        send_power_message();
+
+
       }
 
 
@@ -657,10 +767,10 @@ implementation {
     post state_machine();
   }
 
-  event void VTimerRead.readDone (error_t result, uint16_t val) {
-    timing_cap_val = val;
-    post state_machine();
-  }
+//  event void VTimerRead.readDone (error_t result, uint16_t val) {
+//    timing_cap_val = val;
+//    post state_machine();
+//  }
 
 //  event void CoilAdcStream.readDone (error_t result, uint32_t usActualPeriod) {
   //  if (result == SUCCESS) {
@@ -691,6 +801,9 @@ implementation {
 //  }
 
   async event void ConversionTimeCapture.overflow(){}
+
+  async event void TimerA.overflow() {}
+  async event void CompareA1.fired(){}
 
 
 }

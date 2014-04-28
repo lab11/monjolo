@@ -32,11 +32,11 @@ implementation {
   components HplFlagC;
   App.FlagGPIO -> HplFlagC.FlagGPIO;
 
-  components HplVTimerC;
-  components new AdcReadClientC() as Adc;
-  App.TimeControlGPIO -> HplVTimerC.TimeControlGPIO;
-  App.VTimerRead -> Adc.Read;
-  Adc.AdcConfigure -> HplVTimerC.VTimerAdcConfig;
+//  components HplVTimerC;
+//  components new AdcReadClientC() as Adc;
+//  App.TimeControlGPIO -> HplVTimerC.TimeControlGPIO;
+//  App.VTimerRead -> Adc.Read;
+//  Adc.AdcConfigure -> HplVTimerC.VTimerAdcConfig;
 
 //  components new AdcReadStreamClientC() as CoilAdc;
 //  App.CoilAdcStream -> CoilAdc.ReadStream;
@@ -58,9 +58,17 @@ implementation {
   components new TimerMilliC();
   App.sendWaitTimer -> TimerMilliC.Timer;
 
-  components HplAdc12P as HplAdc;
-  App.HplAdc -> HplAdc.HplAdc12;
+  //components HplAdc12P as HplAdc;
+  //App.HplAdc -> HplAdc.HplAdc12;
   components Counter32khz16C ;
   App.ConversionTimeCapture -> Counter32khz16C.Counter;
   App.CoilIn -> MspGpio.Port62;
+
+
+
+
+  components Msp430TimerC;
+  App.TimerA -> Msp430TimerC.TimerA;
+  App.ControlA1 -> Msp430TimerC.ControlA1;
+  App.CompareA1 -> Msp430TimerC.CompareA1;
 }
