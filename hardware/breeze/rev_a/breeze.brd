@@ -138,7 +138,7 @@
 <wire x1="3.302" y1="12.192" x2="3.302" y2="12.446" width="0" layer="20"/>
 <wire x1="3.302" y1="12.446" x2="2.794" y2="12.954" width="0" layer="20" curve="90"/>
 <wire x1="2.794" y1="12.954" x2="0" y2="12.954" width="0" layer="20"/>
-<text x="4.9784" y="14.351" size="0.762" layer="21" font="vector" ratio="12" align="bottom-center">2014/04/09</text>
+<text x="4.9784" y="14.351" size="0.762" layer="21" font="vector" ratio="12" align="bottom-center">2014/04/28</text>
 <text x="3.5306" y="2.7432" size="0.762" layer="21" font="vector" ratio="12" align="center">A</text>
 <wire x1="2.9718" y1="3.2512" x2="2.9718" y2="2.2352" width="0.127" layer="21"/>
 <wire x1="2.9718" y1="2.2352" x2="3.937" y2="2.2352" width="0.127" layer="21"/>
