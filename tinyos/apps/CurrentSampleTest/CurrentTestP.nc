@@ -34,9 +34,9 @@ module CurrentTestP {
     interface Counter<T32khz,uint16_t> as ConversionTimeCapture;
     interface HplMsp430GeneralIO as CoilIn;
 
-    interface Msp430Timer as TimerA;;
-    interface Msp430TimerControl as ControlA1;
-    interface Msp430Compare as CompareA1;
+//    interface Msp430Timer as TimerA;;
+//    interface Msp430TimerControl as ControlA1;
+//    interface Msp430Compare as CompareA1;
   }
 //  provides{
 //    interface AdcConfigure<const msp430adc12_channel_config_t*> as CoilAdcConfigure;
@@ -271,11 +271,25 @@ implementation {
     adc_started = TRUE;*/
 
 
-    msp430_compare_control_t com_ctrl = {
-      ccifg : 0, cov : 0, out : 1, cci : 0, ccie : 0,
-      outmod : 4, cap : 0, clld : 0, scs : 0, ccis : 0, cm : 0 };
+  //  msp430_compare_control_t com_ctrl = {
+  //    ccifg : 0, cov : 0, out : 1, cci : 0, ccie : 0,
+  //    outmod : 4, cap : 0, clld : 0, scs : 0, ccis : 0, cm : 0 };
 
+//    P1SEL |= 0x40;
+//    P1DIR |= 0x40;
 
+    // Up mode, /1 divider, SMCLK
+    TACTL = 0;
+    TACTL = TASSEL_2 | ID_0 | MC_1;
+
+    // Toggle mode
+    TACCTL1 = 0x0000;
+    TACCTL1 = CM0 | CCIS_0 | OUTMOD_4;
+
+    TACCR0 = 20;
+    TACCR1 = 20;
+
+/*
     call TimerA.setMode(MSP430TIMER_STOP_MODE);
     call TimerA.clear();
     call TimerA.disableEvents();
@@ -283,7 +297,7 @@ implementation {
     call TimerA.setInputDivider(0);
     call CompareA1.setEvent(40);
     call ControlA1.setControl(com_ctrl);
-    call TimerA.setMode(MSP430TIMER_UP_MODE);
+    call TimerA.setMode(MSP430TIMER_UP_MODE);*/
 
 
     // Sample as fast as possible, no auto start after each conversion
@@ -336,9 +350,9 @@ implementation {
   }*/
 
   TOSH_SIGNAL(ADC12_VECTOR) {
-    if (ADC12IV > 4) {
+    if (sample_index < NUM_CURRENT_SAMPLES) {
       P5OUT ^= 0x20;
-      adc_current_samples[0] = ADC12MEM[0];
+      adc_current_samples[sample_index++] = ADC12MEM[0];
     }
   }
 
@@ -351,6 +365,9 @@ implementation {
     ADC12CTL1 |= (ctl1 & (CONSEQ0 | CONSEQ1));
 
  //   DMA0CTL = 0;
+
+    TACTL = 0;
+    TACCTL1 = 0x0000;
 
     adc_started = FALSE;
   }
@@ -802,8 +819,8 @@ zero_cross_index =  local_sample_index - 1 - tdelta0;
 
   async event void ConversionTimeCapture.overflow(){}
 
-  async event void TimerA.overflow() {}
-  async event void CompareA1.fired(){}
+//  async event void TimerA.overflow() {}
+//  async event void CompareA1.fired(){}
 
 
 }

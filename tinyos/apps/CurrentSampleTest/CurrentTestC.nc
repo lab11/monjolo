@@ -66,9 +66,9 @@ implementation {
 
 
 
-
+/*
   components Msp430TimerC;
   App.TimerA -> Msp430TimerC.TimerA;
   App.ControlA1 -> Msp430TimerC.ControlA1;
-  App.CompareA1 -> Msp430TimerC.CompareA1;
+  App.CompareA1 -> Msp430TimerC.CompareA1;*/
 }
