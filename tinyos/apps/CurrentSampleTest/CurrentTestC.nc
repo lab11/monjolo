@@ -55,8 +55,6 @@ implementation {
   //App.SfdCapture -> HplCC2420FbC.SfdCapture;
 
 
-  components new TimerMilliC();
-  App.sendWaitTimer -> TimerMilliC.Timer;
 
   //components HplAdc12P as HplAdc;
   //App.HplAdc -> HplAdc.HplAdc12;

@@ -62,20 +62,23 @@ typedef struct {
   uint16_t samples[30];
 } __attribute__((packed)) pkt_samples_t;
 
+typedef nx_struct {
+  nx_uint32_t vpeak;              // max voltage of AC waveform
+  nx_uint32_t ticks_since_rising; // time from rising zero-crossing of AC signal to SFD
+  nx_uint16_t chksum_balance;     // 16 bits to compensate for checksum
+  nx_uint8_t  ending;             // Magic byte to identify these packets
+} __attribute__ ((__packed__)) voltage_data_t;
+
 typedef enum {
   STATE_START,
   STATE_FRAM_READ,
-  //STATE_READ_TIMING_CAP,
   STATE_READ_TIMING_CAP_DONE,
   STATE_SEND_HELLO_MESSAGE,
   STATE_SENT_HELLO_MESSAGE,
   STATE_SAMPLE_CURRENT_DONE,
-  STATE_CALCULATE_CURRENT,
   STATE_SEND_POWER,
   STATE_CLEAR_POWER,
-  STATE_DONE,
-  STATE_CALCULATE_CURRENT2,
-  STATE_SEND_SAMPLES
+  STATE_DONE
 } cc_state_e;
 
 
