@@ -101,6 +101,7 @@ implementation {
 
   // Peak AC voltage of the AC wave, in millivolts
   uint32_t voltage_ac_max = 0;
+  uint32_t ticks_since_rising = 0;
 
 
   fram_data_t fram_data;
@@ -185,9 +186,12 @@ implementation {
     pkt_data.pkt_type       = PKT_TYPE_POWER;
     pkt_data.seq_no         = fram_data.seq_no;
     pkt_data.wakeup_counter = fram_data.wakeup_counter;
-    pkt_data.power          = htonl((uint32_t) power_average);
-    pkt_data.power_factor   = fram_data.power_factor;
+    pkt_data.power          = (int32_t) power_average;
+    //pkt_data.power_factor   = fram_data.power_factor;
     pkt_data.power_factor   = 0xAABBEEDD;
+    pkt_data.tdelta         = tdelta0;
+    pkt_data.voltage        = voltage_ac_max;
+    pkt_data.ticks          = ticks_since_rising;
 
     call Udp.sendto(&gatd_dest2, &pkt_data, sizeof(pkt_data_t));
 
@@ -210,6 +214,8 @@ P5OUT ^= 0x20;
 
     voltage_ac_max = volt_data->vpeak;
 
+    ticks_since_rising = volt_data->ticks_since_rising;
+
     // Calculate the phase offset in 40 us periods
     time_calc = ((volt_data->ticks_since_rising * 3125) / 4000000);
     tdelta0 = (uint16_t) time_calc;
@@ -220,8 +226,8 @@ P5OUT ^= 0x20;
   // Configure the ADC to sample the current waveform
   void start_adc () {
 
-P1SEL |= 0x40;
-P1DIR |= 0x40;
+//P1SEL |= 0x40;
+//P1DIR |= 0x40;
 
     // SETUP TIMER A
     // Use timer a to sample the ADC every 40 microseconds
@@ -273,7 +279,7 @@ P1DIR |= 0x40;
 
 atomic{
     reading = ADC12MEM[0];
-    P5OUT ^= 0x20;
+  //  P5OUT ^= 0x20;
     if (state == STATE_READ_TIMING_CAP_DONE) {
       timing_cap_val = reading;
       stop_adc();
@@ -405,10 +411,13 @@ atomic{
 
           // Shift the ADC value down from our bias offset
           adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2048;
+        //  adc_current_no_bias = ((int32_t) adc_current_samples[current_index]);
+        //  adc_current_no_bias = -12;
 
           // Get some crazy scaled value for the instantaneous power
           // at this point in the voltage waveform (that always starts at 0);
-          power[i] = ((int32_t) SIN_SAMPLES[i]) * voltage_ac_max * adc_current_no_bias;
+          power[i] = ((int32_t) SIN_SAMPLES[i]) * adc_current_no_bias;
+        //  power[i] = adc_current_no_bias;
 
           // Accumulate the power total
           power_total += (int64_t) power[i];
@@ -422,7 +431,9 @@ atomic{
         call FlagGPIO.toggle();
 
         // Calculate an average
-        power_average =  power_total / (int64_t) local_sample_index;
+      //  power_average = (power_total / (int64_t) iterations) * voltage_ac_max;
+        power_average = (power_total / (int64_t) iterations) * 171000;
+      //  power_average = (power_total / (int64_t) iterations);
 
         // Send the result
         send_power_message();
@@ -462,6 +473,9 @@ atomic{
       sfds++;
       sfds_local = sfds;
     }
+
+    P5OUT ^= 0x20;
+
 
  //   call FlagGPIO.toggle();
 

@@ -42,15 +42,18 @@ typedef struct {
   uint8_t hello_message;
 } __attribute__((packed)) pkt_hello_t;
 
-typedef struct {
-  char     profile[10]; // GATD profile ID
-  uint8_t  version;  // version of the coilcube
-  uint8_t  pkt_type; // what data this packet contains
-  uint8_t  seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
-  uint8_t  reserved;
-  uint32_t wakeup_counter;  // number of wakeups of the coilcube
-  uint32_t power;
-  uint32_t power_factor;
+typedef nx_struct {
+  nx_uint8_t  profile[10]; // GATD profile ID
+  nx_uint8_t  version;     // version of the coilcube
+  nx_uint8_t  pkt_type;    // what data this packet contains
+  nx_uint8_t  seq_no;      // copy of the 15.4 sequence number as this will be lost (udp)
+  nx_uint8_t  reserved;
+  nx_uint32_t wakeup_counter;  // number of wakeups of the coilcube
+  nx_int32_t power;
+  nx_uint32_t power_factor;
+  nx_uint16_t tdelta;
+  nx_uint32_t voltage;
+  nx_uint32_t ticks;
 } __attribute__((packed)) pkt_data_t;
 
 typedef struct {
