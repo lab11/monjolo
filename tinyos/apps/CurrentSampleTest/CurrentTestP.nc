@@ -93,7 +93,7 @@ implementation {
 
   uint16_t adc_current_samples[NUM_CURRENT_SAMPLES];
 
-  int32_t power[396] = {0};
+ // int32_t power[396] = {0};
 
   // Number of 40 us periods between when the SFD of the voltage info
   // packet and the zero crossing of the AC wave
@@ -188,7 +188,7 @@ implementation {
     pkt_data.wakeup_counter = fram_data.wakeup_counter;
     pkt_data.power          = (int32_t) power_average;
     //pkt_data.power_factor   = fram_data.power_factor;
-    pkt_data.power_factor   = 0xAABBEEDD;
+    pkt_data.power_factor   = sample_index;
     pkt_data.tdelta         = tdelta0;
     pkt_data.voltage        = voltage_ac_max;
     pkt_data.ticks          = ticks_since_rising;
@@ -217,7 +217,24 @@ P5OUT ^= 0x20;
     ticks_since_rising = volt_data->ticks_since_rising;
 
     // Calculate the phase offset in 40 us periods
-    time_calc = ((volt_data->ticks_since_rising * 3125) / 4000000);
+    // The ticks_since_rising (TSR) is counter ticks of a 32MHz counter
+    // between when the ADE7753 ZX line went high and when the SFD line
+    // of the packet we just received went high. We sample the current waveform
+    // every 40us, so we need to know how many samples ago the rising zero
+    // crossing of the voltage waveform occurred.
+    // The ADE7753 ZX line has a phase offset from when the voltage actually
+    // crosses zero that was empirically measured to be about 1.19ms.
+    //
+    //
+    //             (TSR * 31.25ns) + 1.19ms
+    //  tdelta0 =  ------------------------
+    //                      40us
+    //
+    //             (TSR * 3125dps) + 119000000dps
+    //          =  ------------------------------
+    //                      4000000dps
+    //
+    time_calc = ((volt_data->ticks_since_rising * 3125) / 4000000) + 30;
     tdelta0 = (uint16_t) time_calc;
 
     post state_machine();
@@ -384,6 +401,7 @@ atomic{
         uint16_t local_sample_index;
         uint16_t iterations = 396;
 
+        int64_t power = 0;
         int64_t power_total = 0;
 
         state = STATE_DONE;
@@ -400,6 +418,8 @@ atomic{
           iterations = local_sample_index;
         }
 
+power_average = 0;
+
         // Iterate over all of the current samples and multiply them by the
         // reconstructed voltage
         for (i=0; i<iterations; i++) {
@@ -410,19 +430,27 @@ atomic{
           uint16_t current_index = (zero_cross_index + i) % local_sample_index;
 
           // Shift the ADC value down from our bias offset
-          adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2048;
+          adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2031;
         //  adc_current_no_bias = ((int32_t) adc_current_samples[current_index]);
         //  adc_current_no_bias = -12;
 
           // Get some crazy scaled value for the instantaneous power
           // at this point in the voltage waveform (that always starts at 0);
-          power[i] = ((int32_t) SIN_SAMPLES[i]) * adc_current_no_bias;
+          power = ((int32_t) (SIN_SAMPLES[i])) * adc_current_no_bias;
         //  power[i] = adc_current_no_bias;
 
           // Accumulate the power total
-          power_total += (int64_t) power[i];
+          power_total += power;
 
       //    call FlagGPIO.toggle();
+/*
+if (SIN_SAMPLES[i]>0 && adc_current_no_bias < 0) {
+  power_average += 1;
+} else if (SIN_SAMPLES[i]<0 && adc_current_no_bias > 0) {
+  power_average += 1;
+} else {
+   power_total += power;
+}*/
         }
 
         call FlagGPIO.toggle();
@@ -432,8 +460,8 @@ atomic{
 
         // Calculate an average
       //  power_average = (power_total / (int64_t) iterations) * voltage_ac_max;
-        power_average = (power_total / (int64_t) iterations) * 171000;
-      //  power_average = (power_total / (int64_t) iterations);
+//        power_average = (power_total / (int64_t) iterations) * 171000;
+        power_average = (power_total / (int64_t) iterations);
 
         // Send the result
         send_power_message();
