@@ -190,9 +190,9 @@ implementation {
     pkt_data.pkt_type       = PKT_TYPE_POWER;
     pkt_data.seq_no         = fram_data.seq_no;
     pkt_data.wakeup_counter = fram_data.wakeup_counter;
-    pkt_data.power          = (int32_t) power_average;
+    pkt_data.power          = fram_data.power;
     pkt_data.power_factor   = fram_data.power_factor;
-    pkt_data.voltage        = voltage_ac_max;
+    pkt_data.voltage        = fram_data.voltage;
 
     call Udp.sendto(&gatd_dest2, &pkt_data, sizeof(pkt_data_t));
 
@@ -408,6 +408,7 @@ implementation {
           fram_data.seq_no         = 0;
           fram_data.power          = 0;
           fram_data.power_factor   = 0;
+          fram_data.voltage        = 0;
           state = STATE_DONE;
           write_fram();
         }
@@ -514,8 +515,13 @@ if (SIN_SAMPLES[i]>0 && adc_current_no_bias < 0) {
 //        power_average = (power_total / (int64_t) iterations) * 171000;
         power_average = (power_total / (int64_t) iterations);
 
+        fram_data.power = (int32_t) power_average;
+        fram_data.voltage = voltage_ac_max;
+
+        write_fram();
+
         // Send the result
-        send_power_debug_message();
+      //  send_power_debug_message();
         break;
       }
 
@@ -530,7 +536,6 @@ if (SIN_SAMPLES[i]>0 && adc_current_no_bias < 0) {
       case STATE_CLEAR_POWER:
         state = STATE_DONE;
         fram_data.power = 0;
-        fram_data.power_factor = 0;
         write_fram();
         break;
 

@@ -66,6 +66,7 @@ typedef struct {
   uint8_t  seq_no;         // 802.15.4 seq no so it can increment as the spec expects
   int32_t  power;          // Stored power value from the last wakeup
   uint32_t power_factor;   // Stored power factor from the last wakeup (not used yet)
+  uint32_t voltage;        // Peak AC voltage in mV
 } fram_data_t;
 
 // The data structure transmitted to the voltage monitor requesting
