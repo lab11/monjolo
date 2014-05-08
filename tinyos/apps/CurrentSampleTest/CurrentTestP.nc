@@ -263,8 +263,9 @@ implementation {
     //
     time_calc = ((volt_data->ticks_since_rising * 3125) / 4000000) + 30;
     tdelta0 = (uint16_t) time_calc;
-
-    post state_machine();
+P5OUT ^= 0x20;
+    //post state_machine();
+    call BlipControl.stop();
   }
 
   // Configure the ADC to sample the timing capacitor
@@ -355,7 +356,6 @@ implementation {
         post state_machine();
       } else {
         if (edges_caught < 2) {
-          P5OUT ^= 0x20;
           if (sample_index < NUM_CURRENT_SAMPLES) {
             adc_current_samples[sample_index++] = reading;
           }
@@ -452,6 +452,7 @@ implementation {
         uint16_t zero_cross_index;
         uint16_t local_sample_index;
         uint16_t iterations = 396;
+        //uint16_t iterations = 225;
 
         int64_t power = 0;
         int64_t power_total = 0;
@@ -475,20 +476,31 @@ power_average = 0;
         // Iterate over all of the current samples and multiply them by the
         // reconstructed voltage
         for (i=0; i<iterations; i++) {
-          int32_t adc_current_no_bias;
+          int16_t adc_current_no_bias;
+          uint16_t sample;
 
           // Find the sample of the current waveform that we need to multiply
           // with.
           uint16_t current_index = (zero_cross_index + i) % local_sample_index;
 
           // Shift the ADC value down from our bias offset
-          adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2031;
+        //  adc_current_no_bias = ((int32_t) (adc_current_samples[current_index])) - 2031;
+
+          sample = adc_current_samples[current_index];
+
+          if (sample > 2031) {
+            adc_current_no_bias = sample - 2031;
+          } else {
+            adc_current_no_bias = 2031 - sample;
+            adc_current_no_bias *= -1;
+          }
+
         //  adc_current_no_bias = ((int32_t) adc_current_samples[current_index]);
         //  adc_current_no_bias = -12;
 
           // Get some crazy scaled value for the instantaneous power
           // at this point in the voltage waveform (that always starts at 0);
-          power = ((int32_t) (SIN_SAMPLES[i])) * adc_current_no_bias;
+          power = ((int32_t) (SIN_SAMPLES[i])) * (int32_t) adc_current_no_bias;
         //  power[i] = adc_current_no_bias;
 
           // Accumulate the power total
@@ -517,7 +529,7 @@ if (SIN_SAMPLES[i]>0 && adc_current_no_bias < 0) {
 
         fram_data.power = (int32_t) power_average;
         fram_data.voltage = voltage_ac_max;
-
+P5OUT ^= 0x20;
         write_fram();
 
         // Send the result
@@ -540,6 +552,7 @@ if (SIN_SAMPLES[i]>0 && adc_current_no_bias < 0) {
         break;
 
       case STATE_DONE:
+      P5OUT ^= 0x20;
         break;
 
       default:
