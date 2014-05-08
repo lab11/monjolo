@@ -24,7 +24,6 @@
 *.smt
 *.tps
 *.centroid
-*.pdf
 *.svg
 *.mil
 *.crop
