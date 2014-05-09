@@ -552,6 +552,7 @@ P5OUT ^= 0x20;
         break;
 
       case STATE_DONE:
+      call Leds.led0On();
       P5OUT ^= 0x20;
         break;
 

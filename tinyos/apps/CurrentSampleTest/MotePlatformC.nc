@@ -22,7 +22,7 @@ implementation {
       P1OUT = 0x00;
       P1DIR = 0xe0;
 
-      P2OUT = 0x30;
+      P2OUT = 0x31;
       P2DIR = 0x7b;
 
       P3OUT = 0x00;
