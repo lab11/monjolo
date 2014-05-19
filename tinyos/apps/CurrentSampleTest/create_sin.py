@@ -4,7 +4,7 @@ import math
 
 SAMPLE_INTERVAL = 40.375 # microseconds
 
-PERIOD = 16000 # microseconds
+PERIOD = 16666 # microseconds
 
 
 SCALE = 32767

@@ -19,6 +19,8 @@ implementation {
   App.SFDGpio -> MspGpio.Port15;
   App.SFDInt  -> MspInterrupt.Port15;
 
+  App.TimeControlGPIO -> MspGpio.Port54;
+
   components LedsC;
   App.Leds -> LedsC.Leds;
 
@@ -47,5 +49,12 @@ implementation {
   // Wire to the ADC pin attached to the coil so we can configure it as an
   // ADC input
   App.CoilIn -> MspGpio.Port62;
+
+  components new TimerMilliC() as TimerRadio;
+  App.TimerRadio -> TimerRadio.Timer;
+
+
+  App.RelayA -> MspGpio.Port21;
+  App.RelayB -> MspGpio.Port26;
 
 }

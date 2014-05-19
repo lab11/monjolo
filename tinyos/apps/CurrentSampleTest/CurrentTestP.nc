@@ -24,6 +24,10 @@ module CurrentTestP {
     interface HplMsp430Interrupt as SFDInt;
 
     interface HplMsp430GeneralIO as CoilIn;
+    interface HplMsp430GeneralIO as RelayA;
+    interface HplMsp430GeneralIO as RelayB;
+
+    interface Timer<TMilli> as TimerRadio;
 
   }
 }
@@ -121,6 +125,47 @@ implementation {
     call FlagGPIO.makeOutput();
     call FlagGPIO.clr();
 
+    call RelayA.makeOutput();
+    call RelayB.makeOutput();
+    call RelayB.clr();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.set();
+    call RelayA.clr();
+
+P5OUT ^= 0x20;
+
     // Enable falling edge SFD interrupt so we know when the first packet
     // went out
     call SFDGpio.selectIOFunc();
@@ -175,6 +220,8 @@ implementation {
     // Tell the radio driver what sequence number to use
     call SeqNoControl.set_sequence_number(fram_data.seq_no);
 
+P5OUT ^= 0x20;
+
     // Send a "hello" message to the voltage meter
     call Udp.sendto(&voltage_dest, &pkt_hello, sizeof(pkt_hello_t));
 
@@ -196,11 +243,6 @@ implementation {
 
     call Udp.sendto(&gatd_dest2, &pkt_data, sizeof(pkt_data_t));
 
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
-
     post state_machine();
   }
 
@@ -221,11 +263,6 @@ implementation {
     pkt_data_debug.ticks          = ticks_since_rising;
 
     call Udp.sendto(&gatd_dest2, &pkt_data_debug, sizeof(pkt_data_debug_t));
-
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
-//P5OUT ^= 0x20;
 
     post state_machine();
   }
@@ -330,6 +367,10 @@ P5OUT ^= 0x20;
 
   }
 
+  task void start_blip () {
+    call BlipControl.start();
+  }
+
   // Stop the ADC and the timer
   void adc_stop () {
     uint16_t ctl1 = ADC12CTL1;
@@ -359,6 +400,9 @@ P5OUT ^= 0x20;
           if (sample_index < NUM_CURRENT_SAMPLES) {
             adc_current_samples[sample_index++] = reading;
           }
+        //  if (sample_index == 300) {
+        //    post start_blip();
+        //  }
         }
       }
     }
@@ -419,8 +463,8 @@ P5OUT ^= 0x20;
       // else, if below, do a power measurement
       case STATE_READ_TIMING_CAP_DONE:
 
-        if (1) {
-        //if ((timing_cap_val >> 8) <= 2) {
+        //if (1) {
+        if ((timing_cap_val >> 8) <= 2) {
           fram_data.seq_no++;
           state = STATE_SEND_HELLO_MESSAGE;
         } else {
@@ -438,6 +482,12 @@ P5OUT ^= 0x20;
 
       // Sample the current waveform
       case STATE_SENT_HELLO_MESSAGE:
+     //   state = STATE_SAMPLE_CURRENT;
+     //   call TimerRadio.startOneShot(5000);
+     //   call BlipControl.stop();
+     //   break;
+
+      //case STATE_SAMPLE_CURRENT:
         // Sample the ADC
         state = STATE_SAMPLE_CURRENT_DONE;
         adc_sample_coil();
@@ -548,18 +598,99 @@ P5OUT ^= 0x20;
       case STATE_CLEAR_POWER:
         state = STATE_DONE;
         fram_data.power = 0;
+        call TimeControlGPIO.set();
         write_fram();
         break;
 
       case STATE_DONE:
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.set();
+      call RelayB.clr();
       call Leds.led0On();
-      P5OUT ^= 0x20;
+P5OUT ^= 0x20;
         break;
 
       default:
         break;
 
     }
+  }
+
+  event void TimerRadio.fired () {
+  //  P5OUT ^= 0x20;
+ //   call BlipControl.start();
   }
 
   async event void SFDInt.fired () {

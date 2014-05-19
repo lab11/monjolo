@@ -92,7 +92,9 @@ implementation {
 
   event void RadioControl.startDone (error_t error) {
     //call WattageUpdateTimer.startPeriodic(LOAD_REPORT_INTERVAL);
-    call LoadIncrementTimer.startPeriodic(LOAD_INCREMENT_INTERVAL);
+    //call LoadIncrementTimer.startPeriodic(LOAD_INCREMENT_INTERVAL);
+
+    set_load(90);
   }
 
   void sendMsg(){
@@ -204,9 +206,9 @@ implementation {
 
     val1 = p[10];
     val2 = p[11];
-/*
-    new_value = (val1 << 8) | val2;
 
+    new_value = (val1 << 8) | val2;
+/*
     if (new_value == 0xFFFF) {
       // auto increment
       increment();
