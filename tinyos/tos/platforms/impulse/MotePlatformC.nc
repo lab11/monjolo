@@ -54,7 +54,7 @@ __attribute__((naked, section(".init3"))) void __low_level_init()  @C() @spontan
       P5OUT = 0xF7;
       P5DIR = 0xfb;
 
-      P6OUT = 0x00;
+      P6OUT = 0x30;
       P6DIR = 0xfb;
 
       P1IE = 0;

@@ -13,7 +13,7 @@ configuration HplVTimerC {
 }
 implementation {
   components HplMsp430GeneralIOC as TimeControlGPIOC;
-  TimeControlGPIO = TimeControlGPIOC.Port66;
+  TimeControlGPIO = TimeControlGPIOC.Port63;
 
   // ADC for time approximation
   components HplVTimerP;
