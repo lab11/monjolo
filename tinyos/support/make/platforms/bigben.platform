@@ -1,0 +1,5 @@
+#-*-Makefile-*- vim:syntax=make
+
+# Include directories
+PFLAGS += -I%T/platforms/bigben
+PFLAGS += -I%T/platforms/bigben/chips/fm25v20
