@@ -3,3 +3,6 @@
 # Include directories
 PFLAGS += -I%T/platforms/bigben
 PFLAGS += -I%T/platforms/bigben/chips/fm25v20
+PFLAGS += -I%T/platforms/bigben/chips/rv3049c3
+
+PFLAGS += -I%T/chips/rv3049
