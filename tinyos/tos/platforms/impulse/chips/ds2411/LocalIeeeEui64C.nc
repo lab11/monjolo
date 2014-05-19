@@ -20,10 +20,10 @@ configuration LocalIeeeEui64C {
 implementation {
   components LocalIeeeEui64P;
   components Ds2411C;
-  components Fm25lbC;
+  components FM25L04BC;
 
   LocalIeeeEui64P.ReadId48 -> Ds2411C.ReadId48;
-  LocalIeeeEui64P.Fram -> Fm25lbC.Fm25lb;
+  LocalIeeeEui64P.Fram -> FM25L04BC.Fm25lb;
 
   LocalIeeeEui64 = LocalIeeeEui64P.LocalIeeeEui64;
 }
