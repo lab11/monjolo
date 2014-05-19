@@ -2499,14 +2499,17 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <sheets>
 <sheet>
 <plain>
-<text x="53.34" y="76.2" size="2.54" layer="97">FRAM</text>
+<text x="53.34" y="76.2" size="2.54" layer="98" align="bottom-center">FRAM</text>
+<text x="55.88" y="162.56" size="2.54" layer="98" align="bottom-center">Impulse Connection</text>
+<text x="177.8" y="93.98" size="2.54" layer="98" align="bottom-center">RTC</text>
+<text x="165.1" y="152.4" size="2.54" layer="98" align="bottom-center">Battery</text>
 </plain>
 <instances>
-<instance part="GND1" gate="1" x="53.34" y="124.46"/>
-<instance part="P+2" gate="VCC" x="53.34" y="157.48"/>
+<instance part="GND1" gate="1" x="78.74" y="121.92"/>
+<instance part="P+2" gate="VCC" x="78.74" y="154.94"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="FRAME1" gate="G$2" x="147.32" y="0"/>
-<instance part="J3" gate="G$1" x="27.94" y="144.78"/>
+<instance part="J3" gate="G$1" x="53.34" y="142.24"/>
 <instance part="U1" gate="G$1" x="177.8" y="73.66"/>
 <instance part="BT1" gate="G$1" x="157.48" y="142.24"/>
 <instance part="GND13" gate="1" x="165.1" y="55.88"/>
@@ -2540,9 +2543,9 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <nets>
 <net name="GND" class="0">
 <segment>
-<wire x1="38.1" y1="137.16" x2="53.34" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="134.62" x2="78.74" y2="134.62" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<wire x1="53.34" y1="137.16" x2="53.34" y2="127" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="134.62" x2="78.74" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="J3" gate="G$1" pin="GND"/>
 </segment>
 <segment>
@@ -2586,9 +2589,9 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 </net>
 <net name="VCC" class="0">
 <segment>
-<wire x1="38.1" y1="152.4" x2="53.34" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="149.86" x2="78.74" y2="149.86" width="0.1524" layer="91"/>
 <pinref part="P+2" gate="VCC" pin="VCC"/>
-<wire x1="53.34" y1="152.4" x2="53.34" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="149.86" x2="78.74" y2="152.4" width="0.1524" layer="91"/>
 <pinref part="J3" gate="G$1" pin="VREG"/>
 </segment>
 <segment>
@@ -2620,9 +2623,9 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 </net>
 <net name="!FRAM_CS" class="0">
 <segment>
-<label x="40.64" y="142.24" size="1.27" layer="95" xref="yes"/>
+<label x="66.04" y="139.7" size="1.27" layer="95" xref="yes"/>
 <pinref part="J3" gate="G$1" pin="TRIGGER/P2.1"/>
-<wire x1="40.64" y1="142.24" x2="38.1" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="139.7" x2="63.5" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R1" gate="G$1" pin="1"/>
@@ -2637,23 +2640,23 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 </net>
 <net name="VCAP" class="0">
 <segment>
-<label x="40.64" y="154.94" size="1.27" layer="95" xref="yes"/>
+<label x="66.04" y="152.4" size="1.27" layer="95" xref="yes"/>
 <pinref part="J3" gate="G$1" pin="VCAP"/>
-<wire x1="40.64" y1="154.94" x2="38.1" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="152.4" x2="63.5" y2="152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SHD" class="0">
 <segment>
-<label x="40.64" y="144.78" size="1.27" layer="95" xref="yes"/>
+<label x="66.04" y="142.24" size="1.27" layer="95" xref="yes"/>
 <pinref part="J3" gate="G$1" pin="SHTDWN/P2.0"/>
-<wire x1="40.64" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="142.24" x2="63.5" y2="142.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MOSI0" class="0">
 <segment>
 <pinref part="J3" gate="G$1" pin="MOSI/SDA"/>
-<wire x1="38.1" y1="132.08" x2="40.64" y2="132.08" width="0.1524" layer="91"/>
-<label x="40.64" y="132.08" size="1.27" layer="95" xref="yes"/>
+<wire x1="63.5" y1="129.54" x2="66.04" y2="129.54" width="0.1524" layer="91"/>
+<label x="66.04" y="129.54" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="MOSI"/>
@@ -2669,8 +2672,8 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <net name="MISO0" class="0">
 <segment>
 <pinref part="J3" gate="G$1" pin="MISO"/>
-<wire x1="38.1" y1="129.54" x2="40.64" y2="129.54" width="0.1524" layer="91"/>
-<label x="40.64" y="129.54" size="1.27" layer="95" xref="yes"/>
+<wire x1="63.5" y1="127" x2="66.04" y2="127" width="0.1524" layer="91"/>
+<label x="66.04" y="127" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="MISO"/>
@@ -2686,8 +2689,8 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 <net name="SCLK0" class="0">
 <segment>
 <pinref part="J3" gate="G$1" pin="SCL"/>
-<wire x1="38.1" y1="127" x2="40.64" y2="127" width="0.1524" layer="91"/>
-<label x="40.64" y="127" size="1.27" layer="95" xref="yes"/>
+<wire x1="63.5" y1="124.46" x2="66.04" y2="124.46" width="0.1524" layer="91"/>
+<label x="66.04" y="124.46" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="SCL"/>
@@ -2712,8 +2715,8 @@ To use, set global attributes TITLE and REV in your schematic.</description>
 </segment>
 <segment>
 <pinref part="J3" gate="G$1" pin="OVRVLT/P1.7"/>
-<label x="40.64" y="147.32" size="1.27" layer="95" xref="yes"/>
-<wire x1="38.1" y1="147.32" x2="40.64" y2="147.32" width="0.1524" layer="91"/>
+<label x="66.04" y="144.78" size="1.27" layer="95" xref="yes"/>
+<wire x1="63.5" y1="144.78" x2="66.04" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
