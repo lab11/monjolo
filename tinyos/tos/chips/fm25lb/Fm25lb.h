@@ -41,6 +41,4 @@ typedef enum {
 #define FM25LB_GET_ADDRESS(cmd_byte, addr_byte) \
   (((uint16_t) addr_byte) | ((((uint16_t) cmd_byte) << 5) & 0x0100))
 
-
-
 #endif

@@ -5,7 +5,7 @@
 
 #include "Fm25lb.h"
 
-module Fm25lbP {
+generic module Fm25lbP () {
   provides {
     interface Init @exactlyonce();
     interface Fm25lb;
