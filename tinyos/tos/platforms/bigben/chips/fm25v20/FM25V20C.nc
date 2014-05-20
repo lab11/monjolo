@@ -9,7 +9,7 @@
 
 configuration FM25V20C {
   provides {
-    interface Fm25lb;
+    interface FM25V;
   }
 }
 implementation {
@@ -17,7 +17,7 @@ implementation {
   components new NullGpioP() as WPNull;
 
   // Wire to a copy of the main driver
-  components new Fm25lbC() as FramC;
+  components new FM25VC() as FramC;
 
   // Wire to the correct pin for the chip select line.
   components HplMsp430GeneralIOC as HplGeneralIOC;
@@ -30,6 +30,6 @@ implementation {
   FramC.WP -> WPNull.GeneralIO;
 
   // Connect the main interface
-  Fm25lb = FramC.Fm25lb;
+  FM25V = FramC.FM25V;
 }
 
