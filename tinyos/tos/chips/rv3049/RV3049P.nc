@@ -22,15 +22,15 @@ implementation {
   uint8_t binary_to_bcd (uint8_t binary) {
     uint8_t out = 0;
 
-    if (binary > 40) {
+    if (binary >= 40) {
       out |= 0x40;
       binary -= 40;
     }
-    if (binary > 20) {
+    if (binary >= 20) {
       out |= 0x20;
       binary -= 20;
     }
-    if (binary > 10) {
+    if (binary >= 10) {
       out |= 0x10;
       binary -= 10;
     }
