@@ -80,7 +80,7 @@ implementation {
           fram_data.wakeup_counter++;
           call RTC.readTime();
         } else {
-          state = STATE_DONE;
+          state = STATE_WRITE_SCRATCH;
           // FRAM hash does not match, reset everything
           memset(&fram_data, 0, sizeof(fram_data_t));
           fram_data.version_hash = IDENT_UIDHASH;
@@ -118,6 +118,33 @@ implementation {
           state = STATE_WRITE_SCRATCH;
           write_log();
 
+        } else {
+          // calculate time difference between now and the last wakeup
+          uint16_t diff_days = 0;
+          uint8_t month_lengths = [0, 31]
+
+          uint32_t month_seconds_now, month_seconds_then;
+
+
+          // calculate the number of seconds since the beginning of the month
+          month_seconds_now = (((uint32_t)(days-1))*86400) +
+                              ((uint32_t hours)*3600) +
+                              ((uint32_t minutes)*60) +
+                              (uint32_t) seconds;
+          month_seconds_then = (((uint32_t)(fram_data.days-1))*86400) +
+                               ((uint32_t fram_data.hours)*3600) +
+                               ((uint32_t fram_data.minutes)*60) +
+                               (uint32_t) fram_data.seconds;
+
+
+
+          // number of days between
+          if (year == fram_data.last_year && month == fram_data.last_month) {
+            // same month
+            diff_days = days - fram_data.days;
+          } else if (year == fram_data.last_year) {
+
+          }
         }
 
         break;
