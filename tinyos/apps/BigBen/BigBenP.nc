@@ -36,6 +36,7 @@ implementation {
   // been sent.
   uint16_t log_dump_count = 0;
 
+  // Buffer to transmit over UART with
   uint8_t uart_buf[8];
 
   fram_data_t fram_data;
@@ -301,8 +302,7 @@ implementation {
         break;
 
       case STATE_UART_DUMP_SENT_LOG:
-    //    if (log_dump_count >= fram_data.storage_count) {
-        if (log_dump_count >= 5) {
+        if (log_dump_count >= fram_data.storage_count) {
           // Done
           state = STATE_DONE;
           call UartStream.send("DONE", 4);
@@ -320,14 +320,13 @@ implementation {
           uart_command = CMD_NULL;
         }
 
+        call Leds.led1On();
+
         switch (local_uart_command) {
           case CMD_OFF:
             // Upon reaching STATE_DONE when the UART is off, we start by
             // turning the uart on.
-          call Leds.led0Toggle();
             call UartControl.start();
-            //call UartStream.enableReceiveInterrupt();
-            //call UartStream.send("hello", 5);
             call UartStream.receive(uart_buf, 5);
             call UartStream.send("hello", 5);
             break;
@@ -426,7 +425,6 @@ implementation {
 
     if (len >= 5 && buf[0] == 's' && buf[1] == 't' && buf[2] == 'a' &&
                     buf[3] == 'r' && buf[4] == 't') {
-      call Leds.led0Off();
       atomic {
         uart_command = CMD_DUMP;
       }
@@ -452,7 +450,6 @@ implementation {
   }
 
   async event void UartStream.receivedByte(uint8_t byte) {
-//call Leds.led0Off();
   }
 
 
