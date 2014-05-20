@@ -220,32 +220,44 @@ implementation {
             diff_from_last_interval = fram_data.last_diff - diff_seconds;
           }
 
-          // Make sure scratch fram gets updated
-          fram_data.last_seconds = seconds;
-          fram_data.last_minutes = minutes;
-          fram_data.last_hours   = hours;
-          fram_data.last_days    = days;
-          fram_data.last_month   = month;
-          fram_data.last_year    = year;
-          fram_data.last_diff    = diff_seconds;
-
           if (diff_from_last_interval > DIFF_THRESHOLD) {
             // this is a change! record it!
             state = STATE_WRITE_SCRATCH;
 
+            // log the previous wakeup timestamp
             log_data.wakeup_counter = fram_data.wakeup_counter;
-            log_data.seconds = seconds;
-            log_data.minutes = minutes;
-            log_data.hours   = hours;
-            log_data.days    = days;
-            log_data.month   = month;
-            log_data.year    = (uint8_t) (year-2000);
+            log_data.seconds   = fram_data.last_seconds;
+            log_data.minutes   = fram_data.last_minutes;
+            log_data.hours     = fram_data.last_hours;
+            log_data.days      = fram_data.last_days;
+            log_data.month     = fram_data.last_month;
+            log_data.year      = (uint8_t) (fram_data.last_year-2000);
+            log_data.last_diff = fram_data.last_diff;
+
+            // Make sure scratch fram gets updated
+            fram_data.last_seconds = seconds;
+            fram_data.last_minutes = minutes;
+            fram_data.last_hours   = hours;
+            fram_data.last_days    = days;
+            fram_data.last_month   = month;
+            fram_data.last_year    = year;
+            fram_data.last_diff    = diff_seconds;
 
             write_log();
 
           } else {
             // just updated scratch fram
             state = STATE_DONE;
+
+            // Make sure scratch fram gets updated
+            fram_data.last_seconds = seconds;
+            fram_data.last_minutes = minutes;
+            fram_data.last_hours   = hours;
+            fram_data.last_days    = days;
+            fram_data.last_month   = month;
+            fram_data.last_year    = year;
+            fram_data.last_diff    = diff_seconds;
+
             write_scratch();
           }
         }

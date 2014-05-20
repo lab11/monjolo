@@ -27,6 +27,7 @@ typedef struct {
   uint8_t  days;
   uint8_t  month;
   uint8_t  year;   // plus 2000
+  uint32_t last_diff;
 } fram_log_t;
 
 typedef enum {
