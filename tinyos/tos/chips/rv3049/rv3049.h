@@ -18,7 +18,7 @@
 #define RV3049_SET_READ_BIT(command) (0x80 | command)
 #define RV3049_SET_WRITE_BIT(command) (0x7F & command)
 
-#define BCD_TO_BINARY(v) ((v & 0x0F) + ((v & 0x10)*10) + ((v & 0x20)*20) + ((v & 0x40)*40))
+#define BCD_TO_BINARY(v) ((v & 0x0F) + (((v & 0x10)>>4)*10) + (((v & 0x20)>>5)*20) + (((v & 0x40)>>6)*40))
 
 typedef enum {
   JANUARY   = 1,
