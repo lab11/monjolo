@@ -31,4 +31,9 @@ implementation {
   components HplFlagC;
   App.FlagGPIO -> HplFlagC.FlagGPIO;
 
+  // Serial connection for data dump
+  components PlatformSerialC;
+  App.UartStream -> PlatformSerialC.UartStream;
+  App.UartControl -> PlatformSerialC.StdControl;
+
 }

@@ -35,8 +35,17 @@ typedef enum {
   STATE_INITIAL_READ_DONE,
   STATE_READ_RTC_DONE,
   STATE_WRITE_SCRATCH,
+  STATE_UART_DUMP_GOT_LOG,
+  STATE_UART_DUMP_SENT_LOG,
   STATE_DONE
 } bb_state_e;
+
+typedef enum {
+  CMD_OFF,
+  CMD_DUMP,
+  CMD_RESET,
+  CMD_NULL
+} uart_command_e;
 
 
 #endif

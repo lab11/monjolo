@@ -17,6 +17,9 @@ module BigBenP {
     interface RVRTC as RTC;
 
     interface HplMsp430GeneralIO as FlagGPIO;
+
+    interface UartStream;
+    interface StdControl as UartControl;
   }
 }
 implementation {
@@ -29,9 +32,15 @@ implementation {
   month_e  month;
   uint16_t year;
 
+  // When in dump mode, keep track of how many log messages have
+  // been sent.
+  uint16_t log_dump_count = 0;
+
   fram_data_t fram_data;
   fram_log_t  log_data;
   bb_state_e state;
+
+  uart_command_e uart_command = CMD_OFF;
 
   task void state_machine();
 
@@ -50,6 +59,22 @@ implementation {
     call FramScratch.write(FRAM_ADDR_START,
                            (uint8_t*) &fram_data,
                            sizeof(fram_data_t));
+  }
+
+  void clear_scratch () {
+    memset(&fram_data, 0, sizeof(fram_data_t));
+    fram_data.version_hash = IDENT_UIDHASH;
+  }
+
+  void read_log () {
+    uint16_t storage_pointer;
+
+    storage_pointer = log_dump_count * sizeof(fram_log_t);
+    log_dump_count++;
+
+    call FramStorage.read(storage_pointer,
+                          (uint8_t*) &log_data,
+                          sizeof(fram_log_t));
   }
 
   void write_log () {
@@ -160,8 +185,7 @@ implementation {
         } else {
           state = STATE_WRITE_SCRATCH;
           // FRAM hash does not match, reset everything
-          memset(&fram_data, 0, sizeof(fram_data_t));
-          fram_data.version_hash = IDENT_UIDHASH;
+          clear_scratch();
 
           // set RTC time with constants acquired at compile time
           call RTC.setTime(RTC_SECONDS,
@@ -269,8 +293,58 @@ implementation {
         write_scratch();
         break;
 
-      case STATE_DONE:
+      case STATE_UART_DUMP_GOT_LOG:
+        state = STATE_UART_DUMP_SENT_LOG;
+        call UartStream.send((uint8_t*) &log_data, sizeof(fram_log_t));
         break;
+
+      case STATE_UART_DUMP_SENT_LOG:
+        if (log_dump_count >= fram_data.storage_count) {
+          // Done
+          state = STATE_DONE;
+          call UartStream.send("DONE", 4);
+        } else {
+          state = STATE_UART_DUMP_GOT_LOG;
+          read_log();
+        }
+        break;
+
+      case STATE_DONE: {
+        uart_command_e local_uart_command;
+
+        atomic {
+          local_uart_command = uart_command;
+          uart_command = CMD_NULL;
+        }
+
+        switch (local_uart_command) {
+          case CMD_OFF:
+            // Upon reaching STATE_DONE when the UART is off, we start by
+            // turning the uart on.
+            call UartControl.start();
+            break;
+
+          case CMD_DUMP:
+            // If we received the start command then we can start sending data
+            state = STATE_UART_DUMP_GOT_LOG;
+            read_log();
+            break;
+
+          case CMD_RESET:
+            // Clear the log and start over
+            state = STATE_DONE;
+            clear_scratch();
+            write_scratch();
+            break;
+
+          case CMD_NULL:
+            // Don't do anything
+            break;
+
+          default:
+            break;
+        }
+      }
 
       default:
         break;
@@ -344,6 +418,38 @@ implementation {
 
   event void RTC.setTimeDone (error_t error) {
     post state_machine();
+  }
+
+  async event void UartStream.receiveDone(uint8_t* buf,
+                                          uint16_t len,
+                                          error_t e) {
+    if (len >= 5 && buf[0] == 's' && buf[1] == 't' && buf[2] == 'a' &&
+                    buf[3] == 'r' && buf[4] == 't') {
+      atomic {
+        uart_command = CMD_DUMP;
+      }
+    } else if (len >= 5 && buf[0] == 'r' && buf[1] == 'e' && buf[2] == 's' &&
+                           buf[3] == 'e' && buf[4] == 't') {
+      atomic {
+        uart_command = CMD_RESET;
+      }
+    } else {
+      atomic {
+        uart_command = CMD_NULL;
+      }
+    }
+
+    post state_machine();
+  }
+
+  async event void UartStream.sendDone(uint8_t* buf,
+                                       uint16_t len,
+                                       error_t error) {
+    post state_machine();
+  }
+
+  async event void UartStream.receivedByte(uint8_t byte) {
+
   }
 
 
