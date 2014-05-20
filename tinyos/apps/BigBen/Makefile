@@ -4,7 +4,7 @@ CFLAGS += -DCC2420X_DEF_CHANNEL=18
 
 CFLAGS += -DASSERT_NONE
 
-GOALS += blip
+GOALS += time
 
 TINYOS_ROOT_DIR?=../..
 include $(TINYOS_ROOT_DIR)/Makefile.include

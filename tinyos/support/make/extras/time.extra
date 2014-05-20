@@ -1,0 +1,5 @@
+#-*-Makefile-*- vim:syntax=make
+
+# Create RTC_ #defines for initializing RTC clocks
+TIME_FLAGS := $(shell tos-make-time)
+CFLAGS += $(TIME_FLAGS)
