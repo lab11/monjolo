@@ -3,6 +3,8 @@
 
 #define FRAM_ADDR_START  8 // make room for ds2411 id
 
+#define DIFF_THRESHOLD 30
+
 typedef struct {
   uint32_t version_hash;
   uint32_t wakeup_counter;
@@ -12,7 +14,7 @@ typedef struct {
   uint8_t  last_days;
   uint8_t  last_month;
   uint16_t last_year;
-  uint32_t last_rate;     // average wakeup rate from before
+  uint32_t last_diff;       // time between previous two wakeups
   uint16_t storage_pointer; // where the next item in storage fram should go
   uint16_t storage_count;   // how many valid items in FRAM
 } fram_data_t;

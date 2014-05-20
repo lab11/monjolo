@@ -65,6 +65,84 @@ implementation {
                            sizeof(fram_log_t));
   }
 
+  // calculate time difference between now and then in seconds
+  uint32_t calculate_time_diff (uint8_t  then_seconds,
+                                uint8_t  then_minutes,
+                                uint8_t  then_hours,
+                                uint8_t  then_days,  // 1 indexed
+                                month_e  then_month, // 1 indexed
+                                uint16_t then_year,
+                                uint8_t  now_seconds,
+                                uint8_t  now_minutes,
+                                uint8_t  now_hours,
+                                uint8_t  now_days,  // 1 indexed
+                                month_e  now_month, // 1 indexed
+                                uint16_t now_year) {
+
+
+    uint32_t month_lengths[12] = {2678400, // jan
+                                  2419200, // feb
+                                  2678400, // mar
+                                  2592000, // apr
+                                  2678400, // may
+                                  2592000, // jun
+                                  2678400, // jul
+                                  2678400, // aug
+                                  2592000, // sep
+                                  2678400, // oct
+                                  2592000, // nov
+                                  2678400}; // dec
+
+    uint32_t month_seconds_now, month_seconds_then;
+    uint32_t diff_seconds;
+
+
+    // calculate the number of seconds since the beginning of the month
+    month_seconds_now = (((uint32_t)(now_days-1))*86400) +
+                        (((uint32_t) now_hours)*3600) +
+                        (((uint32_t) now_minutes)*60) +
+                        (uint32_t) now_seconds;
+    month_seconds_then = (((uint32_t)(then_days-1))*86400) +
+                         (((uint32_t) then_hours)*3600) +
+                         (((uint32_t) then_minutes)*60) +
+                         (uint32_t) then_seconds;
+
+    // calculate based on a few cases
+    if (now_year == then_year && now_month == then_month) {
+      // same month
+      // this is simple, just subtract
+      diff_seconds = month_seconds_now - month_seconds_then;
+
+    } else {
+      uint8_t now_month_adjusted, then_month_adjusted;
+      uint32_t remaining_previous_month;
+      uint32_t middle_months = 0;
+      uint8_t i;
+
+      // find the number of seconds from the previous timestamp and the
+      // end of its month
+      remaining_previous_month = month_lengths[then_month-1] -
+                                 month_seconds_then;
+
+      // Compensate for the year changing
+      then_month_adjusted = then_month - 1;
+      now_month_adjusted = (now_month - 1) + (12 * (now_year-then_year));
+
+      // Sum the time in the months between the two months
+      for (i=then_month_adjusted+1; i<now_month_adjusted; i++) {
+        middle_months += month_lengths[i%12];
+      }
+
+      // Difference is now the sum
+      diff_seconds = month_seconds_now +
+                     middle_months +
+                     remaining_previous_month;
+
+    }
+
+    return diff_seconds;
+  }
+
   task void state_machine () {
     switch (state) {
       case STATE_INITIAL_READ:
@@ -120,30 +198,55 @@ implementation {
 
         } else {
           // calculate time difference between now and the last wakeup
-          uint16_t diff_days = 0;
-          uint8_t month_lengths = [0, 31]
+          uint32_t diff_seconds;
+          uint32_t diff_from_last_interval;
 
-          uint32_t month_seconds_now, month_seconds_then;
+          diff_seconds = calculate_time_diff(fram_data.last_seconds,
+                                             fram_data.last_minutes,
+                                             fram_data.last_hours,
+                                             fram_data.last_days,
+                                             fram_data.last_month,
+                                             fram_data.last_year,
+                                             seconds,
+                                             minutes,
+                                             hours,
+                                             days,
+                                             month,
+                                             year);
 
+          if (diff_seconds > fram_data.last_diff) {
+            diff_from_last_interval = diff_seconds - fram_data.last_diff;
+          } else {
+            diff_from_last_interval = fram_data.last_diff - diff_seconds;
+          }
 
-          // calculate the number of seconds since the beginning of the month
-          month_seconds_now = (((uint32_t)(days-1))*86400) +
-                              ((uint32_t hours)*3600) +
-                              ((uint32_t minutes)*60) +
-                              (uint32_t) seconds;
-          month_seconds_then = (((uint32_t)(fram_data.days-1))*86400) +
-                               ((uint32_t fram_data.hours)*3600) +
-                               ((uint32_t fram_data.minutes)*60) +
-                               (uint32_t) fram_data.seconds;
+          // Make sure scratch fram gets updated
+          fram_data.last_seconds = seconds;
+          fram_data.last_minutes = minutes;
+          fram_data.last_hours   = hours;
+          fram_data.last_days    = days;
+          fram_data.last_month   = month;
+          fram_data.last_year    = year;
+          fram_data.last_diff    = diff_seconds;
 
+          if (diff_from_last_interval > DIFF_THRESHOLD) {
+            // this is a change! record it!
+            state = STATE_WRITE_SCRATCH;
 
+            log_data.wakeup_counter = fram_data.wakeup_counter;
+            log_data.seconds = seconds;
+            log_data.minutes = minutes;
+            log_data.hours   = hours;
+            log_data.days    = days;
+            log_data.month   = month;
+            log_data.year    = (uint8_t) (year-2000);
 
-          // number of days between
-          if (year == fram_data.last_year && month == fram_data.last_month) {
-            // same month
-            diff_days = days - fram_data.days;
-          } else if (year == fram_data.last_year) {
+            write_log();
 
+          } else {
+            // just updated scratch fram
+            state = STATE_DONE;
+            write_scratch();
           }
         }
 
