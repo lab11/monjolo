@@ -12,7 +12,7 @@ module BigBenP {
     interface Boot;
 
     interface Fm25lb as FramScratch;
-    interface Fm25lb as FramStorage;
+    interface FM25V as FramStorage;
 
     interface RVRTC as RTC;
 
@@ -35,6 +35,8 @@ implementation {
   // When in dump mode, keep track of how many log messages have
   // been sent.
   uint16_t log_dump_count = 0;
+
+  uint8_t uart_buf[8];
 
   fram_data_t fram_data;
   fram_log_t  log_data;
@@ -67,9 +69,9 @@ implementation {
   }
 
   void read_log () {
-    uint16_t storage_pointer;
+    uint32_t storage_pointer;
 
-    storage_pointer = log_dump_count * sizeof(fram_log_t);
+    storage_pointer = (uint32_t) log_dump_count * (uint32_t) sizeof(fram_log_t);
     log_dump_count++;
 
     call FramStorage.read(storage_pointer,
@@ -78,11 +80,11 @@ implementation {
   }
 
   void write_log () {
-    uint16_t storage_pointer;
+    uint32_t storage_pointer;
 
-    storage_pointer = fram_data.storage_pointer;
+    storage_pointer = (uint32_t) fram_data.storage_count *
+                      (uint32_t) sizeof(fram_log_t);
 
-    fram_data.storage_pointer += sizeof(fram_log_t);
     fram_data.storage_count++;
 
     call FramStorage.write(storage_pointer,
@@ -299,7 +301,8 @@ implementation {
         break;
 
       case STATE_UART_DUMP_SENT_LOG:
-        if (log_dump_count >= fram_data.storage_count) {
+    //    if (log_dump_count >= fram_data.storage_count) {
+        if (log_dump_count >= 5) {
           // Done
           state = STATE_DONE;
           call UartStream.send("DONE", 4);
@@ -321,7 +324,12 @@ implementation {
           case CMD_OFF:
             // Upon reaching STATE_DONE when the UART is off, we start by
             // turning the uart on.
+          call Leds.led0Toggle();
             call UartControl.start();
+            //call UartStream.enableReceiveInterrupt();
+            //call UartStream.send("hello", 5);
+            call UartStream.receive(uart_buf, 5);
+            call UartStream.send("hello", 5);
             break;
 
           case CMD_DUMP:
@@ -368,16 +376,16 @@ implementation {
     post state_machine();
   }
 
-  event void FramStorage.readDone(uint16_t addr,
+  event void FramStorage.readDone(uint32_t addr,
                            uint8_t* buf,
-                           uint16_t len,
+                           uint32_t len,
                            error_t err) {
     post state_machine();
   }
 
-  event void FramStorage.writeDone(uint16_t addr,
+  event void FramStorage.writeDone(uint32_t addr,
                             uint8_t* buf,
-                            uint16_t len,
+                            uint32_t len,
                             error_t err) {
     post state_machine();
   }
@@ -387,14 +395,6 @@ implementation {
   }
 
   event void FramScratch.writeStatusDone(error_t err) {
-    post state_machine();
-  }
-
-  event void FramStorage.readStatusDone (uint8_t status, error_t err) {
-    post state_machine();
-  }
-
-  event void FramStorage.writeStatusDone(error_t err) {
     post state_machine();
   }
 
@@ -423,11 +423,14 @@ implementation {
   async event void UartStream.receiveDone(uint8_t* buf,
                                           uint16_t len,
                                           error_t e) {
+
     if (len >= 5 && buf[0] == 's' && buf[1] == 't' && buf[2] == 'a' &&
                     buf[3] == 'r' && buf[4] == 't') {
+      call Leds.led0Off();
       atomic {
         uart_command = CMD_DUMP;
       }
+
     } else if (len >= 5 && buf[0] == 'r' && buf[1] == 'e' && buf[2] == 's' &&
                            buf[3] == 'e' && buf[4] == 't') {
       atomic {
@@ -449,7 +452,7 @@ implementation {
   }
 
   async event void UartStream.receivedByte(uint8_t byte) {
-
+//call Leds.led0Off();
   }
 
 

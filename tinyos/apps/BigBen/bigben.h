@@ -15,7 +15,6 @@ typedef struct {
   uint8_t  last_month;
   uint16_t last_year;
   uint32_t last_diff;       // time between previous two wakeups
-  uint16_t storage_pointer; // where the next item in storage fram should go
   uint16_t storage_count;   // how many valid items in FRAM
 } fram_data_t;
 

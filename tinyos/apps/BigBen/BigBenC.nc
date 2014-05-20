@@ -21,7 +21,7 @@ implementation {
   App.FramScratch -> FramScratchC.Fm25lb;
 
   components FM25V20C as FramStorageC;
-  App.FramStorage -> FramStorageC.Fm25lb;
+  App.FramStorage -> FramStorageC.FM25V;
 
   // RTC
   components RV3049C3C as RtcC;
