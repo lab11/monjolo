@@ -15,7 +15,7 @@ generic configuration Fm25lbC () {
   }
 }
 implementation {
-  components Fm25lbP as FramP;
+  components new Fm25lbP() as FramP;
   Fm25lb = FramP.Fm25lb;
 
   components MainC;

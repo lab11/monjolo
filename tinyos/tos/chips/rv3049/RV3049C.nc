@@ -4,7 +4,7 @@
  * @author Brad Campbell <bradjc@umich.edu>
  */
 
-generic configuration RV3049C () {
+configuration RV3049C {
   provides {
     interface RVRTC;
   }
@@ -25,5 +25,5 @@ implementation {
 
   RtcP.CS = CS;
 
-  RVRTC = RtcP.Fm25lb;
+  RVRTC = RtcP.RVRTC;
 }

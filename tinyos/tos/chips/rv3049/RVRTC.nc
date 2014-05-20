@@ -3,6 +3,8 @@
  * @author Brad Campbell <bradjc@umich.edu>
  */
 
+#include "rv3049.h"
+
 interface RVRTC {
   command error_t readTime ();
   command error_t setTime (uint8_t seconds,

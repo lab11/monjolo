@@ -5,7 +5,9 @@
  */
 
 configuration RV3049C3C {
-  provides RVRTC;
+  provides {
+    interface RVRTC;
+  }
 }
 implementation {
 

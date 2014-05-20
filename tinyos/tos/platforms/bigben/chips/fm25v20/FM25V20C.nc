@@ -8,7 +8,9 @@
  */
 
 configuration FM25V20C {
-  provides Fm25lb;
+  provides {
+    interface Fm25lb;
+  }
 }
 implementation {
   components new NullGpioP() as HoldNull;

@@ -1,5 +1,5 @@
-#include "Timer.h"
-#include "monjolo.h"
+#include "rv3049.h"
+#include "bigben.h"
 
 /* BigBen app for logging events.
  *
@@ -21,30 +21,48 @@ module BigBenP {
 }
 implementation {
 
+  // Time saved between event and state machine
+  uint8_t  seconds;
+  uint8_t  minutes;
+  uint8_t  hours;
+  uint8_t  days;
+  month_e  month;
+  uint16_t year;
+
   fram_data_t fram_data;
+  fram_log_t  log_data;
   bb_state_e state;
+
+  task void state_machine();
 
   event void Boot.booted() {
     state = STATE_INITIAL_READ;
     post state_machine();
   }
 
-  void sendMsg () {
-    // Tell the radio driver what sequence number to use
-    call SeqNoControl.set_sequence_number(fram_data.seq_no);
-
-    // Set the payload as the pkt data
-    pkt_data.counter = fram_data.counter;
-    pkt_data.seq_no = fram_data.seq_no;
-
-    call Udp.sendto(&dest, &pkt_data, sizeof(pkt_data_t));
-    // Not much we can do if this returns an error
-  }
-
-  void read_scratch_fram () {
+  void read_scratch () {
     call FramScratch.read(FRAM_ADDR_START,
                           (uint8_t*) &fram_data,
                           sizeof(fram_data_t));
+  }
+
+  void write_scratch () {
+    call FramScratch.write(FRAM_ADDR_START,
+                           (uint8_t*) &fram_data,
+                           sizeof(fram_data_t));
+  }
+
+  void write_log () {
+    uint16_t storage_pointer;
+
+    storage_pointer = fram_data.storage_pointer;
+
+    fram_data.storage_pointer += sizeof(fram_log_t);
+    fram_data.storage_count++;
+
+    call FramStorage.write(storage_pointer,
+                           (uint8_t*) &log_data,
+                           sizeof(fram_log_t));
   }
 
   task void state_machine () {
@@ -52,12 +70,15 @@ implementation {
       case STATE_INITIAL_READ:
         // Read in the status from the FRAM
         state = STATE_INITIAL_READ_DONE;
-        read_scratch_fram();
+        read_scratch();
         break;
 
       case STATE_INITIAL_READ_DONE:
         if (fram_data.version_hash == IDENT_UIDHASH) {
           // FRAM hash matches, data is valid
+          state = STATE_READ_RTC_DONE;
+          fram_data.wakeup_counter++;
+          call RTC.readTime();
         } else {
           state = STATE_DONE;
           // FRAM hash does not match, reset everything
@@ -75,51 +96,35 @@ implementation {
         }
         break;
 
-      case STATE_CHECK_PKT_DELAY:
-        // Now have access to the adc
-        // Sample the timing capacitor
-        state = STATE_CHECK_PKT_DELAY_DONE;
-        call VTimerRead.configureSingle(call VTimerAdcConfig.getConfiguration());
-        call VTimerRead.getData();
-        break;
+      case STATE_READ_RTC_DONE:
 
-      case STATE_CHECK_PKT_DELAY_DONE: {
-        // Got the ADC sample back
-        uint16_t timing_cap_val_local;
-        atomic timing_cap_val_local = timing_cap_val;
+        if (fram_data.last_year == 0) {
+          // first wakeup
+          fram_data.last_seconds = seconds;
+          fram_data.last_minutes = minutes;
+          fram_data.last_hours   = hours;
+          fram_data.last_days    = days;
+          fram_data.last_month   = month;
+          fram_data.last_year    = year;
 
-        call AdcResource.release();
+          log_data.wakeup_counter = fram_data.wakeup_counter;
+          log_data.seconds = seconds;
+          log_data.minutes = minutes;
+          log_data.hours   = hours;
+          log_data.days    = days;
+          log_data.month   = month;
+          log_data.year    = (uint8_t) (year-2000);
 
-        //if (1) {
-        if ((timing_cap_val_local >> 8) <= 2) {
-          // The capacitor is low enough to send a packet
-          // Update the sequence number and store it and the count value
-          state = STATE_SEND_PACKET;
-          fram_data.seq_no++;
-          call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, 2);
+          state = STATE_WRITE_SCRATCH;
+          write_log();
 
-        } else {
-          // Just store the counter value and be done
-          state = STATE_DONE;
-          call Fram.write(FRAM_ADDR_COUNT, &fram_data.counter, 1);
         }
-        break;
-      }
 
-      case STATE_SEND_PACKET:
-        state = STATE_SEND_PACKET_DONE;
-        // Recharge the timing capacitor
-        call TimeControlGPIO.makeOutput();
-        call TimeControlGPIO.set();
-        sendMsg();
-        call TimeControlGPIO.clr();
-        call Leds.led0On();
         break;
 
-      case STATE_SEND_PACKET_DONE:
+      case STATE_WRITE_SCRATCH:
         state = STATE_DONE;
-        // Stop recharing the timing capacitor
-        call TimeControlGPIO.clr();
+        write_scratch();
         break;
 
       case STATE_DONE:
@@ -132,55 +137,72 @@ implementation {
 
   }
 
-  event void BlipControl.startDone (error_t error) {
-    post state_machine();
-  }
 
-  event void Fram.readDone(uint16_t addr,
+  event void FramScratch.readDone(uint16_t addr,
                            uint8_t* buf,
                            uint16_t len,
                            error_t err) {
     post state_machine();
   }
 
-  event void Fram.writeDone(uint16_t addr,
+  event void FramScratch.writeDone(uint16_t addr,
                             uint8_t* buf,
                             uint16_t len,
                             error_t err) {
     post state_machine();
   }
 
-  event void AdcResource.granted () {
-    // Go ahead and sample the timing capacitor
-    post state_machine();
-  }
-
-  async event error_t VTimerRead.singleDataReady (uint16_t data) {
-    timing_cap_val = data;
-    post state_machine();
-    return SUCCESS;
-  }
-
-  event void Fram.readStatusDone (uint8_t status, error_t err) {
-    post state_machine();
-  }
-
-  event void Fram.writeStatusDone(error_t err) {
-    post state_machine();
-  }
-
-  event void BlipControl.stopDone (error_t error) {
-    post state_machine();
-  }
-
-  async event uint16_t* COUNT_NOK(numSamples)
-  VTimerRead.multipleDataReady(uint16_t *COUNT(numSamples) buffer,
-    uint16_t numSamples) {
-    return NULL;
-  }
-
-  event void Udp.recvfrom (struct sockaddr_in6 *from,
-                           void *data,
+  event void FramStorage.readDone(uint16_t addr,
+                           uint8_t* buf,
                            uint16_t len,
-                           struct ip6_metadata *meta) { }
+                           error_t err) {
+    post state_machine();
+  }
+
+  event void FramStorage.writeDone(uint16_t addr,
+                            uint8_t* buf,
+                            uint16_t len,
+                            error_t err) {
+    post state_machine();
+  }
+
+  event void FramScratch.readStatusDone (uint8_t status, error_t err) {
+    post state_machine();
+  }
+
+  event void FramScratch.writeStatusDone(error_t err) {
+    post state_machine();
+  }
+
+  event void FramStorage.readStatusDone (uint8_t status, error_t err) {
+    post state_machine();
+  }
+
+  event void FramStorage.writeStatusDone(error_t err) {
+    post state_machine();
+  }
+
+  event void RTC.readTimeDone (error_t error,
+                               uint8_t rtcseconds,
+                               uint8_t rtcminutes,
+                               uint8_t rtchours,
+                               uint8_t rtcdays,
+                               month_e rtcmonth,
+                               uint16_t rtcyear,
+                               day_e rtcweekday) {
+    seconds = rtcseconds;
+    minutes = rtcminutes;
+    hours   = rtchours;
+    days    = rtcdays;
+    month   = rtcmonth;
+    year    = rtcyear;
+
+    post state_machine();
+  }
+
+  event void RTC.setTimeDone (error_t error) {
+    post state_machine();
+  }
+
+
 }

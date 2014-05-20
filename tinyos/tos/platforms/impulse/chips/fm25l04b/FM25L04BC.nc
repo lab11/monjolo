@@ -5,7 +5,9 @@
  */
 
 configuration FM25L04BC {
-  provides Fm25lb;
+  provides {
+    interface Fm25lb;
+  }
 }
 implementation {
   // Wire to a copy of the main driver

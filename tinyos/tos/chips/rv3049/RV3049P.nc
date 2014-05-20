@@ -41,20 +41,22 @@ implementation {
   command error_t Init.init () {
     call CS.makeOutput();
     call CS.clr();
+    return SUCCESS;
   }
 
-  command RVRTC.readTime () {
+  command error_t RVRTC.readTime () {
     state = RV3049_STATE_READ_TIME;
     call SpiResource.request();
+    return SUCCESS;
   }
 
-  command RVRTC.setTime (uint8_t seconds,
-                         uint8_t minutes,
-                         uint8_t hours,
-                         uint8_t days,
-                         month_e month,
-                         uint16_t year,
-                         day_e weekday) {
+  command error_t RVRTC.setTime (uint8_t seconds,
+                                 uint8_t minutes,
+                                 uint8_t hours,
+                                 uint8_t days,
+                                 month_e month,
+                                 uint16_t year,
+                                 day_e weekday) {
 
     buf_out[0] = RV3049_SET_WRITE_BIT(RV3049_PAGE_ADDR_CLOCK);
     buf_out[1] = binary_to_bcd(seconds);
@@ -67,6 +69,7 @@ implementation {
 
     state = RV3049_STATE_SET_TIME;
     call SpiResource.request();
+    return SUCCESS;
   }
 
 
@@ -96,13 +99,14 @@ implementation {
         minutes  = BCD_TO_BINARY(buf_in[2]);
         hours    = BCD_TO_BINARY((buf_in[3])&0x3F);
         days     = BCD_TO_BINARY(buf_in[4]);
-        weekday  = buf_in[5];
+        day      = buf_in[5];
         month    = buf_in[6];
         year     = BCD_TO_BINARY(buf_in[7])+2000;
 
         signal RVRTC.readTimeDone(SUCCESS, seconds, minutes, hours, days,
-                                  weekdays, months, years);
+                                  month, year, day);
         break;
+      }
 
       case RV3049_STATE_SET_TIME:
         state = RV3049_STATE_SET_TIME_DONE;
