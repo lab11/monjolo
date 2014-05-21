@@ -186,14 +186,32 @@ implementation {
           fram_data.wakeup_counter++;
           call RTC.readTime();
         } else {
+          uint8_t adj_seconds = RTC_SECONDS;
+          uint8_t adj_minutes = RTC_MINUTES;
+          uint8_t adj_hours = RTC_HOURS;
+
           state = STATE_WRITE_SCRATCH;
           // FRAM hash does not match, reset everything
           clear_scratch();
 
+          // add an offset because programming the node took some time
+          if (adj_seconds < 45) {
+            adj_seconds += 15;
+          } else {
+            adj_seconds = (adj_seconds + 15) % 60;
+            if (adj_minutes == 59) {
+              // just assume we won't program near midnight
+              adj_hours++;
+              adj_minutes = 0;
+            } else {
+              adj_minutes++;
+            }
+          }
+
           // set RTC time with constants acquired at compile time
-          call RTC.setTime(RTC_SECONDS,
-                           RTC_MINUTES,
-                           RTC_HOURS,
+          call RTC.setTime(adj_seconds,
+                           adj_minutes,
+                           adj_hours,
                            RTC_DAYS,
                            RTC_MONTH,
                            RTC_YEAR,
@@ -305,7 +323,7 @@ implementation {
         if (log_dump_count >= fram_data.storage_count) {
           // Done
           state = STATE_DONE;
-          call UartStream.send("DONE", 4);
+          call UartStream.send((uint8_t*) "DONE", 4);
         } else {
           state = STATE_UART_DUMP_GOT_LOG;
           read_log();
@@ -328,7 +346,7 @@ implementation {
             // turning the uart on.
             call UartControl.start();
             call UartStream.receive(uart_buf, 5);
-            call UartStream.send("hello", 5);
+            call UartStream.send((uint8_t*) "hello", 5);
             break;
 
           case CMD_DUMP:
