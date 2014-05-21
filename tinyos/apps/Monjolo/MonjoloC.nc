@@ -19,7 +19,7 @@ implementation {
   App.Leds -> LedsC.Leds;
 
   // FRAM
-  components Fm25lbC as FramC;
+  components FM25L04BC as FramC;
   App.Fram -> FramC.Fm25lb;
 
   // IPv6 Stack

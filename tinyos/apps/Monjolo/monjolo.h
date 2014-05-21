@@ -1,5 +1,5 @@
-#ifndef __COILCUBE_IP_H__
-#define __COILCUBE_IP_H__
+#ifndef __MONJOLO_H__
+#define __MONJOLO_H__
 
 #include "Ieee154.h"
 
