@@ -49,7 +49,7 @@ implementation {
       P3DIR = 0xf1;
 
       P4OUT = 0xfd;
-      P4DIR = 0xfd;
+      P4DIR = 0xdd;
 
       P5OUT = 0xF7;
       P5DIR = 0xfb;
