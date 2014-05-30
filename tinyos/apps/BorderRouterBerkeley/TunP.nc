@@ -99,7 +99,11 @@ implementation {
       pkt_header->ip6_dst.s6_addr[14] = 1;
       pkt_header->ip6_dst.s6_addr[15] = 1;
 
-    }
+      // also need to convert the profile_id
+      len
+
+	}
+
 
     send_info_struct.upper_data = data;
     send_info_struct.link_fragments = 1;
