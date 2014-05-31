@@ -99,8 +99,33 @@ implementation {
       pkt_header->ip6_dst.s6_addr[14] = 1;
       pkt_header->ip6_dst.s6_addr[15] = 1;
 
-      // also need to convert the profile_id
-      len
+    }
+
+    // HACK
+    // Also need to convert the profile_id
+    {
+      struct ip_iovec* current_iov = msg->ip6_data.iov_next;
+      struct udp_hdr* data_hdr;
+      uint8_t* data;
+      
+      // Find the last IOV
+      while (1) {
+        if (current_iov.iov_next) {
+          current_iov = current_iov.iov_next;
+        } else {
+          break;
+        }
+      }
+
+      // Find the UDP header
+      data_hdr = (udp_hdr*) current_iov.iov_base;
+      // Get a pointer to the UDP data
+      data = (uint8_t*) (data_hdr+1);
+
+      if (data_hdr->len > 10) {
+        memcpy(data, "123abc456d", 10);
+      }
+    }
 
 	}
 
