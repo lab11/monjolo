@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+
+################################################################################
+##
+## Download the data from the storage flash of a BigBen node.
+##
+## Usage: 1. Set the switch so the epic-multi-prog is in UART mode.
+##        2. Run this script. Something like:
+##              ./get_log.py | tee node1.data
+##        3. Connect the impulse to an epic-multi-prog board with a
+##           tag connect cable within two seconds of starting the script.
+##
+##
+################################################################################
+
+
 import serial
 import sys
 import struct
@@ -8,13 +23,22 @@ import datetime
 
 s = serial.Serial('/dev/ttyUSB0', 115200, timeout=2)
 
+welcome = 'hello'
+welcome_index = 0
+
 # Make sure BigBen/impulse is there
-n = s.read(1)
-h = s.read(5)
+while True:
+	c = s.read(1)
+	if len(c) == 0:
+		break
 
-hello = h.decode('utf-8')
+	if c.decode('utf-8') == welcome[welcome_index]:
+		welcome_index += 1
 
-if (hello == 'hello'):
+	if welcome_index == len(welcome):
+		break
+
+if welcome_index >= len(welcome):
 	print('Found BigBen')
 else:
 	print('No response from BigBen')
