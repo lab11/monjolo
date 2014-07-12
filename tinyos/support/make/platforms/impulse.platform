@@ -7,6 +7,7 @@ PFLAGS += -I%T/platforms/impulse/chips/ds2411
 PFLAGS += -I%T/platforms/impulse/chips/fm25l04b
 PFLAGS += -I%T/platforms/impulse/chips/vtimer
 PFLAGS += -I%T/platforms/impulse/chips/gpioflag
+PFLAGS += -I%T/platforms/impulse/chips/gecko_power_supply
 PFLAGS += -I%T/platforms/epic
 PFLAGS += -I%T/platforms/telosa
 

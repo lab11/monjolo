@@ -10,7 +10,7 @@ endif
 
 PFLAGS += -DMONJOLO_VERSION=4
 
-$(call TOSMake_include_platform,impulsec)
+$(call TOSMake_include_platform,impulse)
 $(call TOSMake_include_make_platform,msp)
 
 $(TARGET): $(BUILD_DEPS)

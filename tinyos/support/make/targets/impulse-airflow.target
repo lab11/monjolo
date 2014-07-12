@@ -8,7 +8,7 @@ ifdef CC2420_CHANNEL
 PFLAGS += -DCC2420_DEF_CHANNEL=$(CC2420_CHANNEL)
 endif
 
-$(call TOSMake_include_platform,impulsec)
+$(call TOSMake_include_platform,impulse)
 $(call TOSMake_include_make_platform,msp)
 
 $(TARGET): $(BUILD_DEPS)
