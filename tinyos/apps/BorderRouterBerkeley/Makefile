@@ -2,6 +2,7 @@ COMPONENT=BorderRouterC
 
 PFLAGS += -DCC2520_DEF_CHANNEL=18
 
+PFLAGS += -I%T/../apps/BorderRouterBerkeley
 PFLAGS += -I%T/../apps/BorderRouter
 
 ################################################################################

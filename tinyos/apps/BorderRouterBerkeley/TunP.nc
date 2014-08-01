@@ -76,58 +76,61 @@ implementation {
     // Do it twice so we can have two copies of the packets
     memcpy(out_buf2_start, &msg->ip6_hdr, sizeof(struct ip6_hdr));
     iov_read(msg->ip6_data, 0, len, out_buf2_start + sizeof(struct ip6_hdr));
-
+printf("outout\n");
     // HACK
     // Convert the destination on one of the messages to the IPv6 address
     // of the Berkeley GATD server
     {
-      struct ip6_hdr* pkt_header = (struct ip6_hdr*) out_buf2_start;
-      pkt_header->ip6_dst.s6_addr[0] = 1;
-      pkt_header->ip6_dst.s6_addr[1] = 1;
-      pkt_header->ip6_dst.s6_addr[2] = 1;
-      pkt_header->ip6_dst.s6_addr[3] = 1;
-      pkt_header->ip6_dst.s6_addr[4] = 1;
-      pkt_header->ip6_dst.s6_addr[5] = 1;
-      pkt_header->ip6_dst.s6_addr[6] = 1;
-      pkt_header->ip6_dst.s6_addr[7] = 1;
-      pkt_header->ip6_dst.s6_addr[8] = 1;
-      pkt_header->ip6_dst.s6_addr[9] = 1;
-      pkt_header->ip6_dst.s6_addr[10] = 1;
-      pkt_header->ip6_dst.s6_addr[11] = 1;
-      pkt_header->ip6_dst.s6_addr[12] = 1;
-      pkt_header->ip6_dst.s6_addr[13] = 1;
-      pkt_header->ip6_dst.s6_addr[14] = 1;
-      pkt_header->ip6_dst.s6_addr[15] = 1;
-
+      //2001:0470:1f04:00aa:0000:0000:0000:0002
+	  struct ip6_hdr* pkt_header = (struct ip6_hdr*) out_buf2_start;
+      pkt_header->ip6_dst.s6_addr[15] = 0x20;
+      pkt_header->ip6_dst.s6_addr[14] = 0x01;
+      pkt_header->ip6_dst.s6_addr[13] = 0x04;
+      pkt_header->ip6_dst.s6_addr[12] = 0x70;
+      pkt_header->ip6_dst.s6_addr[11] = 0x1f;
+      pkt_header->ip6_dst.s6_addr[10] = 0x04;
+      pkt_header->ip6_dst.s6_addr[9] = 0x00;
+      pkt_header->ip6_dst.s6_addr[8] = 0xaa;
+      pkt_header->ip6_dst.s6_addr[7] = 0x00;
+      pkt_header->ip6_dst.s6_addr[6] = 0x00;
+      pkt_header->ip6_dst.s6_addr[5] = 0x00;
+      pkt_header->ip6_dst.s6_addr[4] = 0x00;
+      pkt_header->ip6_dst.s6_addr[3] = 0x00;
+      pkt_header->ip6_dst.s6_addr[2] = 0x00;
+      pkt_header->ip6_dst.s6_addr[1] = 0x00;
+      pkt_header->ip6_dst.s6_addr[0] = 0x02;
+	  printf("updated ipv6\n");
     }
 
     // HACK
     // Also need to convert the profile_id
     {
-      struct ip_iovec* current_iov = msg->ip6_data.iov_next;
+      struct ip_iovec* current_iov = msg->ip6_data;
       struct udp_hdr* data_hdr;
-      uint8_t* data;
+      uint8_t* data_ptr;
       
       // Find the last IOV
-      while (1) {
-        if (current_iov.iov_next) {
-          current_iov = current_iov.iov_next;
+      while (current_iov->iov_next != NULL) {
+        if (current_iov->iov_next != NULL) {
+          current_iov = current_iov->iov_next;
         } else {
           break;
         }
       }
 
-      // Find the UDP header
-      data_hdr = (udp_hdr*) current_iov.iov_base;
-      // Get a pointer to the UDP data
-      data = (uint8_t*) (data_hdr+1);
+	  printf("got iov\n");
 
+      // Find the UDP header
+      data_hdr = (struct udp_hdr*) current_iov->iov_base;
+      // Get a pointer to the UDP data
+      data_ptr = (uint8_t*) (data_hdr+1);
+
+		printf("pid: %s\n", data_ptr);
       if (data_hdr->len > 10) {
-        memcpy(data, "123abc456d", 10);
+        memcpy(data_ptr, "YXdBJ0EAgk", 10);
       }
     }
 
-	}
 
 
     send_info_struct.upper_data = data;
