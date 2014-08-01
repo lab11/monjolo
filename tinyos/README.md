@@ -5,17 +5,14 @@ Most of the code for Monjolo sensors is written in TinyOS. There are a
 few steps you must complete to be able to compile the TinyOS apps.
 
 
+Step 1: Get TinyOS
+------------------
 
-Step 1: Get a Special Version of TinyOS
----------------------------------------
-
-There are some outstanding changes to tinyos-main that will hopefully be
-included soon, but until then you need to work off of my branch for tinyos.
-Clone and use the lab11 version of tinyos-main.
+This repo will only compile against the latest version of tinyos. For now,
+you need to compile the tools as well.
 
     git clone https://github.com/lab11/tinyos-main.git
     cd tinyos-main
-    git checkout for-rpi
     cd tools
     ./Bootstrap
     ./configure
