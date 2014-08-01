@@ -16,8 +16,9 @@
 
 #define RECEIVER_ADDR "2001:470:1f10:1320::2"
 #define RECEIVER_PORT 4001
-#define PROFILE_ID "1234567890"
+#define PROFILE_ID "G9T58vZ7Bi"
 
+#define AIRFLOW_TYPE 1
 #define AIRFLOW_VERSION 0
 
 // Prefix for this node, just set it blank as we have no idea what the prefix
@@ -39,9 +40,9 @@ typedef struct {
 #define FRAM_ADDR_SAMPLES 8+sizeof(fram_data_t)
 
 typedef struct {
-  char profile[10]; // GATD profile ID
-  uint8_t version;  // version of the coilcube
-  uint8_t seq_no;   // copy of the 15.4 sequence number as this will be lost (udp)
+  char profile[10];         // GATD profile ID
+  uint8_t  type;
+  uint8_t  version;         // version of the coilcube
   uint32_t wakeup_counter;  // number of wakeups of the coilcube
   uint32_t airflow_sample_total;
   uint16_t sample_count;

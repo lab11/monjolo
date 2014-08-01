@@ -41,7 +41,7 @@ implementation {
   struct sockaddr_in6 dest; // Where to send the packet
   struct in6_addr next_hop; // for default route setup
 
-  pkt_data_t pkt_data = {PROFILE_ID, AIRFLOW_VERSION, 0, 0, 0, 0, {0}};
+  pkt_data_t pkt_data = {PROFILE_ID, AIRFLOW_TYPE, AIRFLOW_VERSION, 0, 0, 0, 0, {0}};
 
   uint16_t timing_cap_val;
 
@@ -135,7 +135,6 @@ implementation {
     // Set the payload as the pkt data
     pkt_data.wakeup_counter       = htonl(fram_data.wakeup_counter);
     //pkt_data.seq_no               = fram_data.seq_no;
-    pkt_data.seq_no               = over;
     pkt_data.airflow_sample_total = htonl(total);
     pkt_data.sample_count         = htons(sample_count_to_send);
 
