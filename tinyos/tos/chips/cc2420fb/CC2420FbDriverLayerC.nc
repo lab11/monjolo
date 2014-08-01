@@ -64,7 +64,7 @@ implementation
 {
 	components CC2420FbDriverLayerP as DriverLayerP,
 		BusyWaitMicroC,
-		TaskletC,
+		new TaskletC(),
 		MainC,
 		HplCC2420FbC as HplC;
 

@@ -45,7 +45,7 @@ generic configuration RadioAlarmC() {
 }
 
 implementation {
-  components new RadioAlarmP(), TaskletC;
+  components new RadioAlarmP(), new TaskletC();
 
   RadioAlarm = RadioAlarmP;
   Alarm = RadioAlarmP;
