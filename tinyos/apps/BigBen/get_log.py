@@ -70,7 +70,14 @@ while True:
 		year    = values[6]+2000
 		diff    = values[7]
 
-		d = datetime.datetime(year, month, days, hours, minutes, seconds)
+		try:
+			d = datetime.datetime(year, month, days, hours, minutes, seconds)
 
-		print('{}: {}'.format(d, diff))
+			print('{}: {}'.format(d, diff))
+
+		except ValueError:
+			print('date error: {}-{}-{} {}:{}:{} | {}'
+				.format(year, month, days, hours, minutes, seconds, diff))
+
+
 
