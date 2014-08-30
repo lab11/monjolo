@@ -12,6 +12,7 @@
 // 4: coilcube/splitcore with impulse
 // 5: gecko power supply + impulse
 // 6: gecko power supply + impulse + buzz
+// 7: hot spring + impulse
 
 #define ADDR_ALL_ROUTERS "ff02::2"
 
