@@ -724,8 +724,8 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <attribute name="NAME" x="10.0956125" y="8.213471875" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center"/>
 <attribute name="VALUE" x="10.0973875" y="9.236328125" size="1.016" layer="27" font="vector" ratio="12" rot="R180" align="bottom-center"/>
 </element>
-<element name="R8" library="passives" package="0402_RES" value="12k" x="23.368" y="1.524">
-<attribute name="DIGIKEY" value="RHM12.0KCDCT-ND" x="23.368" y="1.524" size="1.778" layer="27" display="off"/>
+<element name="R8" library="passives" package="0402_RES" value="12k" x="11.938" y="11.6332" rot="R90">
+<attribute name="DIGIKEY" value="RHM12.0KCDCT-ND" x="11.938" y="11.6332" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="J3" library="gecko" package="HEADER1X9/0.05IN" value="IMPULSE_GECKO_HEADER" x="31.369" y="6.477" rot="R90"/>
 <element name="SJ1" library="SparkFun-Passives" package="SJ_2S-NO" value="SOLDERJUMPERNO" x="29.3878" y="11.3538" smashed="yes" rot="R180">
@@ -966,7 +966,7 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <signal name="SWDCLK">
 <contactref element="U3" pad="24"/>
 <contactref element="R8" pad="1"/>
-<wire x1="12.3808" y1="10.2326" x2="22.93493125" y2="1.524" width="0" layer="19" extent="1-1"/>
+<wire x1="12.3808" y1="10.2326" x2="11.938" y2="11.20013125" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SWDIO">
 <contactref element="U3" pad="23"/>
