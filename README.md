@@ -2,11 +2,14 @@ Monjolo
 =======
 
 Monjolo sensors are designed to meter energy consumers, such as plug loads,
-lighting, water heaters, etc. Monjolo exploits an interesting fact to
-accomplish this: energy consumers produce side channels of energy that are
-harvestable with energy-harvesting power supplies. Monjolo nodes harvest
-from these side channels, and use the rate of recharge to infer something
-about the original energy consumer.
+lighting, water heaters, etc. Monjolo exploits an interesting fact to accomplish
+this: energy consuming loads (e.g. overhead lighting) often produce side
+channels of energy that can be harvested (e.g. light with a solar panel).
+Monjolo nodes use an energy-harvesting power supply to scavenge energy from
+these side channels to power themselves. The sensors then infer information
+about the original load based on the rate it is able to harvest. Monjolo nodes
+follow a simple principle: the faster the rate of harvesting the greater the
+amount of energy consumed by the monitored load.
 
 The operation of a Monjolo node proceeds as follows: the harvester charges
 a capacitor to some threshold. Once the threshold is met, the processing
@@ -21,9 +24,10 @@ on the device. The sensing apparatus is entirely composed of the
 energy-harvester and the packet receiver. All information is contained in
 the rate of activations of the Monjolo node.
 
-We have developed two instantiations of this metering design. First is
+We have developed Three instantiations of this metering design. First is
 Coilcube, a power meter for AC loads. Second is a light sensor for metering
-lighting.
+lighting. And third is a thermoelectric design for metering temperature
+differential.
 
 
 Coilcube

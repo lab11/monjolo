@@ -130,7 +130,7 @@
 <wire x1="7.0612" y1="16.002" x2="7.0612" y2="-2.794" width="0" layer="51"/>
 <text x="3.2512" y="1.2192" size="0.762" layer="21" font="vector" ratio="12" align="center-left">Brad
 Campbell</text>
-<text x="3.7592" y="15.8242" size="1.27" layer="21" font="vector" ratio="14" align="bottom-center">sEHnsor</text>
+<text x="3.7592" y="15.8242" size="1.27" layer="21" font="vector" ratio="14" align="bottom-center">Blast</text>
 <text x="35.2298" y="7.7724" size="0.762" layer="21" font="vector" ratio="12" rot="R90" align="bottom-center">2013/08/14</text>
 </plain>
 <libraries>
@@ -737,8 +737,14 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <element name="SJ3" library="SparkFun-Passives" package="SJ_2S-NO" value="SOLDERJUMPERNO" x="29.3878" y="7.3406" smashed="yes" rot="R180">
 <attribute name="VALUE" x="30.2958" y="8.9916" size="0.4064" layer="27" rot="R180"/>
 </element>
-<element name="D1" library="SparkFun-LED" package="LED-0603" value="BLUE" x="13.9446" y="11.811" rot="R90"/>
-<element name="D2" library="SparkFun-LED" package="LED-0603" value="BLUE" x="13.9446" y="11.811" rot="MR270"/>
+<element name="D1" library="SparkFun-LED" package="LED-0603" value="BLUE" x="13.9446" y="11.811" smashed="yes" rot="R90">
+<attribute name="NAME" x="14.8336" y="11.1125" size="1.016" layer="25" font="vector" ratio="12" rot="R180" align="bottom-center"/>
+<attribute name="VALUE" x="14.9606" y="12.8905" size="0.4064" layer="27" rot="R180"/>
+</element>
+<element name="D2" library="SparkFun-LED" package="LED-0603" value="BLUE" x="13.9446" y="11.811" smashed="yes" rot="MR270">
+<attribute name="NAME" x="14.8336" y="12.5095" size="0.4064" layer="26" rot="MR0"/>
+<attribute name="VALUE" x="14.9606" y="10.7315" size="0.4064" layer="28" rot="MR0"/>
+</element>
 <element name="R1" library="passives" package="0402_RES" value="470" x="16.3068" y="11.811" rot="R180">
 <attribute name="DIGIKEY" value="RHM470CECT-ND" x="16.3068" y="11.811" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
