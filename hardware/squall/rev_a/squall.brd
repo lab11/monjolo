@@ -125,7 +125,6 @@
 <plain>
 <text x="31.8262" y="8.2042" size="0.762" layer="21" font="vector" ratio="12" align="center-left">Brad
 Campbell</text>
-<text x="30.4292" y="22.8092" size="1.27" layer="21" font="vector" ratio="14" align="bottom-center">Blast</text>
 <text x="33.9598" y="13.4874" size="0.762" layer="21" font="vector" ratio="12" rot="R90" align="bottom-center">2013/08/14</text>
 <wire x1="18.8976" y1="1.6002" x2="25.4" y2="12.7" width="0" layer="20" curve="60.85"/>
 <wire x1="25.4" y1="12.7" x2="12.7" y2="25.4" width="0" layer="20" curve="90"/>
@@ -151,27 +150,6 @@ Campbell</text>
 <libraries>
 <library name="logos">
 <packages>
-<package name="UMICH_SOLID_75MIL">
-<description>University of Michigan - Solid block M 0.075 in tall.</description>
-<rectangle x1="0" y1="1.3716" x2="0.8001" y2="1.905" layer="21"/>
-<wire x1="0.8001" y1="1.8923" x2="1.3335" y2="1.1811" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="1.1811" x2="1.8669" y2="1.8923" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="0.3429" x2="1.8923" y2="1.0668" width="0.0254" layer="21"/>
-<wire x1="1.3335" y1="0.3429" x2="0.7747" y2="1.0541" width="0.0254" layer="21"/>
-<rectangle x1="0.2032" y1="0.5334" x2="0.7874" y2="1.3716" layer="21"/>
-<rectangle x1="0" y1="0" x2="1.016" y2="0.5334" layer="21"/>
-<rectangle x1="1.651" y1="0" x2="2.667" y2="0.5334" layer="21"/>
-<rectangle x1="1.8796" y1="0.5334" x2="2.4638" y2="1.3716" layer="21"/>
-<rectangle x1="1.8669" y1="1.3716" x2="2.667" y2="1.905" layer="21"/>
-<polygon width="0.0254" layer="21">
-<vertex x="1.8669" y="1.8923"/>
-<vertex x="1.3335" y="1.1811"/>
-<vertex x="0.8001" y="1.8923"/>
-<vertex x="0.8001" y="1.0414"/>
-<vertex x="1.3335" y="0.3683"/>
-<vertex x="1.8796" y="1.0795"/>
-</polygon>
-</package>
 <package name="UMICH_SOLID_50MIL">
 <rectangle x1="-0.885825" y1="0.27305" x2="-0.358775" y2="0.635" layer="21"/>
 <rectangle x1="-0.752475" y1="-0.27305" x2="-0.358775" y2="0.27305" layer="21"/>
@@ -1132,7 +1110,6 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 </pass>
 </autorouter>
 <elements>
-<element name="U$1" library="logos" package="UMICH_SOLID_75MIL" value="UMICH_SOLID_SMALL" x="-1.7018" y="18.7706"/>
 <element name="C7" library="passives" package="0402_CAP" value="0.1uF" x="18.8976" y="11.8538" smashed="yes">
 <attribute name="NAME" x="18.8976" y="11.5142" size="0.762" layer="25" font="vector" ratio="12" rot="R180" align="bottom-center"/>
 <attribute name="VALUE" x="18.8976" y="10.4568" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center"/>
@@ -1416,6 +1393,7 @@ This Sunstone Circuits 4 Layer .DRU has been set to cover our minimum requiremen
 <wire x1="12.7" y1="11.5824" x2="12.1412" y2="11.0236" width="0.2032" layer="16"/>
 <wire x1="12.1412" y1="11.0236" x2="10.3378" y2="11.0236" width="0.2032" layer="16"/>
 <contactref element="J23" pad="5"/>
+<via x="2.5654" y="18.7452" extent="1-16" drill="0.2032"/>
 </signal>
 <signal name="VCC">
 <contactref element="C7" pad="1"/>

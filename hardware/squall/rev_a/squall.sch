@@ -3849,7 +3849,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </class>
 </classes>
 <parts>
-<part name="U$1" library="logos" deviceset="UMICH_SOLID" device="_SMALL"/>
 <part name="C7" library="passives" deviceset="CAPACITOR" device="" value="0.1uF">
 <attribute name="DIGIKEY" value="445-4952-1-ND"/>
 </part>
@@ -3974,7 +3973,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </instance>
 <instance part="GND12" gate="1" x="91.44" y="127"/>
 <instance part="GND13" gate="1" x="78.74" y="35.56"/>
-<instance part="U$1" gate="G$1" x="232.664" y="22.352"/>
 <instance part="U3" gate="G$1" x="78.74" y="86.36"/>
 <instance part="GND6" gate="1" x="167.64" y="48.26"/>
 <instance part="B2" gate="G$1" x="149.86" y="60.96"/>
