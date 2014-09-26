@@ -233,6 +233,38 @@
 <vertex x="3.5941" y="8.8773"/>
 </polygon>
 </package>
+<package name="UMICH_SOLID_100MIL">
+<rectangle x1="0" y1="1.8161" x2="1.0541" y2="2.54" layer="21"/>
+<rectangle x1="0.2667" y1="0.7239" x2="1.0541" y2="1.8161" layer="21"/>
+<rectangle x1="0" y1="0" x2="1.3462" y2="0.7239" layer="21"/>
+<rectangle x1="2.1971" y1="0" x2="3.5433" y2="0.7239" layer="21"/>
+<rectangle x1="2.4892" y1="0.7239" x2="3.2766" y2="1.8161" layer="21"/>
+<rectangle x1="2.4892" y1="1.8161" x2="3.5433" y2="2.54" layer="21"/>
+<polygon width="0" layer="21">
+<vertex x="2.4892" y="1.37795"/>
+<vertex x="1.7653" y="0.43815"/>
+<vertex x="1.0541" y="1.37795"/>
+<vertex x="1.0541" y="2.54"/>
+<vertex x="1.7653" y="1.6002"/>
+<vertex x="2.4892" y="2.54"/>
+</polygon>
+</package>
+<package name="UMICH_SOLID_50MIL">
+<rectangle x1="-0.885825" y1="0.27305" x2="-0.358775" y2="0.635" layer="21"/>
+<rectangle x1="-0.752475" y1="-0.27305" x2="-0.358775" y2="0.27305" layer="21"/>
+<rectangle x1="-0.885825" y1="-0.635" x2="-0.212725" y2="-0.27305" layer="21"/>
+<rectangle x1="0.212725" y1="-0.635" x2="0.885825" y2="-0.27305" layer="21"/>
+<rectangle x1="0.358775" y1="-0.27305" x2="0.752475" y2="0.27305" layer="21"/>
+<rectangle x1="0.358775" y1="0.27305" x2="0.885825" y2="0.635" layer="21"/>
+<polygon width="0" layer="21">
+<vertex x="0.358775" y="0.053975"/>
+<vertex x="-0.003175" y="-0.415925"/>
+<vertex x="-0.358775" y="0.053975"/>
+<vertex x="-0.358775" y="0.635"/>
+<vertex x="-0.003175" y="0.1651"/>
+<vertex x="0.358775" y="0.635"/>
+</polygon>
+</package>
 </packages>
 <symbols>
 <symbol name="UMICH_SOLID">
@@ -256,7 +288,7 @@
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="UMICH_SOLID">
+<deviceset name="UMICH_SOLID" prefix="LOGO">
 <gates>
 <gate name="G$1" symbol="UMICH_SOLID" x="0" y="0"/>
 </gates>
@@ -282,6 +314,16 @@
 </technologies>
 </device>
 <device name="_LARGE" package="UMICH_SOLID_350MIL">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_SMALL+" package="UMICH_SOLID_100MIL">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_TINY" package="UMICH_SOLID_50MIL">
 <technologies>
 <technology name=""/>
 </technologies>
@@ -346,54 +388,54 @@
 <packages>
 <package name="QFN-48-6MM">
 <description>6MM x 6MM 48QFN package</description>
-<smd name="1" x="-3" y="2.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="2" x="-3" y="1.8" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="3" x="-3" y="1.4" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="4" x="-3" y="1" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="5" x="-3" y="0.6" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="6" x="-3" y="0.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="7" x="-3" y="-0.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="8" x="-3" y="-0.6" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="9" x="-3" y="-1" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="10" x="-3" y="-1.4" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="11" x="-3" y="-1.8" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="12" x="-3" y="-2.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="13" x="-2.2" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="14" x="-1.8" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="15" x="-1.4" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="16" x="-1" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="17" x="-0.6" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="18" x="-0.2" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="19" x="0.2" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="20" x="0.6" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="21" x="1" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="22" x="1.4" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="23" x="1.8" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="24" x="2.2" y="-3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="25" x="3" y="-2.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="26" x="3" y="-1.8" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="27" x="3" y="-1.4" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="28" x="3" y="-1" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="29" x="3" y="-0.6" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="30" x="3" y="-0.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="31" x="3" y="0.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="32" x="3" y="0.6" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="33" x="3" y="1" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="34" x="3" y="1.4" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="35" x="3" y="1.8" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="36" x="3" y="2.2" dx="0.8" dy="0.25" layer="1" roundness="100"/>
-<smd name="37" x="2.2" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="38" x="1.8" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="39" x="1.4" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="40" x="1" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="41" x="0.6" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="42" x="0.2" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="43" x="-0.2" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="44" x="-0.6" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="45" x="-1" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="46" x="-1.4" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="47" x="-1.8" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
-<smd name="48" x="-2.2" y="3" dx="0.8" dy="0.25" layer="1" roundness="100" rot="R90"/>
+<smd name="1" x="-3" y="2.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="2" x="-3" y="1.8" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="3" x="-3" y="1.4" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="4" x="-3" y="1" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="5" x="-3" y="0.6" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="6" x="-3" y="0.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="7" x="-3" y="-0.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="8" x="-3" y="-0.6" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="9" x="-3" y="-1" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="10" x="-3" y="-1.4" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="11" x="-3" y="-1.8" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="12" x="-3" y="-2.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="13" x="-2.2" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="14" x="-1.8" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="15" x="-1.4" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="16" x="-1" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="17" x="-0.6" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="18" x="-0.2" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="19" x="0.2" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="20" x="0.6" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="21" x="1" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="22" x="1.4" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="23" x="1.8" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="24" x="2.2" y="-3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="25" x="3" y="-2.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="26" x="3" y="-1.8" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="27" x="3" y="-1.4" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="28" x="3" y="-1" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="29" x="3" y="-0.6" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="30" x="3" y="-0.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="31" x="3" y="0.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="32" x="3" y="0.6" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="33" x="3" y="1" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="34" x="3" y="1.4" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="35" x="3" y="1.8" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="36" x="3" y="2.2" dx="0.8" dy="0.2032" layer="1" roundness="100"/>
+<smd name="37" x="2.2" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="38" x="1.8" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="39" x="1.4" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="40" x="1" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="41" x="0.6" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="42" x="0.2" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="43" x="-0.2" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="44" x="-0.6" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="45" x="-1" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="46" x="-1.4" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="47" x="-1.8" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
+<smd name="48" x="-2.2" y="3" dx="0.8" dy="0.2032" layer="1" roundness="100" rot="R90"/>
 <wire x1="-3" y1="3" x2="3" y2="3" width="0.127" layer="21"/>
 <wire x1="3" y1="3" x2="3" y2="-3" width="0.127" layer="21"/>
 <wire x1="3" y1="-3" x2="-3" y2="-3" width="0.127" layer="21"/>
@@ -722,6 +764,14 @@ chip</description>
 <rectangle x1="0.3302" y1="-0.4699" x2="0.8303" y2="0.4801" layer="51"/>
 <rectangle x1="-0.2286" y1="-0.381" x2="0.2286" y2="0.381" layer="21"/>
 </package>
+<package name="0402_DIODE">
+<smd name="CATHODE" x="0.43306875" y="0" dx="0.535940625" dy="0.5461" layer="1"/>
+<smd name="ANODE" x="-0.43306875" y="0" dx="0.535940625" dy="0.5461" layer="1"/>
+<text x="0" y="0.381" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<wire x1="-0.1016" y1="0.254" x2="0.1016" y2="0" width="0.127" layer="21"/>
+<wire x1="0.1016" y1="0" x2="-0.1016" y2="-0.254" width="0.127" layer="21"/>
+<wire x1="0.1016" y1="0.254" x2="0.1016" y2="-0.2794" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="RESISTOR">
@@ -758,6 +808,19 @@ chip</description>
 <wire x1="0" y1="-2.54" x2="0" y2="-5.08" width="0.254" layer="94" curve="-180"/>
 <text x="-0.508" y="-2.54" size="1.27" layer="95" ratio="12" rot="R90">&gt;NAME</text>
 <text x="3.048" y="-2.54" size="1.27" layer="96" ratio="12" rot="R90">&gt;VALUE</text>
+</symbol>
+<symbol name="DIODE">
+<pin name="ANODE" x="-5.08" y="0" visible="off" length="short"/>
+<pin name="CATHODE" x="5.08" y="0" visible="off" length="short" rot="R180"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="0" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-1.27" y2="0" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="0" x2="1.27" y2="0" width="0.1524" layer="94"/>
+<text x="0" y="1.524" size="1.778" layer="95" ratio="12" align="bottom-center">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -823,6 +886,22 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="DIODE" prefix="D">
+<gates>
+<gate name="G$1" symbol="DIODE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="0402_DIODE">
+<connects>
+<connect gate="G$1" pin="ANODE" pad="ANODE"/>
+<connect gate="G$1" pin="CATHODE" pad="CATHODE"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -925,41 +1004,26 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <circle x="-1.27" y="-0.635" radius="0.635" width="0.127" layer="21"/>
 </package>
 <package name="USB_MICRO_B-JST-MC5BR3-M404-4S-TB">
-<smd name="P$1" x="-4.85" y="0" dx="1.8" dy="2.2" layer="1"/>
-<smd name="P$2" x="4.85" y="0" dx="1.8" dy="2.2" layer="1"/>
-<smd name="P$3" x="-4.85" y="2.4" dx="1.8" dy="1.8" layer="1"/>
-<smd name="P$4" x="4.85" y="2.4" dx="1.8" dy="1.8" layer="1"/>
-<smd name="P$5" x="-2.35" y="3.825" dx="1.2" dy="1.55" layer="1"/>
-<smd name="P$6" x="2.35" y="3.825" dx="1.2" dy="1.55" layer="1"/>
-<smd name="1" x="-1.3" y="3.825" dx="0.4" dy="1.55" layer="1"/>
-<smd name="2" x="-0.65" y="3.825" dx="0.4" dy="1.55" layer="1"/>
-<smd name="3" x="0" y="3.825" dx="0.4" dy="1.55" layer="1"/>
-<smd name="4" x="0.65" y="3.825" dx="0.4" dy="1.55" layer="1"/>
-<smd name="5" x="1.3" y="3.825" dx="0.4" dy="1.55" layer="1"/>
-<wire x1="-3.85" y1="-1.5" x2="-3.85" y2="2.55" width="0" layer="20"/>
-<wire x1="-3.85" y1="2.55" x2="-3.45" y2="2.95" width="0" layer="20" curve="-90"/>
+<smd name="P$1" x="-4.9" y="0" dx="1.7" dy="2.2" layer="1"/>
+<smd name="P$2" x="4.9" y="0" dx="1.7" dy="2.2" layer="1"/>
+<smd name="P$3" x="-4.9" y="2.4" dx="1.7" dy="1.8" layer="1"/>
+<smd name="P$4" x="4.9" y="2.4" dx="1.7" dy="1.8" layer="1"/>
+<smd name="P$5" x="-2.35" y="3.875" dx="1.2" dy="1.45" layer="1"/>
+<smd name="P$6" x="2.35" y="3.875" dx="1.2" dy="1.45" layer="1"/>
+<smd name="1" x="-1.3" y="3.875" dx="0.4" dy="1.45" layer="1"/>
+<smd name="2" x="-0.65" y="3.875" dx="0.4" dy="1.45" layer="1"/>
+<smd name="3" x="0" y="3.875" dx="0.4" dy="1.45" layer="1"/>
+<smd name="4" x="0.65" y="3.875" dx="0.4" dy="1.45" layer="1"/>
+<smd name="5" x="1.3" y="3.875" dx="0.4" dy="1.45" layer="1"/>
+<wire x1="-3.8354" y1="-1.524" x2="-3.8354" y2="2.55" width="0" layer="20"/>
+<wire x1="-3.8354" y1="2.55" x2="-3.45" y2="2.95" width="0" layer="20" curve="-90"/>
 <wire x1="-3.45" y1="2.95" x2="3.45" y2="2.95" width="0" layer="20"/>
-<wire x1="3.45" y1="2.95" x2="3.85" y2="2.55" width="0" layer="20" curve="-90"/>
-<wire x1="3.85" y1="2.55" x2="3.85" y2="-1.5" width="0" layer="20"/>
+<wire x1="3.45" y1="2.95" x2="3.8354" y2="2.55" width="0" layer="20" curve="-90"/>
+<wire x1="3.8354" y1="2.55" x2="3.8354" y2="-1.524" width="0" layer="20"/>
 <text x="0" y="5" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
-<symbol name="ARM-6PIN">
-<description>6 Pin ARM JTAG part</description>
-<pin name="VCC" x="-12.7" y="2.54" length="short"/>
-<pin name="GND" x="-12.7" y="-5.08" length="short"/>
-<pin name="TMS" x="12.7" y="2.54" length="short" rot="R180"/>
-<pin name="TCK" x="12.7" y="0" length="short" rot="R180"/>
-<pin name="TDO" x="12.7" y="-2.54" length="short" rot="R180"/>
-<pin name="!RESET" x="12.7" y="-5.08" length="short" rot="R180"/>
-<wire x1="-10.16" y1="5.08" x2="-10.16" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="-10.16" y1="-7.62" x2="10.16" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="10.16" y1="-7.62" x2="10.16" y2="5.08" width="0.254" layer="94"/>
-<wire x1="10.16" y1="5.08" x2="-10.16" y2="5.08" width="0.254" layer="94"/>
-<text x="-10.16" y="6.35" size="1.27" layer="95">&gt;NAME</text>
-<text x="-10.16" y="-10.16" size="1.27" layer="96">&gt;VALUE</text>
-</symbol>
 <symbol name="USB-B-MICRO">
 <wire x1="5.08" y1="7.62" x2="-5.08" y2="7.62" width="0.254" layer="94"/>
 <wire x1="-5.08" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
@@ -972,43 +1036,22 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <pin name="ID" x="-7.62" y="-2.54" visible="pin" length="middle" function="dot"/>
 <pin name="GND" x="-7.62" y="-5.08" visible="pin" length="middle" function="dot"/>
 </symbol>
+<symbol name="JLINK-SWD-TC">
+<pin name="SWDIO" x="12.7" y="5.08" visible="pin" length="short" rot="R180"/>
+<pin name="SWCLK" x="12.7" y="2.54" visible="pin" length="short" rot="R180"/>
+<pin name="SWO" x="12.7" y="-2.54" visible="pin" length="short" rot="R180"/>
+<pin name="!RESET" x="12.7" y="-5.08" visible="pin" length="short" rot="R180"/>
+<pin name="VCC" x="-12.7" y="5.08" visible="pin" length="short"/>
+<pin name="GND" x="-12.7" y="-5.08" visible="pin" length="short"/>
+<wire x1="-10.16" y1="7.62" x2="-10.16" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-7.62" x2="10.16" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-7.62" x2="10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="7.62" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
+<text x="-10.16" y="7.874" size="1.778" layer="95" ratio="12">&gt;NAME</text>
+<text x="-10.16" y="-9.906" size="1.778" layer="96" ratio="12">&gt;VALUE</text>
+</symbol>
 </symbols>
 <devicesets>
-<deviceset name="TC2030-CTX" prefix="J">
-<description>Tag Connect footprint for ARM JTAG.&lt;br&gt;
-10 pin ARM Cortex Debug Connector.</description>
-<gates>
-<gate name="G$1" symbol="ARM-6PIN" x="0" y="0"/>
-</gates>
-<devices>
-<device name="-NL" package="TC2030-IDC-NL">
-<connects>
-<connect gate="G$1" pin="!RESET" pad="3"/>
-<connect gate="G$1" pin="GND" pad="5"/>
-<connect gate="G$1" pin="TCK" pad="4"/>
-<connect gate="G$1" pin="TDO" pad="6"/>
-<connect gate="G$1" pin="TMS" pad="2"/>
-<connect gate="G$1" pin="VCC" pad="1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="" package="TC2030-IDC">
-<connects>
-<connect gate="G$1" pin="!RESET" pad="3"/>
-<connect gate="G$1" pin="GND" pad="5"/>
-<connect gate="G$1" pin="TCK" pad="4"/>
-<connect gate="G$1" pin="TDO" pad="6"/>
-<connect gate="G$1" pin="TMS" pad="2"/>
-<connect gate="G$1" pin="VCC" pad="1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="MICRO_USB_B_JST_MC5BR3-M404-4S" prefix="J">
 <description>Micro USB B mid mount</description>
 <gates>
@@ -1028,6 +1071,39 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <attribute name="DIGIKEY" value="455-2567-2-ND" constant="no"/>
 <attribute name="MOUSER" value="53X3655" constant="no"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TC2030-JLINK">
+<gates>
+<gate name="G$1" symbol="JLINK-SWD-TC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-L" package="TC2030-IDC">
+<connects>
+<connect gate="G$1" pin="!RESET" pad="3"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="SWCLK" pad="4"/>
+<connect gate="G$1" pin="SWDIO" pad="2"/>
+<connect gate="G$1" pin="SWO" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="-NL" package="TC2030-IDC-NL">
+<connects>
+<connect gate="G$1" pin="!RESET" pad="3"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="SWCLK" pad="4"/>
+<connect gate="G$1" pin="SWDIO" pad="2"/>
+<connect gate="G$1" pin="SWO" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -3787,9 +3863,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </part>
 <part name="GND12" library="supply1" deviceset="GND" device=""/>
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
-<part name="J2" library="connector" deviceset="TC2030-CTX" device="-NL"/>
-<part name="P+1" library="supply1" deviceset="VCC" device=""/>
-<part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="U3" library="chips" deviceset="NRF51822" device="QF"/>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="B2" library="chips" deviceset="BAL-NRF01D3" device=""/>
@@ -3837,8 +3910,8 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <part name="J6" library="headers" deviceset="HIROSE-DF40C-10DP-0.4V" device=""/>
 <part name="J7" library="headers" deviceset="HIROSE-DF40C-10DP-0.4V" device=""/>
 <part name="BAT1" library="batteries" deviceset="BAT-HLD-002-THM" device=""/>
-<part name="U$2" library="batteries" deviceset="ML-2020/H1C" device=""/>
-<part name="IC1" library="ftdichip" deviceset="FT232R" device="Q"/>
+<part name="BAT2" library="batteries" deviceset="ML-2020/H1C" device=""/>
+<part name="U2" library="ftdichip" deviceset="FT232R" device="Q"/>
 <part name="L3" library="passives" deviceset="INDUCTOR" device="0603" value="10uH">
 <attribute name="DIGIKEY" value="490-4025-1-ND"/>
 </part>
@@ -3858,10 +3931,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </part>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="GND23" library="supply1" deviceset="GND" device=""/>
-<part name="DDDDD" library="passives" deviceset="CAPACITOR" device="" value="DIODE"/>
-<part name="R2" library="passives" deviceset="RESISTOR" device="" value="12k">
-<attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
-</part>
+<part name="R2" library="passives" deviceset="RESISTOR" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
@@ -3869,6 +3939,18 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="FRAME2" library="frames" deviceset="LETTER_L" device=""/>
+<part name="C1" library="passives" deviceset="CAPACITOR" device="" value="0.8pF">
+<attribute name="DIGIKEY" value="490-5419-1-ND"/>
+</part>
+<part name="GND10" library="supply1" deviceset="GND" device=""/>
+<part name="J23" library="connector" deviceset="TC2030-JLINK" device="-NL"/>
+<part name="GND14" library="supply1" deviceset="GND" device=""/>
+<part name="P+3" library="supply1" deviceset="VCC" device=""/>
+<part name="D2" library="passives" deviceset="DIODE" device="">
+<attribute name="DIGIKEY" value="641-1271-1-ND"/>
+<attribute name="MOUSER" value="750-CDBQR0130L"/>
+</part>
+<part name="LOGO1" library="logos" deviceset="UMICH_SOLID" device="_TINY"/>
 </parts>
 <sheets>
 <sheet>
@@ -3892,12 +3974,9 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </instance>
 <instance part="GND12" gate="1" x="91.44" y="127"/>
 <instance part="GND13" gate="1" x="78.74" y="35.56"/>
-<instance part="J2" gate="G$1" x="190.5" y="170.18"/>
-<instance part="P+1" gate="VCC" x="175.26" y="177.8"/>
-<instance part="GND2" gate="1" x="175.26" y="160.02"/>
 <instance part="U$1" gate="G$1" x="232.664" y="22.352"/>
 <instance part="U3" gate="G$1" x="78.74" y="86.36"/>
-<instance part="GND6" gate="1" x="167.64" y="53.34"/>
+<instance part="GND6" gate="1" x="167.64" y="48.26"/>
 <instance part="B2" gate="G$1" x="149.86" y="60.96"/>
 <instance part="L2" gate="G$1" x="38.1" y="142.24">
 <attribute name="DIGIKEY" x="38.1" y="142.24" size="1.778" layer="96" display="off"/>
@@ -3942,7 +4021,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <instance part="GND3" gate="1" x="27.94" y="53.34"/>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="FRAME1" gate="G$2" x="147.32" y="0"/>
-<instance part="A2" gate="G$1" x="167.64" y="71.12"/>
+<instance part="A2" gate="G$1" x="182.88" y="71.12"/>
 <instance part="J6" gate="G$1" x="157.48" y="132.08"/>
 <instance part="J7" gate="G$1" x="210.82" y="132.08"/>
 <instance part="L3" gate="G$1" x="38.1" y="124.46">
@@ -3951,6 +4030,13 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <instance part="GND5" gate="1" x="200.66" y="116.84"/>
 <instance part="P+4" gate="VCC" x="200.66" y="144.78"/>
 <instance part="GND9" gate="1" x="223.52" y="116.84"/>
+<instance part="C1" gate="G$1" x="177.8" y="58.42">
+<attribute name="DIGIKEY" x="177.8" y="58.42" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="GND10" gate="1" x="177.8" y="48.26"/>
+<instance part="J23" gate="G$1" x="127" y="165.1"/>
+<instance part="GND14" gate="1" x="111.76" y="154.94"/>
+<instance part="P+3" gate="VCC" x="111.76" y="175.26"/>
 </instances>
 <busses>
 </busses>
@@ -3968,14 +4054,8 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <junction x="63.5" y="132.08"/>
 </segment>
 <segment>
-<pinref part="J2" gate="G$1" pin="GND"/>
-<wire x1="177.8" y1="165.1" x2="175.26" y2="165.1" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="165.1" x2="175.26" y2="162.56" width="0.1524" layer="91"/>
-<pinref part="GND2" gate="1" pin="GND"/>
-</segment>
-<segment>
 <wire x1="165.1" y1="58.42" x2="167.64" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="58.42" x2="167.64" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="58.42" x2="167.64" y2="50.8" width="0.1524" layer="91"/>
 <pinref part="GND6" gate="1" pin="GND"/>
 <pinref part="B2" gate="G$1" pin="GND"/>
 </segment>
@@ -4042,6 +4122,17 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="223.52" y1="127" x2="223.52" y2="119.38" width="0.1524" layer="91"/>
 <pinref part="GND9" gate="1" pin="GND"/>
 </segment>
+<segment>
+<pinref part="C1" gate="G$1" pin="2"/>
+<pinref part="GND10" gate="1" pin="GND"/>
+<wire x1="177.8" y1="50.8" x2="177.8" y2="53.34" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="J23" gate="G$1" pin="GND"/>
+<wire x1="114.3" y1="160.02" x2="111.76" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="160.02" x2="111.76" y2="157.48" width="0.1524" layer="91"/>
+<pinref part="GND14" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="VCC" class="0">
 <segment>
@@ -4059,12 +4150,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <junction x="76.2" y="144.78"/>
 </segment>
 <segment>
-<pinref part="J2" gate="G$1" pin="VCC"/>
-<wire x1="177.8" y1="172.72" x2="175.26" y2="172.72" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="172.72" x2="175.26" y2="175.26" width="0.1524" layer="91"/>
-<pinref part="P+1" gate="VCC" pin="VCC"/>
-</segment>
-<segment>
 <pinref part="J7" gate="G$1" pin="3"/>
 <wire x1="208.28" y1="134.62" x2="200.66" y2="134.62" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="134.62" x2="200.66" y2="137.16" width="0.1524" layer="91"/>
@@ -4074,33 +4159,11 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="208.28" y1="137.16" x2="200.66" y2="137.16" width="0.1524" layer="91"/>
 <junction x="200.66" y="137.16"/>
 </segment>
-</net>
-<net name="TCK" class="0">
 <segment>
-<pinref part="J2" gate="G$1" pin="TCK"/>
-<wire x1="203.2" y1="170.18" x2="205.74" y2="170.18" width="0.1524" layer="91"/>
-<label x="205.74" y="170.18" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="TMS" class="0">
-<segment>
-<pinref part="J2" gate="G$1" pin="TMS"/>
-<wire x1="203.2" y1="172.72" x2="205.74" y2="172.72" width="0.1524" layer="91"/>
-<label x="205.74" y="172.72" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="TDO" class="0">
-<segment>
-<pinref part="J2" gate="G$1" pin="TDO"/>
-<wire x1="203.2" y1="167.64" x2="205.74" y2="167.64" width="0.1524" layer="91"/>
-<label x="205.74" y="167.64" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="!RESET" class="0">
-<segment>
-<pinref part="J2" gate="G$1" pin="!RESET"/>
-<wire x1="203.2" y1="165.1" x2="205.74" y2="165.1" width="0.1524" layer="91"/>
-<label x="205.74" y="165.1" size="1.27" layer="95" xref="yes"/>
+<pinref part="J23" gate="G$1" pin="VCC"/>
+<wire x1="114.3" y1="170.18" x2="111.76" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="170.18" x2="111.76" y2="172.72" width="0.1524" layer="91"/>
+<pinref part="P+3" gate="VCC" pin="VCC"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -4130,10 +4193,14 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </net>
 <net name="N$11" class="0">
 <segment>
-<wire x1="165.1" y1="63.5" x2="167.64" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="63.5" x2="167.64" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="63.5" x2="177.8" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="177.8" y1="63.5" x2="182.88" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="63.5" x2="182.88" y2="66.04" width="0.1524" layer="91"/>
 <pinref part="B2" gate="G$1" pin="SE"/>
 <pinref part="A2" gate="G$1" pin="ANTENNA"/>
+<pinref part="C1" gate="G$1" pin="1"/>
+<wire x1="177.8" y1="60.96" x2="177.8" y2="63.5" width="0.1524" layer="91"/>
+<junction x="177.8" y="63.5"/>
 </segment>
 </net>
 <net name="AVDD" class="0">
@@ -4228,6 +4295,11 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="162.56" y1="137.16" x2="167.64" y2="137.16" width="0.1524" layer="91"/>
 <label x="167.64" y="137.16" size="1.27" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="J23" gate="G$1" pin="SWCLK"/>
+<wire x1="139.7" y1="167.64" x2="142.24" y2="167.64" width="0.1524" layer="91"/>
+<label x="142.24" y="167.64" size="1.27" layer="95" xref="yes"/>
+</segment>
 </net>
 <net name="SWDIO" class="0">
 <segment>
@@ -4239,6 +4311,11 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <pinref part="J6" gate="G$1" pin="4"/>
 <wire x1="162.56" y1="134.62" x2="167.64" y2="134.62" width="0.1524" layer="91"/>
 <label x="167.64" y="134.62" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J23" gate="G$1" pin="SWDIO"/>
+<wire x1="139.7" y1="170.18" x2="142.24" y2="170.18" width="0.1524" layer="91"/>
+<label x="142.24" y="170.18" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="N$23" class="0">
@@ -4313,9 +4390,9 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="53.34" y="86.36" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J6" gate="G$1" pin="3"/>
-<wire x1="154.94" y1="134.62" x2="149.86" y2="134.62" width="0.1524" layer="91"/>
-<label x="149.86" y="134.62" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="J6" gate="G$1" pin="1"/>
+<wire x1="154.94" y1="137.16" x2="149.86" y2="137.16" width="0.1524" layer="91"/>
+<label x="149.86" y="137.16" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="P09" class="0">
@@ -4325,9 +4402,9 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="53.34" y="83.82" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J6" gate="G$1" pin="1"/>
-<wire x1="154.94" y1="137.16" x2="149.86" y2="137.16" width="0.1524" layer="91"/>
-<label x="149.86" y="137.16" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="J6" gate="G$1" pin="10"/>
+<wire x1="162.56" y1="127" x2="167.64" y2="127" width="0.1524" layer="91"/>
+<label x="167.64" y="127" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="P10" class="0">
@@ -4337,29 +4414,24 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="53.34" y="81.28" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J6" gate="G$1" pin="10"/>
-<wire x1="162.56" y1="127" x2="167.64" y2="127" width="0.1524" layer="91"/>
-<label x="167.64" y="127" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="P11" class="0">
-<segment>
 <pinref part="J6" gate="G$1" pin="8"/>
 <wire x1="162.56" y1="129.54" x2="167.64" y2="129.54" width="0.1524" layer="91"/>
 <label x="167.64" y="129.54" size="1.27" layer="95" xref="yes"/>
 </segment>
+</net>
+<net name="P11" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P11"/>
 <wire x1="55.88" y1="78.74" x2="53.34" y2="78.74" width="0.1524" layer="91"/>
 <label x="53.34" y="78.74" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
-</net>
-<net name="P12" class="0">
 <segment>
 <pinref part="J6" gate="G$1" pin="6"/>
 <wire x1="162.56" y1="132.08" x2="167.64" y2="132.08" width="0.1524" layer="91"/>
 <label x="167.64" y="132.08" size="1.27" layer="95" xref="yes"/>
 </segment>
+</net>
+<net name="P12" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P12"/>
 <wire x1="55.88" y1="76.2" x2="53.34" y2="76.2" width="0.1524" layer="91"/>
@@ -4428,6 +4500,18 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="223.52" y="132.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
+<net name="P07" class="0">
+<segment>
+<pinref part="J6" gate="G$1" pin="3"/>
+<wire x1="154.94" y1="134.62" x2="149.86" y2="134.62" width="0.1524" layer="91"/>
+<label x="149.86" y="134.62" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U3" gate="G$1" pin="P07"/>
+<wire x1="55.88" y1="91.44" x2="53.34" y2="91.44" width="0.1524" layer="91"/>
+<label x="53.34" y="91.44" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -4437,8 +4521,8 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <instances>
 <instance part="J5" gate="G$1" x="76.2" y="58.42" rot="MR0"/>
 <instance part="BAT1" gate="G$1" x="109.22" y="134.62"/>
-<instance part="U$2" gate="G$1" x="86.36" y="134.62"/>
-<instance part="IC1" gate="1" x="152.4" y="68.58"/>
+<instance part="BAT2" gate="G$1" x="86.36" y="134.62"/>
+<instance part="U2" gate="1" x="152.4" y="68.58"/>
 <instance part="L4" gate="G$1" x="99.06" y="71.12" rot="R90">
 <attribute name="DIGIKEY" x="99.06" y="71.12" size="1.778" layer="96" rot="R90" display="off"/>
 </instance>
@@ -4455,15 +4539,17 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </instance>
 <instance part="GND22" gate="1" x="109.22" y="35.56"/>
 <instance part="GND23" gate="1" x="132.08" y="35.56"/>
-<instance part="DDDDD" gate="G$1" x="83.82" y="160.02" rot="R270"/>
-<instance part="R2" gate="G$1" x="96.52" y="149.86" rot="R270">
-<attribute name="DIGIKEY" x="96.52" y="149.86" size="1.27" layer="96" rot="R270" display="off"/>
-</instance>
+<instance part="R2" gate="G$1" x="96.52" y="149.86" rot="R270"/>
 <instance part="P+2" gate="VCC" x="134.62" y="170.18"/>
 <instance part="GND1" gate="1" x="96.52" y="116.84"/>
 <instance part="GND4" gate="1" x="119.38" y="116.84"/>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
 <instance part="FRAME2" gate="G$2" x="147.32" y="0"/>
+<instance part="D2" gate="G$1" x="81.28" y="160.02">
+<attribute name="DIGIKEY" x="81.28" y="160.02" size="1.27" layer="96" display="off"/>
+<attribute name="MOUSER" x="81.28" y="160.02" size="1.27" layer="96" display="off"/>
+</instance>
+<instance part="LOGO1" gate="G$1" x="195.58" y="162.56"/>
 </instances>
 <busses>
 </busses>
@@ -4482,7 +4568,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="86.36" y1="53.34" x2="116.84" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="53.34" x2="116.84" y2="50.8" width="0.1524" layer="91"/>
 <junction x="86.36" y="53.34"/>
-<pinref part="IC1" gate="1" pin="GND@A"/>
+<pinref part="U2" gate="1" pin="GND@A"/>
 <wire x1="116.84" y1="50.8" x2="139.7" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -4496,7 +4582,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="132.08" y1="38.1" x2="132.08" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$2" gate="G$1" pin="-"/>
+<pinref part="BAT2" gate="G$1" pin="-"/>
 <wire x1="91.44" y1="132.08" x2="96.52" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="132.08" x2="96.52" y2="119.38" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
@@ -4522,7 +4608,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="114.3" y1="137.16" x2="127" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="127" y1="137.16" x2="127" y2="160.02" width="0.1524" layer="91"/>
 <junction x="127" y="160.02"/>
-<pinref part="DDDDD" gate="G$1" pin="1"/>
+<pinref part="D2" gate="G$1" pin="CATHODE"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -4546,12 +4632,12 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <segment>
 <pinref part="J5" gate="G$1" pin="D+"/>
 <wire x1="83.82" y1="58.42" x2="139.7" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="1" pin="USBDP"/>
+<pinref part="U2" gate="1" pin="USBDP"/>
 </segment>
 </net>
 <net name="N$27" class="0">
 <segment>
-<pinref part="IC1" gate="1" pin="USBDM"/>
+<pinref part="U2" gate="1" pin="USBDM"/>
 <wire x1="139.7" y1="55.88" x2="116.84" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="55.88" x2="116.84" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="J5" gate="G$1" pin="D-"/>
@@ -4566,7 +4652,7 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="109.22" y1="71.12" x2="109.22" y2="91.44" width="0.1524" layer="91"/>
 <junction x="109.22" y="71.12"/>
 <wire x1="109.22" y1="91.44" x2="139.7" y2="91.44" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="1" pin="VCC"/>
+<pinref part="U2" gate="1" pin="VCC"/>
 <wire x1="109.22" y1="71.12" x2="121.92" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="71.12" x2="121.92" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="C17" gate="G$1" pin="1"/>
@@ -4574,10 +4660,10 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </net>
 <net name="3V3" class="0">
 <segment>
-<pinref part="IC1" gate="1" pin="VCCIO"/>
+<pinref part="U2" gate="1" pin="VCCIO"/>
 <wire x1="139.7" y1="88.9" x2="132.08" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="88.9" x2="132.08" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="IC1" gate="1" pin="3V3OUT"/>
+<pinref part="U2" gate="1" pin="3V3OUT"/>
 <wire x1="132.08" y1="63.5" x2="139.7" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="63.5" x2="132.08" y2="48.26" width="0.1524" layer="91"/>
 <junction x="132.08" y="63.5"/>
@@ -4588,29 +4674,29 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="134.62" y="99.06" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="DDDDD" gate="G$1" pin="2"/>
-<wire x1="78.74" y1="160.02" x2="71.12" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="160.02" x2="71.12" y2="160.02" width="0.1524" layer="91"/>
 <label x="71.12" y="160.02" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="D2" gate="G$1" pin="ANODE"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="96.52" y1="137.16" x2="96.52" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="+"/>
+<pinref part="BAT2" gate="G$1" pin="+"/>
 <wire x1="96.52" y1="137.16" x2="91.44" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PROG_RX" class="0">
 <segment>
-<pinref part="IC1" gate="1" pin="TXD"/>
+<pinref part="U2" gate="1" pin="TXD"/>
 <wire x1="167.64" y1="91.44" x2="170.18" y2="91.44" width="0.1524" layer="91"/>
 <label x="170.18" y="91.44" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="PROG_TX" class="0">
 <segment>
-<pinref part="IC1" gate="1" pin="RXD"/>
+<pinref part="U2" gate="1" pin="RXD"/>
 <wire x1="167.64" y1="88.9" x2="170.18" y2="88.9" width="0.1524" layer="91"/>
 <label x="170.18" y="88.9" size="1.27" layer="95" xref="yes"/>
 </segment>
