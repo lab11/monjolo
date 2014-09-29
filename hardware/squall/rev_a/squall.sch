@@ -682,6 +682,17 @@ the functionality of your wireless devices.</description>
 <wire x1="-1.3" y1="1.1" x2="-0.3" y2="1.1" width="0.127" layer="21"/>
 <text x="0" y="1.3" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
 </package>
+<package name="ABS05">
+<smd name="B" x="0.55" y="0" dx="0.5" dy="1" layer="1"/>
+<smd name="A" x="-0.55" y="0" dx="0.5" dy="1" layer="1"/>
+<wire x1="-0.2" y1="0.5" x2="0.3" y2="0.5" width="0.127" layer="21"/>
+<wire x1="0.3" y1="-0.5" x2="-0.3" y2="-0.5" width="0.127" layer="21"/>
+<wire x1="-0.4" y1="0.6" x2="-0.2" y2="0.6" width="0.127" layer="21"/>
+<wire x1="-0.2" y1="0.6" x2="-0.2" y2="0.5" width="0.127" layer="21"/>
+<wire x1="-0.2" y1="0.5" x2="-0.2" y2="0.3" width="0.127" layer="21"/>
+<text x="0" y="0.7" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-1.7" size="1.016" layer="27" font="vector" ratio="12" align="bottom-center">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="CRYSTAL-GND">
@@ -697,6 +708,18 @@ the functionality of your wireless devices.</description>
 <text x="-2.54" y="5.08" size="1.27" layer="96">&gt;VALUE</text>
 <pin name="GND" x="0" y="-5.08" visible="off" length="short" rot="R90"/>
 <text x="0" y="-2.54" size="0.762" layer="95" ratio="12" align="bottom-center">GND</text>
+</symbol>
+<symbol name="CRYSTAL">
+<pin name="1" x="-5.08" y="0" visible="pad" length="short"/>
+<pin name="2" x="5.08" y="0" visible="pad" length="short" rot="R180"/>
+<wire x1="-2.54" y1="2.54" x2="-2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="2.54" y1="2.54" x2="2.54" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="3.81" x2="-1.27" y2="-3.81" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-3.81" x2="1.27" y2="-3.81" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-3.81" x2="1.27" y2="3.81" width="0.254" layer="94"/>
+<wire x1="1.27" y1="3.81" x2="-1.27" y2="3.81" width="0.254" layer="94"/>
+<text x="-2.54" y="7.62" size="1.27" layer="95">&gt;NAME</text>
+<text x="-2.54" y="5.08" size="1.27" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -714,6 +737,36 @@ the functionality of your wireless devices.</description>
 </connects>
 <technologies>
 <technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ABS05-32.768KHZ" prefix="X">
+<description>32.768kHz Crystal</description>
+<gates>
+<gate name="G$1" symbol="CRYSTAL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-T" package="ABS05">
+<connects>
+<connect gate="G$1" pin="1" pad="A"/>
+<connect gate="G$1" pin="2" pad="B"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DIGIKEY" value="535-11899-1-ND" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="-9-T" package="ABS05">
+<connects>
+<connect gate="G$1" pin="1" pad="A"/>
+<connect gate="G$1" pin="2" pad="B"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DIGIKEY" value="535-11897-1-ND" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -3950,6 +4003,14 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <attribute name="MOUSER" value="750-CDBQR0130L"/>
 </part>
 <part name="LOGO1" library="logos" deviceset="UMICH_SOLID" device="_TINY"/>
+<part name="X1" library="crystals" deviceset="ABS05-32.768KHZ" device="-9-T"/>
+<part name="C2" library="passives" deviceset="CAPACITOR" device="" value="12pF">
+<attribute name="DIGIKEY" value="490-6197-1-ND"/>
+</part>
+<part name="C4" library="passives" deviceset="CAPACITOR" device="" value="12pF">
+<attribute name="DIGIKEY" value="490-6197-1-ND"/>
+</part>
+<part name="GND2" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3982,16 +4043,16 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <instance part="C3" gate="G$1" x="30.48" y="144.78">
 <attribute name="DIGIKEY" x="30.48" y="144.78" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="X2" gate="G$1" x="132.08" y="96.52">
-<attribute name="DIGIKEY" x="132.08" y="96.52" size="1.778" layer="96" display="off"/>
+<instance part="X2" gate="G$1" x="160.02" y="96.52">
+<attribute name="DIGIKEY" x="160.02" y="96.52" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="C8" gate="G$1" x="124.46" y="91.44">
-<attribute name="DIGIKEY" x="124.46" y="91.44" size="1.778" layer="96" display="off"/>
+<instance part="C8" gate="G$1" x="152.4" y="91.44">
+<attribute name="DIGIKEY" x="152.4" y="91.44" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="C9" gate="G$1" x="139.7" y="91.44">
-<attribute name="DIGIKEY" x="139.7" y="91.44" size="1.778" layer="96" display="off"/>
+<instance part="C9" gate="G$1" x="167.64" y="91.44">
+<attribute name="DIGIKEY" x="167.64" y="91.44" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="GND7" gate="1" x="132.08" y="78.74"/>
+<instance part="GND7" gate="1" x="160.02" y="78.74"/>
 <instance part="C11" gate="G$1" x="119.38" y="45.72">
 <attribute name="DIGIKEY" x="119.38" y="45.72" size="1.778" layer="96" display="off"/>
 </instance>
@@ -4035,6 +4096,14 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <instance part="J23" gate="G$1" x="127" y="165.1"/>
 <instance part="GND14" gate="1" x="111.76" y="154.94"/>
 <instance part="P+3" gate="VCC" x="111.76" y="175.26"/>
+<instance part="X1" gate="G$1" x="132.08" y="111.76"/>
+<instance part="C2" gate="G$1" x="124.46" y="106.68">
+<attribute name="DIGIKEY" x="124.46" y="106.68" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="C4" gate="G$1" x="139.7" y="106.68">
+<attribute name="DIGIKEY" x="139.7" y="106.68" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="GND2" gate="1" x="132.08" y="93.98"/>
 </instances>
 <busses>
 </busses>
@@ -4064,14 +4133,14 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 </segment>
 <segment>
 <pinref part="C8" gate="G$1" pin="2"/>
-<wire x1="124.46" y1="86.36" x2="124.46" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="86.36" x2="152.4" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="C9" gate="G$1" pin="2"/>
-<wire x1="124.46" y1="83.82" x2="132.08" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="132.08" y1="83.82" x2="139.7" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="83.82" x2="139.7" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="83.82" x2="160.02" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="160.02" y1="83.82" x2="167.64" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="83.82" x2="167.64" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="GND7" gate="1" pin="GND"/>
-<wire x1="132.08" y1="81.28" x2="132.08" y2="83.82" width="0.1524" layer="91"/>
-<junction x="132.08" y="83.82"/>
+<wire x1="160.02" y1="81.28" x2="160.02" y2="83.82" width="0.1524" layer="91"/>
+<junction x="160.02" y="83.82"/>
 </segment>
 <segment>
 <pinref part="C12" gate="G$1" pin="2"/>
@@ -4130,6 +4199,17 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <wire x1="114.3" y1="160.02" x2="111.76" y2="160.02" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="160.02" x2="111.76" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="GND14" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="C4" gate="G$1" pin="2"/>
+<wire x1="139.7" y1="101.6" x2="139.7" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="99.06" x2="132.08" y2="99.06" width="0.1524" layer="91"/>
+<pinref part="C2" gate="G$1" pin="2"/>
+<wire x1="132.08" y1="99.06" x2="124.46" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="99.06" x2="124.46" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="99.06" x2="132.08" y2="96.52" width="0.1524" layer="91"/>
+<junction x="132.08" y="99.06"/>
+<pinref part="GND2" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -4237,29 +4317,27 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <net name="N$16" class="0">
 <segment>
 <pinref part="C8" gate="G$1" pin="1"/>
-<wire x1="124.46" y1="93.98" x2="124.46" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="93.98" x2="152.4" y2="96.52" width="0.1524" layer="91"/>
 <pinref part="X2" gate="G$1" pin="1"/>
-<wire x1="124.46" y1="96.52" x2="127" y2="96.52" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="96.52" x2="119.38" y2="96.52" width="0.1524" layer="91"/>
-<junction x="124.46" y="96.52"/>
-<wire x1="119.38" y1="96.52" x2="119.38" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="96.52" x2="154.94" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="96.52" x2="147.32" y2="96.52" width="0.1524" layer="91"/>
+<junction x="152.4" y="96.52"/>
+<wire x1="147.32" y1="96.52" x2="147.32" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="U3" gate="G$1" pin="XC1"/>
-<wire x1="119.38" y1="71.12" x2="101.6" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="147.32" y1="71.12" x2="101.6" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$17" class="0">
 <segment>
 <pinref part="X2" gate="G$1" pin="2"/>
 <pinref part="C9" gate="G$1" pin="1"/>
-<wire x1="137.16" y1="96.52" x2="139.7" y2="96.52" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="96.52" x2="139.7" y2="93.98" width="0.1524" layer="91"/>
-<junction x="139.7" y="96.52"/>
+<wire x1="165.1" y1="96.52" x2="167.64" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="96.52" x2="167.64" y2="93.98" width="0.1524" layer="91"/>
+<junction x="167.64" y="96.52"/>
 <pinref part="U3" gate="G$1" pin="XC2"/>
-<wire x1="101.6" y1="68.58" x2="121.92" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="68.58" x2="121.92" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="71.12" x2="144.78" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="144.78" y1="71.12" x2="144.78" y2="96.52" width="0.1524" layer="91"/>
-<wire x1="144.78" y1="96.52" x2="139.7" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="68.58" x2="172.72" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="172.72" y1="68.58" x2="172.72" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="172.72" y1="96.52" x2="167.64" y2="96.52" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$18" class="0">
@@ -4450,18 +4528,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="104.14" y="78.74" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="P25" class="0">
-<segment>
-<pinref part="U3" gate="G$1" pin="P25"/>
-<wire x1="101.6" y1="88.9" x2="104.14" y2="88.9" width="0.1524" layer="91"/>
-<label x="104.14" y="88.9" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="J7" gate="G$1" pin="4"/>
-<wire x1="223.52" y1="134.62" x2="215.9" y2="134.62" width="0.1524" layer="91"/>
-<label x="223.52" y="134.62" size="1.27" layer="95" xref="yes"/>
-</segment>
-</net>
 <net name="P24" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P24"/>
@@ -4469,33 +4535,35 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <label x="104.14" y="91.44" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="J7" gate="G$1" pin="2"/>
-<wire x1="223.52" y1="137.16" x2="215.9" y2="137.16" width="0.1524" layer="91"/>
-<label x="223.52" y="137.16" size="1.27" layer="95" xref="yes"/>
+<pinref part="J7" gate="G$1" pin="6"/>
+<wire x1="215.9" y1="132.08" x2="223.52" y2="132.08" width="0.1524" layer="91"/>
+<label x="223.52" y="132.08" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="A1" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P27/AIN1/XL1"/>
-<wire x1="101.6" y1="83.82" x2="104.14" y2="83.82" width="0.1524" layer="91"/>
-<label x="104.14" y="83.82" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="J7" gate="G$1" pin="8"/>
-<wire x1="215.9" y1="129.54" x2="223.52" y2="129.54" width="0.1524" layer="91"/>
-<label x="223.52" y="129.54" size="1.27" layer="95" xref="yes"/>
+<wire x1="101.6" y1="83.82" x2="144.78" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="83.82" x2="144.78" y2="111.76" width="0.1524" layer="91"/>
+<pinref part="X1" gate="G$1" pin="2"/>
+<pinref part="C4" gate="G$1" pin="1"/>
+<wire x1="137.16" y1="111.76" x2="139.7" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="111.76" x2="139.7" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="111.76" x2="139.7" y2="111.76" width="0.1524" layer="91"/>
+<junction x="139.7" y="111.76"/>
 </segment>
 </net>
 <net name="A0" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P26/AIN0/XL2"/>
-<wire x1="101.6" y1="86.36" x2="104.14" y2="86.36" width="0.1524" layer="91"/>
-<label x="104.14" y="86.36" size="1.27" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="J7" gate="G$1" pin="6"/>
-<wire x1="215.9" y1="132.08" x2="223.52" y2="132.08" width="0.1524" layer="91"/>
-<label x="223.52" y="132.08" size="1.27" layer="95" xref="yes"/>
+<pinref part="C2" gate="G$1" pin="1"/>
+<wire x1="124.46" y1="109.22" x2="124.46" y2="111.76" width="0.1524" layer="91"/>
+<pinref part="X1" gate="G$1" pin="1"/>
+<wire x1="124.46" y1="111.76" x2="127" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="111.76" x2="119.38" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="111.76" x2="119.38" y2="86.36" width="0.1524" layer="91"/>
+<junction x="124.46" y="111.76"/>
+<wire x1="119.38" y1="86.36" x2="101.6" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="P07" class="0">
@@ -4508,6 +4576,56 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <pinref part="U3" gate="G$1" pin="P07"/>
 <wire x1="55.88" y1="91.44" x2="53.34" y2="91.44" width="0.1524" layer="91"/>
 <label x="53.34" y="91.44" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="P23" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P23"/>
+<wire x1="101.6" y1="96.52" x2="104.14" y2="96.52" width="0.1524" layer="91"/>
+<label x="104.14" y="96.52" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J7" gate="G$1" pin="4"/>
+<wire x1="223.52" y1="134.62" x2="215.9" y2="134.62" width="0.1524" layer="91"/>
+<label x="223.52" y="134.62" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="P22" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P22"/>
+<wire x1="101.6" y1="99.06" x2="104.14" y2="99.06" width="0.1524" layer="91"/>
+<label x="104.14" y="99.06" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J7" gate="G$1" pin="2"/>
+<wire x1="223.52" y1="137.16" x2="215.9" y2="137.16" width="0.1524" layer="91"/>
+<label x="223.52" y="137.16" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="P21" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P21"/>
+<wire x1="101.6" y1="101.6" x2="104.14" y2="101.6" width="0.1524" layer="91"/>
+<label x="104.14" y="101.6" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="BTLDR_CTRL" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P03/AIN4"/>
+<wire x1="55.88" y1="101.6" x2="53.34" y2="101.6" width="0.1524" layer="91"/>
+<label x="53.34" y="101.6" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="P25" class="0">
+<segment>
+<pinref part="U3" gate="G$1" pin="P25"/>
+<wire x1="101.6" y1="88.9" x2="104.14" y2="88.9" width="0.1524" layer="91"/>
+<label x="104.14" y="88.9" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="J7" gate="G$1" pin="8"/>
+<wire x1="215.9" y1="129.54" x2="223.52" y2="129.54" width="0.1524" layer="91"/>
+<label x="223.52" y="129.54" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -4697,6 +4815,13 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 <pinref part="U2" gate="1" pin="RXD"/>
 <wire x1="167.64" y1="88.9" x2="170.18" y2="88.9" width="0.1524" layer="91"/>
 <label x="170.18" y="88.9" size="1.27" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="BTLDR_CTRL" class="0">
+<segment>
+<pinref part="U2" gate="1" pin="!DTR"/>
+<wire x1="167.64" y1="81.28" x2="170.18" y2="81.28" width="0.1524" layer="91"/>
+<label x="170.18" y="81.28" size="1.27" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
