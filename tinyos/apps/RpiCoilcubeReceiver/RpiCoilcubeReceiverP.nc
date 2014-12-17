@@ -20,7 +20,7 @@ implementation {
 
 #define STD_COILCUBE_PKT_LENGTH 19
 
-  char gatd_host[] = "inductor.eecs.umich.edu";
+  char gatd_host[] = "gatd.eecs.umich.edu";
   uint16_t gatd_port = 4002;
   char gatd_profile[] = "7aiOPJapXF";
 

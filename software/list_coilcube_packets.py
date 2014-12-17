@@ -12,7 +12,7 @@ except ImportError:
 	print('sudo pip install socketIO-client')
 	sys.exit(1)
 
-SOCKETIO_HOST      = 'inductor.eecs.umich.edu'
+SOCKETIO_HOST      = 'gatd.eecs.umich.edu'
 SOCKETIO_PORT      = 8080
 SOCKETIO_NAMESPACE = 'stream'
 
