@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "nrf_gpio.h"
 #include "ble_advdata.h"
-#include "boards.h"
+// #include "boards.h"
 #include "nordic_common.h"
 #include "softdevice_handler.h"
 #include "ble_debug_assert_handler.h"
@@ -13,9 +13,13 @@
 
 #define DEVICE_NAME                      "monjolo"
 
+#define LED0          18
+#define LED1          19
+#define LED2          20
+
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  0                                 /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
-#define ADVERTISING_LED_PIN_NO           LED_0                             /**< Is on when device is advertising. */
-#define ASSERT_LED_PIN_NO                LED_1                            /**< Is on when application has asserted. */
+#define ADVERTISING_LED_PIN_NO           LED0                             /**< Is on when device is advertising. */
+#define ASSERT_LED_PIN_NO                LED1                            /**< Is on when application has asserted. */
 
 #define USE_LEDS                         1
 
@@ -135,6 +139,11 @@ static void leds_init(void)
 {
     nrf_gpio_cfg_output(ADVERTISING_LED_PIN_NO);
     nrf_gpio_cfg_output(ASSERT_LED_PIN_NO);
+    nrf_gpio_cfg_output(LED2);
+
+    nrf_gpio_pin_set(LED0);
+    nrf_gpio_pin_set(LED1);
+    nrf_gpio_pin_set(LED2);
 }
 
 
@@ -184,7 +193,7 @@ static void advertising_init(void)
     uint32_t        err_code;
 
     // Use the simplest send adv packets only mode
-    uint8_t         flags = BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
+    // uint8_t         flags = BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
 
 
     // More manufacturing only stuff that might get added back in
@@ -221,8 +230,10 @@ static void advertising_init(void)
 
     advdata.name_type               = BLE_ADVDATA_FULL_NAME;
     advdata.include_appearance      = false;
-    advdata.flags.size              = sizeof(flags);
-    advdata.flags.p_data            = &flags;
+    // advdata.flags              = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    advdata.flags              = BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
+    // advdata.flags.size              = sizeof(flags);
+    // advdata.flags.p_data            = &flags;
     //advdata.p_manuf_specific_data   = &manuf_specific_data;
 
     err_code = ble_advdata_set(&advdata, NULL);
@@ -287,7 +298,7 @@ static void timers_init(void)
     uint32_t err_code;
 
     // Initialize timer module.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
+    APP_TIMER_INIT(APP_TIMER_PRESCALER,  APP_TIMER_OP_QUEUE_SIZE, false);
 
     // Create timers.
     err_code = app_timer_create(&m_avd_timer_id,
@@ -325,18 +336,32 @@ int main(void)
     // Initialize.
     leds_init();
 
+
+
     timers_init();
+
+
 
     ble_stack_init();
 
+
     gap_params_init();
 
+
+
     advertising_init();
+
+
 
     // Start execution.
     advertising_start();
 
-    application_timers_start();
+
+
+//     application_timers_start();
+
+// nrf_gpio_pin_clear(LED0);
+// while (1);
 
    // sd_ble_gap_adv_stop();
 
