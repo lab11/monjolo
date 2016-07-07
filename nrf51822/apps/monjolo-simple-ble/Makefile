@@ -6,10 +6,15 @@ APPLICATION_SRCS += ble_advdata.c
 APPLICATION_SRCS += ble_conn_params.c
 APPLICATION_SRCS += app_timer.c
 APPLICATION_SRCS += app_error.c
+APPLICATION_SRCS += nrf_drv_spi.c
+APPLICATION_SRCS += nrf_drv_common.c
+APPLICATION_SRCS += nrf_delay.c
 
 APPLICATION_SRCS += simple_ble.c
 APPLICATION_SRCS += eddystone.c
 APPLICATION_SRCS += simple_adv.c
+
+APPLICATION_SRCS += fm25l04b.c
 
 LIBRARY_PATHS += ../../include .
 SOURCE_PATHS += ../../src
