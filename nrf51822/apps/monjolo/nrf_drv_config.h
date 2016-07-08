@@ -365,6 +365,13 @@
 #define QDEC_CONFIG_SAMPLE_INTEN false
 #endif
 
+/* ADC */
+#define ADC_ENABLED 1
+
+#if (ADC_ENABLED == 1)
+#define ADC_CONFIG_IRQ_PRIORITY APP_IRQ_PRIORITY_LOW
+#endif
+
 /* SAADC */
 #define SAADC_ENABLED 0
 

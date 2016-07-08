@@ -10,6 +10,8 @@
 #include "nrf_drv_spi.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
+#include "nrf_drv_adc.h"
+#include "app_util_platform.h"
 
 // nrf5x-base libraries
 #include "simple_ble.h"
@@ -23,8 +25,8 @@
 /******************************************************************************/
 
 // Define constants about this beacon.
-#define DEVICE_NAME "monjolo"
-#define PHYSWEB_URL "goo.gl/bbbCCC"
+#define DEVICE_NAME "ligeiro"
+#define PHYSWEB_URL "j2x.us/ligeir"
 
 // Manufacturer specific data setup
 #define UMICH_COMPANY_IDENTIFIER 0x02E0
@@ -91,6 +93,12 @@ fm25l04b_t fm25l04b = {
     .ss_pin   = FM25L04B_nCS
 };
 
+/******************************************************************************/
+// ADC
+/******************************************************************************/
+
+static nrf_drv_adc_config_t _adc_config = NRF_DRV_ADC_DEFAULT_CONFIG;
+static nrf_drv_adc_channel_t _adc_channel_config = NRF_DRV_ADC_DEFAULT_CHANNEL(NRF_ADC_CONFIG_INPUT_7);
 
 /******************************************************************************/
 // Monjolo
@@ -155,8 +163,18 @@ int main (void) {
     // Now because we woke up we increment the counter
     monjolo_fram.counter++;
 
+    // Now setup ADC so we can read the timing capacitor
+    nrf_adc_value_t timer_val;
+    nrf_drv_adc_init(&_adc_config, NULL);
+
+    // Execute a single ADC read
+    nrf_drv_adc_sample_convert(&_adc_channel_config, &timer_val);
+
     // Now check to see if we should suppress transmission or not
-    if (1) {
+    if (timer_val < 400) {
+
+        nrf_gpio_pin_clear(LED2);
+
         // Timing cap is low, transmit a packet
         monjolo_fram.seq_no++;
 

@@ -8,6 +8,7 @@ APPLICATION_SRCS += app_timer.c
 APPLICATION_SRCS += app_error.c
 APPLICATION_SRCS += nrf_drv_spi.c
 APPLICATION_SRCS += nrf_drv_common.c
+APPLICATION_SRCS += nrf_drv_adc.c
 APPLICATION_SRCS += nrf_delay.c
 
 APPLICATION_SRCS += simple_ble.c
