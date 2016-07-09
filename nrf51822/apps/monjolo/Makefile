@@ -16,6 +16,7 @@ APPLICATION_SRCS += eddystone.c
 APPLICATION_SRCS += simple_adv.c
 
 APPLICATION_SRCS += fm25l04b.c
+APPLICATION_SRCS += led.c
 
 LIBRARY_PATHS += ../../include .
 SOURCE_PATHS += ../../src

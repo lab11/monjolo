@@ -19,6 +19,8 @@
 
 // FRAM
 #include "fm25l04b.h"
+// LEDs
+#include "led.h"
 
 /******************************************************************************/
 // BLE
@@ -81,7 +83,7 @@ static simple_ble_config_t ble_config = {
 // FRAM
 /******************************************************************************/
 
-#define FM25L04B_nCS 15
+#define FM25L04B_nCS 30
 
 static nrf_drv_spi_t _spi = NRF_DRV_SPI_INSTANCE(0);
 
@@ -99,6 +101,8 @@ fm25l04b_t fm25l04b = {
 
 static nrf_drv_adc_config_t _adc_config = NRF_DRV_ADC_DEFAULT_CONFIG;
 static nrf_drv_adc_channel_t _adc_channel_config = NRF_DRV_ADC_DEFAULT_CHANNEL(NRF_ADC_CONFIG_INPUT_7);
+
+#define TIMER_CTL_PIN 7
 
 /******************************************************************************/
 // Monjolo
@@ -118,30 +122,18 @@ typedef struct {
 
 static monjolo_fram_t monjolo_fram;
 
+#define LED_FRONT         14
+#define LED_BACK          15
 
 
-
-#define LED0          18
-#define LED1          19
-#define LED2          20
 
 int main (void) {
 
-    nrf_gpio_cfg_output(LED0);
-    nrf_gpio_cfg_output(LED1);
-    nrf_gpio_cfg_output(LED2);
-
-    // for nucleum
-    nrf_gpio_cfg_output(16);
-    nrf_gpio_cfg_output(14);
-
-    nrf_gpio_pin_set(LED0);
-    nrf_gpio_pin_set(LED1);
-    nrf_gpio_pin_set(LED2);
-
-    // for nucleum
-    nrf_gpio_pin_set(16);
-    nrf_gpio_pin_set(14);
+    // Init LEDs
+    led_init(LED_FRONT);
+    led_init(LED_BACK);
+    led_off(LED_FRONT);
+    led_off(LED_BACK);
 
     // Setup BLE
     simple_ble_init(&ble_config);
@@ -167,13 +159,14 @@ int main (void) {
     nrf_adc_value_t timer_val;
     nrf_drv_adc_init(&_adc_config, NULL);
 
-    // Execute a single ADC read
+    // Execute a single ADC read.
+    // Scale 1/3 because our input reference is 1.2 V.
+    _adc_channel_config.config.config.input = NRF_ADC_CONFIG_SCALING_INPUT_ONE_THIRD;
     nrf_drv_adc_sample_convert(&_adc_channel_config, &timer_val);
 
-    // Now check to see if we should suppress transmission or not
+    // Now check to see if we should suppress transmission or not.
+    // Threshold of 400 selected to be about 5 seconds.
     if (timer_val < 400) {
-
-        nrf_gpio_pin_clear(LED2);
 
         // Timing cap is low, transmit a packet
         monjolo_fram.seq_no++;
@@ -188,12 +181,24 @@ int main (void) {
         // EddyStone + Device Name
         eddystone_with_manuf_adv(PHYSWEB_URL, &mandata);
 
+        // Reset timing cap
+        nrf_gpio_cfg_output(TIMER_CTL_PIN);
+        nrf_gpio_pin_set(TIMER_CTL_PIN);
+
+        // Blip LEDs
+        led_on(LED_FRONT);
+        led_on(LED_BACK);
+        nrf_delay_ms(100);
+        led_off(LED_FRONT);
+        led_off(LED_BACK);
+
     } else {
         // Save the counter
         fm25l04b_write(&fm25l04b, FRAM_ADDR_COUNTER, ((uint8_t*) &monjolo_fram)+4, 4);
 
-        // Turn the LED on
-        nrf_gpio_pin_clear(LED1);
+        // Waste energy on an LED
+        led_on(LED_FRONT);
+        led_on(LED_BACK);
     }
 
     while (1) {
