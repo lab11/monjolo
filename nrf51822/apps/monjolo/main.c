@@ -43,6 +43,7 @@
 // 5: gecko power supply + impulse
 // 6: gecko power supply + impulse + buzz
 // 7: hot spring + impulse
+// 8: ligeiro (gecko power supply + blast)
 
 typedef struct {
     uint8_t service;
@@ -55,7 +56,7 @@ typedef struct {
 static monjolo_mandata_t monjolo_mandata = {
     UMICH_MANDATA_SERVICE_MONJOLO,
     1, // Version 1 of this packet structure
-    5, // Gecko power supply
+    8, // Gecko power supply
     0,
     0
 };
